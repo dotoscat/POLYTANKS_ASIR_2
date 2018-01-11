@@ -40,8 +40,10 @@ class Body:
         self.vel_y += y*dt
 
 class RectCollision:
-    def __init__(self, width, height):
+    def __init__(self, width, height, x=0., y=0.):
         self.offset = (0., 0.)
+        self.x = x
+        self.y = y
         self.width = width
         self.height = height
         self.type = 0
