@@ -18,3 +18,18 @@ from . import toyblock3
 class PhysicsSystem(toyblock3.System):
     def _update(self, entity, dt, gravity):
         entity.body.update(dt, gravity)
+
+class CollisionSystem(toyblock3.System):
+    def __init__(self):
+        super().__init__()
+        self.callbacks = {}
+
+    def _update(self, entity):
+        pass
+
+    def register_callback(self, pair):
+        def _register_callback(f):
+            self.callbacks[pair] = f
+            return f
+        return _register_callback
+    

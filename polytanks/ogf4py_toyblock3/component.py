@@ -38,3 +38,11 @@ class Body:
     def apply_force(self, dt, x=0., y=0.):
         self.vel_x += x*dt
         self.vel_y += y*dt
+
+class RectCollision:
+    def __init__(self, width, height):
+        self.offset = (0., 0.)
+        self.width = width
+        self.height = height
+        self.type = 0
+        self.collides_width = 0
