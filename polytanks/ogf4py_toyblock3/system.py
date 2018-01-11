@@ -16,6 +16,21 @@
 from . import toyblock3
 
 class PhysicsSystem(toyblock3.System):
+    """Basic system for upgrade body's position, apply gravity and so.
+
+    This system will look at the *body* attribute of the entity which is a Body component.
+
+    When your call the system pass a *dt* and a *gravity* (vertical acceleration)
+
+    Example:
+
+        .. code-block:: python
+
+            my_system = PhysicsSystem()
+            # add some entities
+            while True:
+                my_system(0.016, -10.)
+    """
     def _update(self, entity, dt, gravity):
         entity.body.update(dt, gravity)
 
