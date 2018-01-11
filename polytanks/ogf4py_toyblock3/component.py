@@ -48,3 +48,25 @@ class CollisionRect:
         self.height = height
         self.type = 0
         self.collides_width = 0
+
+    @property
+    def right(self):
+        return self.x + self.width
+
+    @property
+    def top(self):
+        return self.y + self.height
+
+    def intersects(self, b):
+        if b.y >= self.top: return False    # top
+        if b.top <= self.y: return False    # bottom
+        if b.right <= self.x: return False  # left
+        if b.x >= self.right: return False  # right
+        return True
+
+    def __contains__(self, x, y):
+        return self.x <= x <= self.right and self.y <= y <= self.top
+
+    def update(self, x, y):
+        self.x = x + self.offset[0]
+        self.y = y + self.offset[1]
