@@ -64,8 +64,8 @@ class CollisionRect:
         if b.x >= self.right: return False  # right
         return True
 
-    def __contains__(self, x, y):
-        return self.x <= x <= self.right and self.y <= y <= self.top
+    def __contains__(self, pair):
+        return self.x <= pair[0] <= self.right and self.y <= pair[1] <= self.top
 
     def update(self, x, y):
         self.x = x + self.offset[0]

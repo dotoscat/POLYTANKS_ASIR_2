@@ -54,7 +54,7 @@ class CollisionSystem(toyblock3.System):
         super().__init__()
         self.callbacks = {}
 
-    def _update(self, entity)
+    def _update(self, entity):
         return 
         entity_collision = entity.collision
         for an_entity in self.entities:
