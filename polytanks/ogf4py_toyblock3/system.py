@@ -22,6 +22,9 @@ class PhysicsSystem(toyblock3.System):
 
     When your call the system pass a *dt* and a *gravity* (vertical acceleration)
 
+    If the entity has the *collision* attribute, which is a collection of CollisionRect, then
+    proceed to update them once the body is updated.
+
     Example:
 
         .. code-block:: python
@@ -33,14 +36,36 @@ class PhysicsSystem(toyblock3.System):
     """
     def _update(self, entity, dt, gravity):
         entity.body.update(dt, gravity)
+        collision = getattr(entity, "collision", None)
+        if collision:
+            x = entity.body.x
+            y = entity.body.y
+            for rect in collision:
+                rect.update(x, y)
 
 class CollisionSystem(toyblock3.System):
+    """System for collision detection and responses.
+
+    This system will look at the member *collisions*, which is sequence
+    of :class:`CollisionRect`.
+
+    """
     def __init__(self):
         super().__init__()
         self.callbacks = {}
 
-    def _update(self, entity):
-        pass
+    def _update(self, entity)
+        return 
+        entity_collision = entity.collision
+        for an_entity in self.entities:
+            if entity is an_entity: continue
+            if (entity_collision.type & an_entity.collision.collides_with 
+                != entity_collision.type):
+                continue
+            for an_entity_rect in an_entity.collision:
+                if not entity_collision.intersects(an_entity_rect):
+                    continue
+                
 
     def register_callback(self, pair):
         def _register_callback(f):
