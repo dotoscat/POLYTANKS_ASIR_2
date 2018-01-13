@@ -47,7 +47,7 @@ class CollisionRect:
         self.width = width
         self.height = height
         self.type = 0
-        self.collides_width = 0
+        self.collides_with = 0
 
     @property
     def right(self):

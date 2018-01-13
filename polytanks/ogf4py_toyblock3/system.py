@@ -70,7 +70,7 @@ class CollisionSystem(toyblock3.System):
                     continue
                 if not rect.intersects(other_rect):
                     continue
-                callback = self.callbacks.get(rect.type, other_rect.type, None)
+                callback = self.callbacks.get((rect.type, other_rect.type), None)
                 if not callable(callback):
                     continue
                 callback(entity, other_entity)
