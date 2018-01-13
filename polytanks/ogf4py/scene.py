@@ -56,7 +56,7 @@ class Scene(object):
         return self._batch
 
     @property
-    def group(self):
+    def groups(self):
         """Access to the ordered groups of this scene.
         
         Returns:
