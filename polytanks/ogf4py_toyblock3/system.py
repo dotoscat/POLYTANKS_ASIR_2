@@ -76,6 +76,29 @@ class CollisionSystem(toyblock3.System):
                 callback(entity, other_entity)
 
     def register_callback(self, pair):
+        """This is a decorator where you define a callback.
+        
+        The second type of the CollisionRect must have set the flags *collides_with* with the first type.
+
+        The callback has the following signature callback(first_entity, second_entity) 
+
+        Example:
+
+            PLAYER = 1
+            BULLET = 2
+            my_collision = CollisionSystem()
+            # ... set up
+            player.collisions[0].type = PLAYER
+            bullet.collisions[0].type = BULLET
+            bullet.collisions[0].collides_with = PLAYER
+            my_collision.register_callback((PLAYER, BULLET))
+            def player_bullet(player, bullet):
+                player.hit()
+                bullet.free()
+
+        Parameters:
+            pair (tuple): pair of two element where you set two collision types for the callback.
+        """
         def _register_callback(f):
             self.callbacks[pair] = f
             return f
