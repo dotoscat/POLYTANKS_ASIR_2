@@ -24,14 +24,14 @@ class Entity:
 class SystemTest(unittest.TestCase):
     def setUp(self):
         self.entity = Entity()
-        self.physics = system.PhysicsSystem()
+        self.physics = system.PhysicsSystem(1., 0.)
         self.physics.add_entity(self.entity)
 
     def test_Physics_nocollision(self):
         entity = self.entity
         entity.body.vel_x = 16
         entity.body.vel_y = 16
-        self.physics(1., 0.)
+        self.physics()
         self.assertTrue(entity.body.x >= 16., "Move x")
         self.assertTrue(entity.body.y >= 16., "Move y")
 
@@ -48,6 +48,6 @@ class SystemTest(unittest.TestCase):
         two.offset = (-4, 0.)
         entity.collision.append(one)
         entity.collision.append(two)
-        self.physics(1., 0.)
+        self.physics()
         self.assertEqual(one.x, 16., "one x")
         self.assertEqual(two.x, 16. + -4., "two x with offset")

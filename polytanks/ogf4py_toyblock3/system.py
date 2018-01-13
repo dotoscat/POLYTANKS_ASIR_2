@@ -34,8 +34,13 @@ class PhysicsSystem(toyblock3.System):
             while True:
                 my_system(0.016, -10.)
     """
-    def _update(self, entity, dt, gravity):
-        entity.body.update(dt, gravity)
+    def __init__(self, dt, gravity):
+        super().__init__()
+        self.dt = dt
+        self.gravity = gravity
+
+    def _update(self, entity):
+        entity.body.update(self.dt, self.gravity)
         collision = getattr(entity, "collision", None)
         if collision:
             x = entity.body.x

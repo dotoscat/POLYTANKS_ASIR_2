@@ -108,22 +108,26 @@ class System:
         else:
             self._entities.remove(entity)
     
-    def __call__(self, *args, **kwargs):
+    def __call__(self):
         """Call the system to compute the entities.
         
         Example:
         
             .. code-block:: python
             
-                class PhysicsSystem(toyblock3.System):
-                    def _update(self, entity, dt):
-                        entity.body.update(dt)
+                class PhysicsSystem(toyblock3.System, dt):
+                    def __init__(self):
+                        super().__init__()
+                        self.dt = dt
+
+                    def _update(self, entity):
+                        entity.body.update(self.dt)
                         
-                physics = PhysicsSystem()
+                physics = PhysicsSystem(STEP)
                 physics.add_entity(player)
                 
                 while not game_over:
-                    physics(get_dt_time())
+                    physics()
         
         """
         if self._locked: return
@@ -131,12 +135,12 @@ class System:
         update = self._update
         self._locked = True
         for entity in entities:
-            update(entity, *args, **kwargs)
+            update(entity)
         self._locked = False
         while self._remove_entity_list:
             self._entities.remove(self._remove_entity_list.pop())
         while self._add_entity_list:
             self._entities.append(self._add_entity_list.pop())
 
-    def _update(self, entity, *args, **kwargs):
+    def _update(self, entity):
         raise NotImplementedError("Define an _update method for this system.")
