@@ -38,7 +38,7 @@ class SystemTest(unittest.TestCase):
     def test_Physics_collision(self):
         entity = self.entity
         entity.body.vel_x = 16.
-        entity.collision = []
+        entity.collisions = []
         one = component.CollisionRect(32., 32.)
         one.x = 1.
         one.y = 1.
@@ -51,3 +51,27 @@ class SystemTest(unittest.TestCase):
         self.physics()
         self.assertEqual(one.x, 16., "one x")
         self.assertEqual(two.x, 16. + -4., "two x with offset")
+    
+    def test_CollisionSystem_collides(self):
+        ONE = 1
+        TWO = 2
+        entity = self.entity
+        entity.collisions = []
+        entity.collisions.append(component.CollisionRect(32., 32.))
+        entity.collisions[0].type = ONE
+
+        other_entity = Entity()
+        other_entity.collisions = [component.CollisionRect(32., 32.)]
+        other_entity.collisions[0].type = TWO        
+        other_entity.collisions[0].collides_with = ONE        
+        other_entity.done = False
+        collisions = system.CollisionSystem()
+        collisions.add_entity(entity)
+        collisions.add_entity(other_entity)
+        @collisions.register_callback((ONE, TWO))
+        def test_collision(entity, other_entity):
+            other_entity.done = True 
+
+        self.physics()
+        collisions()
+        self.assertTrue(other_entity.done, "Collision callback not called")
