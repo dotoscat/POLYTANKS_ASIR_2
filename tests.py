@@ -14,7 +14,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-from polytanks.ogf4py_toyblock3 import system, component
+from polytanks.ogf4py_toyblock3 import system, component, toyblock3
 
 class Entity:
     Body = component.Body
@@ -75,3 +75,24 @@ class SystemTest(unittest.TestCase):
         self.physics()
         collisions()
         self.assertTrue(other_entity.done, "Collision callback not called")
+
+class PoolTest(unittest.TestCase):
+
+    def test_pool(self):
+        class A(toyblock3.Poolable):
+            def __init__(self, n=7):
+                self.n = n
+            def reset(self):
+                self.n = 7
+            
+        A_pool = toyblock3.Pool(A, 8)
+        self.assertEqual(len(A_pool.entities), 8, "There is not 8 entities in pool.")
+        a = A_pool()
+        self.assertEqual(type(a), A, "instance is not an instance of A.")
+        self.assertEqual(len(A_pool.used), 1, "a is not used.")
+        self.assertEqual(len(A_pool.entities), 7, "instance not poped from pool.")
+        a.n = 12
+        a.free()
+        self.assertEqual(len(A_pool.used), 0, "a is not freed.")
+        a = A_pool()
+        self.assertEqual(a.n, 7, "a reset has not been called")
