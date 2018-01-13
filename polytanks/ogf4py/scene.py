@@ -74,14 +74,14 @@ class Scene(object):
         
         Does nothing, so you can override this to do something useful.
         """
-        pass
+        raise NotImplementedError("Implement an init for this scene.")
 
     def quit(self):
         """This is called when this scene is about to set another scene and *before* that scene.
         
         Does nothing, so you can override this to do something useful.
         """
-        pass
+        raise NotImplementedError("Implement a quite method when this scene is replaced.")
 
     def update(self, dt):
         """The scene's heart. This is called periodically.
@@ -91,7 +91,7 @@ class Scene(object):
         Parameters:
             dt (float): Time elapsed from the last call to update.
         """
-        pass
+        raise NotImplementedError("Implement a update method for this scene.")
 
     def on_text(self, text):
         if self._focus:
