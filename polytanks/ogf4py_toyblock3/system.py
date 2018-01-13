@@ -91,7 +91,7 @@ class CollisionSystem(toyblock3.System):
             player.collisions[0].type = PLAYER
             bullet.collisions[0].type = BULLET
             bullet.collisions[0].collides_with = PLAYER
-            my_collision.register_callback((PLAYER, BULLET))
+            @my_collision.register_callback((PLAYER, BULLET))
             def player_bullet(player, bullet):
                 player.hit()
                 bullet.free()
