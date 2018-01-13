@@ -3,6 +3,9 @@ from polytanks.ogf4py.director import Director
 from polytanks.ogf4py.scene import Scene
 from polytanks import assets
 
+WIDTH = 640
+HEIGHT = 360
+
 class Screen(Scene):
     def __init__(self):
         super().__init__(1)
@@ -17,6 +20,6 @@ class Screen(Scene):
     def update(self, dt):
         print("dt", dt)
 
-director = Director()
+director = Director(width=WIDTH, height=HEIGHT)
 director.scene = Screen()
 pyglet.app.run()
