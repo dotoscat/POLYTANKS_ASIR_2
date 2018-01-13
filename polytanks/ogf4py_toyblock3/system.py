@@ -13,6 +13,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from itertools import product
 from . import toyblock3
 
 class PhysicsSystem(toyblock3.System):
@@ -28,7 +29,7 @@ class PhysicsSystem(toyblock3.System):
         .. code-block:: python
 
             my_system = PhysicsSystem(0.016, -10.)
-            
+
             # add some entities
             my_system.add_entity(asteroid1)
             my_system.add_entity(player)
@@ -61,17 +62,18 @@ class CollisionSystem(toyblock3.System):
         self.callbacks = {}
 
     def _update(self, entity):
-        return 
-        entity_collision = entity.collision
-        for an_entity in self.entities:
-            if entity is an_entity: continue
-            if (entity_collision.type & an_entity.collision.collides_with 
-                != entity_collision.type):
+        for rect, other_entity in product(entity.collisions, self.entities):
+            if entity is other_entity:
                 continue
-            for an_entity_rect in an_entity.collision:
-                if not entity_collision.intersects(an_entity_rect):
+            for other_rect in other_entity.collisions:
+                if rect.type & other_rect.collides_with != rect.type:
                     continue
-                
+                if not rect.intersects(other_rect):
+                    continue
+                callback = self.callbacks.get(rect.type, other_rect.type, None)
+                if not callable(callback):
+                    continue
+                callback(entity, other_entity)
 
     def register_callback(self, pair):
         def _register_callback(f):
