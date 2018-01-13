@@ -43,11 +43,11 @@ class PhysicsSystem(toyblock3.System):
 
     def _update(self, entity):
         entity.body.update(self.dt, self.gravity)
-        collision = getattr(entity, "collision", None)
-        if collision:
+        collisions = getattr(entity, "collisions", None)
+        if collisions:
             x = entity.body.x
             y = entity.body.y
-            for rect in collision:
+            for rect in collisions:
                 rect.update(x, y)
 
 class CollisionSystem(toyblock3.System):
