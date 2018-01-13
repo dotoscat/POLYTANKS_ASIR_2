@@ -20,8 +20,6 @@ class PhysicsSystem(toyblock3.System):
 
     This system will look at the *body* attribute of the entity which is a Body component.
 
-    When your call the system pass a *dt* and a *gravity* (vertical acceleration)
-
     If the entity has the *collision* attribute, which is a collection of CollisionRect, then
     proceed to update them once the body is updated.
 
@@ -29,10 +27,13 @@ class PhysicsSystem(toyblock3.System):
 
         .. code-block:: python
 
-            my_system = PhysicsSystem()
+            my_system = PhysicsSystem(0.016, -10.)
+            
             # add some entities
-            while True:
-                my_system(0.016, -10.)
+            my_system.add_entity(asteroid1)
+            my_system.add_entity(player)
+            while not game_over:
+                my_system()
     """
     def __init__(self, dt, gravity):
         super().__init__()
