@@ -19,7 +19,7 @@ class TankGraphic:
     def __init__(self, batch, groups, group_start):
        self.base = pyglet.sprite.Sprite(assets.images["tank-base"], batch=batch, group=groups[group_start])
        self.cannon = pyglet.sprite.Sprite(assets.images["tank-cannon"], batch=batch, group=groups[group_start - 1])
-       self.cannon_offset = (0., 0.)
+       self.cannon_offset = (0., 4.)
        self._update()
 
     @property
@@ -42,7 +42,7 @@ class TankGraphic:
 
     def _update(self):
         self.cannon.x = self.base.x + self.cannon_offset[0]
-        self.cannon.y = self.base.y + self.cannon_offset[0]
+        self.cannon.y = self.base.y + self.cannon_offset[1]
 
 class InputSystem(toyblock3.System):
     def _update(self, entity):
@@ -68,6 +68,8 @@ class Screen(Scene):
     def __init__(self):
         super().__init__(3)
         self.player = Player(self.batch, self.groups)
+        self.player.body.x = 32.
+        self.player.body.y = 32.
         self.input_system = InputSystem()
         self.physics = system.PhysicsSystem(1./60.)
         self.sprites_system = SpritesSystem()
