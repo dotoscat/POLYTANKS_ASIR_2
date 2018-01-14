@@ -18,6 +18,8 @@ from collections import deque
 class Poolable:
     __pool = None
     def free(self):
+        if not self.__pool:
+            return
         self.__pool.free(self)
     def reset(self):
         raise NotImplementedError("Implement reset for this Poolable")
@@ -71,6 +73,8 @@ class Pool:
         poolable.set_pool(self)
 
     def free(self, entity):
+        if entity not in self.used:
+            return
         entity.reset()
         self.used.remove(entity)
         self.entities.append(entity)
