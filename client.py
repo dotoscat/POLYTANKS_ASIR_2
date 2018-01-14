@@ -1,3 +1,4 @@
+from math import atan2, degrees
 import pyglet
 from pyglet.window import key
 from polytanks.ogf4py.director import Director
@@ -14,6 +15,8 @@ class KeyControl:
         self.left_keys = (key.A, key.LEFT)
         self.right_keys = (key.D, key.RIGHT) 
         self.move = 0.
+        self.pointer_x = 0.
+        self.pointer_y = 0.
 
 class TankGraphic:
     def __init__(self, batch, groups, group_start):
@@ -44,9 +47,14 @@ class TankGraphic:
         self.cannon.x = self.base.x + self.cannon_offset[0]
         self.cannon.y = self.base.y + self.cannon_offset[1]
 
+    def update_cannon_angle(self, x, y):
+        angle = atan2(y - self.cannon.y, x - self.cannon.x)
+        self.cannon.rotation = degrees(-angle)
+
 class InputSystem(toyblock3.System):
     def _update(self, entity):
         entity.body.vel_x = entity.input.move*UNIT*2.
+        entity.sprite.update_cannon_angle(entity.input.pointer_x, entity.input.pointer_y)
 
 class SpritesSystem(toyblock3.System):
     def _update(self, entity):
@@ -99,6 +107,10 @@ class Screen(Scene):
             self.player.input.move = 0.
         if symbol in self.player.input.right_keys:
             self.player.input.move = 0.
+
+    def on_mouse_motion(self, x, y, dx, dy):
+        self.player.input.pointer_x = x
+        self.player.input.pointer_y = y
 
 director = Director(width=WIDTH, height=HEIGHT)
 director.scene = Screen()
