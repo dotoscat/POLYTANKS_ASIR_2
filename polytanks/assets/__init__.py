@@ -24,5 +24,7 @@ images = {
     if entry.name.endswith(".png")
 }
 
-print("images loaded")
-print(images)
+images["eyehole"].anchor_x = 8.
+images["eyehole"].anchor_y = 8.
+
+cursor = pyglet.window.ImageMouseCursor(images["eyehole"], 0., 0.)

@@ -47,7 +47,7 @@ class Screen(Scene):
         self.sprites_system.add_entity(self.player)
 
     def init(self):
-        pass
+        self.director.set_mouse_cursor(assets.cursor)
 
     def quit(self):
         pass
