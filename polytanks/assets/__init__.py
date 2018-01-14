@@ -13,10 +13,16 @@
 #You should have received a copy of the GNU Affero General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import pyglet
 pyglet.resource.path = __path__
 pyglet.resource.reindex()
 
-images = {}
+images = {
+    entry.name.split('.')[0] : pyglet.resource.image(entry.name)
+    for entry in os.scandir(__path__[0])
+    if entry.name.endswith(".png")
+}
 
-images["tank-base"] = pyglet.resource.image("tank-base.png")
+print("images loaded")
+print(images)
