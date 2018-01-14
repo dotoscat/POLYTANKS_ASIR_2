@@ -26,5 +26,9 @@ images = {
 
 images["eyehole"].anchor_x = 8.
 images["eyehole"].anchor_y = 8.
+images["tank-base"].anchor_x = 8.
+images["tank-base"].anchor_y = 8.
+images["tank-cannon"].anchor_x = 0.
+images["tank-cannon"].anchor_y = 4.
 
 cursor = pyglet.window.ImageMouseCursor(images["eyehole"], 0., 0.)
