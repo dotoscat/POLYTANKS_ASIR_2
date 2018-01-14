@@ -22,16 +22,18 @@ class Body:
         self.y = 0
         self.vel_x = 0.
         self.vel_y = 0.
-        self.max_falling_speed = 0.
-        self.max_ascending_speed = 0.
+        self.max_vel_y = 0.
+        self.max_vel_x = 0.
         self.has_gravity = False
 
     def update(self, dt, gravity):
-        if self.has_gravity: self.vel_y += gravity*dt
-        if self.vel_y < 0. and fabs(self.vel_y) > self.max_falling_speed > 0.:
-            self.vel_y = -self.max_falling_speed
-        elif self.vel_y > self.max_ascending_speed > 0.:
-            self.vel_y = self.max_ascending_speed
+        if self.has_gravity:
+            self.vel_y += gravity[0]*dt
+            self.vel_x += gravity[1]*dt
+        if self.max_vel_x > 0. and fabs(self.vel_x) > self.max_vel_x:
+            self.vel_x = self.max_vel_x if self.vel_x > 0. else -self.max_vel_x
+        if self.max_vel_y > 0. and fabs(self.vel_y) > self.max_vel_y:
+            self.vel_y = self.max_vel_y if self.vel_y > 0. else -self.max_vel_y
         self.x += self.vel_x*dt
         self.y += self.vel_y*dt
 

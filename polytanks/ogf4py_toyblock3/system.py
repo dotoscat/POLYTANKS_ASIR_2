@@ -36,7 +36,7 @@ class PhysicsSystem(toyblock3.System):
             while not game_over:
                 my_system()
     """
-    def __init__(self, dt, gravity):
+    def __init__(self, dt, gravity=(0., 0.)):
         super().__init__()
         self.dt = dt
         self.gravity = gravity
