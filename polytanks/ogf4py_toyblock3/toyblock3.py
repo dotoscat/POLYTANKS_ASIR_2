@@ -53,6 +53,17 @@ class Pool:
         
     """
     def __init__(self, poolable, n_entities, *args, **kwargs):
+        """Create a pool of n_entities with a *poolable* class.
+
+        Parameters:
+            poolable (:class:`Poolable`): Any class which inherits from Poolable.
+            n_entities (int): Number of entities for this pool
+            *args: args for creating the instances.
+            **kwargs: kwargs for creating the instances.
+
+        Raises:
+            TypeError if the class is not poolable
+        """
         if not issubclass(poolable, Poolable):
             raise TypeError("Type passed is not poolable")
         self.entities = deque([poolable(*args, **kwargs) for i in range(n_entities)])
@@ -66,6 +77,8 @@ class Pool:
         
     def __call__(self, *args, **kwargs):
         """Return an instance from its pool. None if there is not an avaliable entity."""
+        if not self.entities:
+            return None
         entity = self.entities.pop()
         self.used.append(entity)
         return entity

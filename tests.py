@@ -96,3 +96,8 @@ class PoolTest(unittest.TestCase):
         self.assertEqual(len(A_pool.used), 0, "a is not freed.")
         a = A_pool()
         self.assertEqual(a.n, 7, "a reset has not been called")
+
+    def test_nopoolable(self):
+        class A:
+            pass
+        self.assertRaises(TypeError, toyblock3.Pool, A, 4)
