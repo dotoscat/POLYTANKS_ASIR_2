@@ -28,7 +28,7 @@ class PhysicsSystem(toyblock3.System):
 
         .. code-block:: python
 
-            my_system = PhysicsSystem(0.016, -10.)
+            my_system = PhysicsSystem(0.016, (0, -10.))
 
             # add some entities
             my_system.add_entity(asteroid1)

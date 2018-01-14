@@ -40,7 +40,7 @@ class Screen(Scene):
         super().__init__(1)
         self.player = Player(assets.images["tank-base"], self.batch, self.groups)
         self.input_system = InputSystem()
-        self.physics = system.PhysicsSystem(1./60., 0.)
+        self.physics = system.PhysicsSystem(1./60.)
         self.sprites_system = SpritesSystem()
         self.input_system.add_entity(self.player)
         self.physics.add_entity(self.player)
