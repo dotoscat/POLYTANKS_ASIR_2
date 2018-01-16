@@ -5,6 +5,7 @@ from polytanks.ogf4py.director import Director
 from polytanks.ogf4py.scene import Scene
 from polytanks.ogf4py_toyblock3 import component, system, toyblock3
 from polytanks import assets
+from polytanks import level
 
 WIDTH = 640
 HEIGHT = 360
@@ -112,6 +113,7 @@ class Screen(Scene):
         self.player.input.pointer_x = x
         self.player.input.pointer_y = y
 
+level.load_level(level.basic)
 director = Director(width=WIDTH, height=HEIGHT)
 director.scene = Screen()
 pyglet.app.run()
