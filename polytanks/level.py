@@ -13,6 +13,8 @@
 #You should have received a copy of the GNU Affero General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from .constants import UNIT
+
 basic = [
     "....................................",
     "....................................",
@@ -25,7 +27,23 @@ basic = [
     "...................................."
 ]
 
-def load_level(level_info):
-    for n, l in enumerate(reversed(level_info)):
-        print(n, end=". ")
-        print(l)
+def load_level(level_info, platform_pool):
+    for y, l in enumerate(reversed(level_info)):
+        iter_l = iter(l)
+        x = 0.
+        while True:
+            c = next(iter_l, None)
+            if c is None:
+                break
+            if c != '_':
+                x += 1.
+                continue
+            platform = platform_pool()
+            platform.body.x = x*UNIT
+            platform.body.y = y*UNIT
+            try:
+                platform.sprite.x = x*UNIT
+                platform.sprite.y = y*UNIT
+            except AttributeError:
+                pass
+            x += 1.

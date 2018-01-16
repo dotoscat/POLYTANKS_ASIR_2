@@ -6,10 +6,7 @@ from polytanks.ogf4py.scene import Scene
 from polytanks.ogf4py_toyblock3 import component, system, toyblock3
 from polytanks import assets
 from polytanks import level
-
-WIDTH = 640
-HEIGHT = 360
-UNIT = 16.
+from polytanks.constants import WIDTH, HEIGHT, UNIT
 
 class KeyControl:
     def __init__(self):
@@ -73,18 +70,31 @@ class Player:
         self.sprite = self.Sprite(batch, groups, 1)
         self.body = component.Body()
 
+class Platform(toyblock3.Poolable):
+    Body = component.Body
+    Sprite = pyglet.sprite.Sprite
+    def __init__(self, batch, group):
+        self.body = self.Body()
+        self.sprite = self.Sprite(assets.images["platform"], batch=batch, group=group)
+    def reset(self):
+        pass
+
 class Screen(Scene):
     def __init__(self):
         super().__init__(3)
+        self.pools = {
+            "platform": toyblock3.Pool(Platform, 64, self.batch, self.groups[0])
+        }
         self.player = Player(self.batch, self.groups)
-        self.player.body.x = 32.
-        self.player.body.y = 32.
+        self.player.body.x = 64.
+        self.player.body.y = 64.
         self.input_system = InputSystem()
         self.physics = system.PhysicsSystem(1./60.)
         self.sprites_system = SpritesSystem()
         self.input_system.add_entity(self.player)
         self.physics.add_entity(self.player)
         self.sprites_system.add_entity(self.player)
+        level.load_level(level.basic, self.pools["platform"])
 
     def init(self):
         self.director.set_mouse_cursor(assets.cursor)
@@ -113,7 +123,6 @@ class Screen(Scene):
         self.player.input.pointer_x = x
         self.player.input.pointer_y = y
 
-level.load_level(level.basic)
 director = Director(width=WIDTH, height=HEIGHT)
 director.scene = Screen()
 pyglet.app.run()
