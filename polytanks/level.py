@@ -39,8 +39,7 @@ def load_level(level_info, platform_pool):
                 x += 1.
                 continue
             platform = platform_pool()
-            platform.body.x = x*UNIT
-            platform.body.y = y*UNIT
+            # TODO: Implement collision for the platforms
             try:
                 platform.sprite.x = x*UNIT
                 platform.sprite.y = y*UNIT

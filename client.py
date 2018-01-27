@@ -1,9 +1,10 @@
 from math import atan2, degrees
 import pyglet
 from pyglet.window import key
+import toyblock3
 from polytanks.ogf4py.director import Director
 from polytanks.ogf4py.scene import Scene
-from polytanks.ogf4py_toyblock3 import component, system, toyblock3
+from polytanks.ogf4py_toyblock3 import component, system 
 from polytanks import assets
 from polytanks import level
 from polytanks.constants import WIDTH, HEIGHT, UNIT
@@ -54,6 +55,8 @@ class InputSystem(toyblock3.System):
         entity.body.vel_x = entity.input.move*UNIT*2.
         entity.sprite.update_cannon_angle(entity.input.pointer_x, entity.input.pointer_y)
 
+input_system = InputSystem()
+
 class SpritesSystem(toyblock3.System):
     def _update(self, entity):
         body = entity.body
@@ -61,7 +64,11 @@ class SpritesSystem(toyblock3.System):
         sprite.x = body.x
         sprite.y = body.y
 
+sprites_system = SpritesSystem()
+physics_system = system.PhysicsSystem(1./60.)
+
 class Player:
+    SYSTEMS = (input_system, physics_system, sprites_system)
     Input = KeyControl
     Body = component.Body
     Sprite = TankGraphic
@@ -69,12 +76,13 @@ class Player:
         self.input = self.Input() 
         self.sprite = self.Sprite(batch, groups, 1)
         self.body = component.Body()
+    def reset(self):
+        pass
 
-class Platform(toyblock3.Poolable):
-    Body = component.Body
+class Platform:
+    SYSTEMS = ()
     Sprite = pyglet.sprite.Sprite
     def __init__(self, batch, group):
-        self.body = self.Body()
         self.sprite = self.Sprite(assets.images["platform"], batch=batch, group=group)
     def reset(self):
         pass
@@ -83,17 +91,16 @@ class Screen(Scene):
     def __init__(self):
         super().__init__(3)
         self.pools = {
+            "player": toyblock3.Manager(Player, 4, self.batch, self.groups),
             "platform": toyblock3.Pool(Platform, 64, self.batch, self.groups[0])
         }
         self.player = Player(self.batch, self.groups)
+        self.player = self.pools["player"]()
         self.player.body.x = 64.
         self.player.body.y = 64.
-        self.input_system = InputSystem()
-        self.physics = system.PhysicsSystem(1./60.)
-        self.sprites_system = SpritesSystem()
-        self.input_system.add_entity(self.player)
-        self.physics.add_entity(self.player)
-        self.sprites_system.add_entity(self.player)
+        self.input_system = input_system
+        self.physics = physics_system
+        self.sprites_system = sprites_system
         level.load_level(level.basic, self.pools["platform"])
 
     def init(self):
