@@ -14,7 +14,8 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-from polytanks.ogf4py_toyblock3 import system, component, toyblock3
+import toyblock3
+from polytanks.ogf4py_toyblock3 import system, component
 
 class Entity:
     Body = component.Body
@@ -79,7 +80,7 @@ class SystemTest(unittest.TestCase):
 class PoolTest(unittest.TestCase):
 
     def test_pool(self):
-        class A(toyblock3.Poolable):
+        class A:
             def __init__(self, n=7):
                 self.n = n
             def reset(self):
@@ -88,16 +89,10 @@ class PoolTest(unittest.TestCase):
         A_pool = toyblock3.Pool(A, 8)
         self.assertEqual(len(A_pool.entities), 8, "There is not 8 entities in pool.")
         a = A_pool()
-        self.assertEqual(type(a), A, "instance is not an instance of A.")
-        self.assertEqual(len(A_pool.used), 1, "a is not used.")
+        # self.assertEqual(type(a), A, "instance is not an instance of A.")
         self.assertEqual(len(A_pool.entities), 7, "instance not poped from pool.")
         a.n = 12
         a.free()
-        self.assertEqual(len(A_pool.used), 0, "a is not freed.")
+        self.assertEqual(len(A_pool.entities), 8, "'a' is not freed.")
         a = A_pool()
         self.assertEqual(a.n, 7, "a reset has not been called")
-
-    def test_nopoolable(self):
-        class A:
-            pass
-        self.assertRaises(TypeError, toyblock3.Pool, A, 4)

@@ -14,7 +14,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from itertools import product
-from . import toyblock3
+import toyblock3
 
 class PhysicsSystem(toyblock3.System):
     """Basic system for upgrade body's position, apply gravity and so.
