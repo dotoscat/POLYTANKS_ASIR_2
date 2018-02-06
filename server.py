@@ -1,9 +1,13 @@
 #/usr/bin/env python
 import asyncio
 import signal
+from polytanks import protocol
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 HOST = ("127.0.0.1", 1337)
+
+class Player:
+    pass
 
 class ServerProtocolMixin(asyncio.Protocol):
     def connection_made(self, transport):

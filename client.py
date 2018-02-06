@@ -1,3 +1,5 @@
+import socket
+import selectors
 from math import atan2, degrees
 import pyglet
 from pyglet.window import key
@@ -5,8 +7,7 @@ import toyblock3
 from polytanks.ogf4py.director import Director
 from polytanks.ogf4py.scene import Scene
 from polytanks.ogf4py_toyblock3 import component, system 
-from polytanks import assets
-from polytanks import level
+from polytanks import assets, level, protocol
 from polytanks.constants import WIDTH, HEIGHT, UNIT
 
 class KeyControl:
@@ -130,7 +131,31 @@ class Screen(Scene):
         self.player.input.pointer_x = x
         self.player.input.pointer_y = y
 
+class Client:
+    def __init__(self):
+        self.selectors = selectors.DefaultSelector()
+        self._connected = False
+
+    def __del__(self):
+        self.selectors.close()
+
+    def connect_to_server(self, address):
+        conn = socket.socket()
+        conn.connect(address)
+        conn.send(protocol.HEADER + protocol.CONNECT.to_bytes(4, "big"))
+        response = conn.recv(8)
+        if response == b"OK":
+            self._connected = True
+        conn.close()
+
+    def disconnect_from_server(self):
+        if not self._connected:
+            return
+
 if __name__ == "__main__":
-    director = Director(width=WIDTH, height=HEIGHT)
-    director.scene = Screen()
-    pyglet.app.run()
+    ADDRESS = ("127.0.0.1", 1337)
+    client = Client()
+    client.connect_to_server(ADDRESS)
+    # director = Director(width=WIDTH, height=HEIGHT)
+    # director.scene = Screen()
+    # pyglet.app.run()
