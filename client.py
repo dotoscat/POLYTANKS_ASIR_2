@@ -142,7 +142,7 @@ class Client:
     def connect_to_server(self, address):
         conn = socket.socket()
         conn.connect(address)
-        conn.send(protocol.HEADER + protocol.CONNECT.to_bytes(4, "big"))
+        conn.send(protocol.CONNECT.to_bytes(4, "big"))
         response = conn.recv(8)
         if response == b"OK":
             self._connected = True
@@ -156,6 +156,7 @@ if __name__ == "__main__":
     ADDRESS = ("127.0.0.1", 1337)
     client = Client()
     client.connect_to_server(ADDRESS)
+    client.disconnect_from_server()
     # director = Director(width=WIDTH, height=HEIGHT)
     # director.scene = Screen()
     # pyglet.app.run()
