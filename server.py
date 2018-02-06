@@ -1,4 +1,5 @@
 #/usr/bin/env python
+import sys
 import weakref
 import asyncio
 import signal
@@ -13,6 +14,7 @@ class Player:
 class ServerProtocol(asyncio.Protocol):
     def __init__(self, server):
         self.server = server
+        self.transport = None
 
     def connection_made(self, transport):
         self.transport = transport
@@ -21,6 +23,12 @@ class ServerProtocol(asyncio.Protocol):
     def data_received(self, data):
         peername = self.transport.get_extra_info("peername")
         print("data_received", data, "from", self.transport.get_extra_info("peername"))
+        command = data.from_bytes(data, sys.byteorder)
+        if command == protocol.CONNECT:
+            if self.server.add_client(peername):
+                self.transport.write(b"OK")
+            else:
+                self.transport.write(b"NO")
         self.transport.close()
         print("clients", self.server.clients)
 
@@ -46,6 +54,22 @@ class Server:
             self.server.close()
             self.loop.run_until_complete(self.server.wait_closed())
             self.loop.close()
+    
+    @property
+    def is_full(self):
+        return len(self.clients) >= self.max_n_players
+
+    def add_client(self, address):
+        if self.is_full:
+            return False
+        self.clients[address] = Player()
+        return True
+
+    def remove_client(self, address):
+        if not address in self.clients:
+            return False
+        del self.clients[address]
+        return True
 
 if __name__ == "__main__":
     print("Hola mundo")

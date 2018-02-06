@@ -156,6 +156,7 @@ if __name__ == "__main__":
     ADDRESS = ("127.0.0.1", 1337)
     client = Client()
     client.connect_to_server(ADDRESS)
+    print("connected", client._connected)
     client.disconnect_from_server()
     # director = Director(width=WIDTH, height=HEIGHT)
     # director.scene = Screen()
