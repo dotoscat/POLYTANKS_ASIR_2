@@ -130,6 +130,7 @@ class Screen(Scene):
         self.player.input.pointer_x = x
         self.player.input.pointer_y = y
 
-director = Director(width=WIDTH, height=HEIGHT)
-director.scene = Screen()
-pyglet.app.run()
+if __name__ == "__main__":
+    director = Director(width=WIDTH, height=HEIGHT)
+    director.scene = Screen()
+    pyglet.app.run()
