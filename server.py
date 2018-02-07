@@ -12,6 +12,7 @@ class Player:
     def __init__(self, transport):
         self.server_transport = transport
     def __del__(self):
+        print("close transport")
         self.server_transport.close()
 
 class ServerProtocol(asyncio.Protocol):
@@ -35,7 +36,8 @@ class ServerProtocol(asyncio.Protocol):
                 self.transport.write(b"NO")
         elif command == protocol.DISCONNECT:
             id_ = int.from_bytes(data[4:8], "big")
-            if self.server.remove_client(id_):
+            player = self.server.remove_client(id_)
+            if player:
                 self.transport.write(b"OK")
             else:
                 self.transport.write(b"NO")
@@ -82,9 +84,10 @@ class Server:
 
     def remove_client(self, id_):
         if not id_ in self.clients:
-            return False
+            return None
+        player = self.clients[id_]
         del self.clients[id_]
-        return True
+        return player
 
 if __name__ == "__main__":
     print("Hola mundo")

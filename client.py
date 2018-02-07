@@ -171,13 +171,32 @@ class Client:
             self.remote_server = None
             self.server_connection.close()
 
+class Main(Scene):
+    def __init__(self, client):
+        super().__init__(1)
+        self.client = client
+
+    def init(self):
+        pass
+
+    def quit(self):
+        pass
+
+    def update(self, dt):
+        pass
+
+    def on_key_press(self, symbol, modifiers):
+        if symbol == key.C:
+            self.client.connect_to_server(ADDRESS)
+        elif symbol == key.D:
+            self.client.disconnect_from_server()
 
 if __name__ == "__main__":
     ADDRESS = ("127.0.0.1", 1337)
     client = Client()
-    client.connect_to_server(ADDRESS)
-    print("connected", client.connected)
-    client.disconnect_from_server()
-    # director = Director(width=WIDTH, height=HEIGHT)
-    # director.scene = Screen()
-    # pyglet.app.run()
+    #client.connect_to_server(ADDRESS)
+    #print("connected", client.connected)
+    #client.disconnect_from_server()
+    director = Director(width=WIDTH, height=HEIGHT)
+    director.scene = Main(client)
+    pyglet.app.run()
