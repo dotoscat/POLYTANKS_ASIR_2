@@ -13,5 +13,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import struct
+
 CONNECT = 1
-DISCONNECT = 2
+CONNECTED = 2
+DISCONNECT = 3
+
+connected_struct = struct.Struct("!ii")
+def connected(id):
+    return connected_struct.pack(CONNECTED, id)

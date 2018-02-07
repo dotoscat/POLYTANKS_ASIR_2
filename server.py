@@ -9,7 +9,10 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 HOST = ("127.0.0.1", 1337)
 
 class Player:
-    pass
+    def __init__(self, transport):
+        self.server_transport = transport
+    def __del__(self):
+        self.server_transport.close()
 
 class ServerProtocol(asyncio.Protocol):
     def __init__(self, server):
@@ -23,9 +26,15 @@ class ServerProtocol(asyncio.Protocol):
     def data_received(self, data):
         peername = self.transport.get_extra_info("peername")
         print("data_received", data, "from", self.transport.get_extra_info("peername"))
-        command = data.from_bytes(data, sys.byteorder)
+        command = int.from_bytes(data, "big")
         if command == protocol.CONNECT:
-            if self.server.add_client(peername):
+            player_id = self.server.add_client(self.transport)
+            if player_id:
+                self.transport.write(protocol.connected(player_id))
+            else:
+                self.transport.write(b"NO")
+        elif command == protocol.DISCONNECT:
+            if self.server.remove_client(peername):
                 self.transport.write(b"OK")
             else:
                 self.transport.write(b"NO")
@@ -59,11 +68,17 @@ class Server:
     def is_full(self):
         return len(self.clients) >= self.max_n_players
 
-    def add_client(self, address):
+    def add_client(self, transport):
         if self.is_full:
-            return False
-        self.clients[address] = Player()
-        return True
+            return 0
+        id = 0
+        for i in range(1, self.max_n_players + 1):
+            if i in self.clients:
+                continue
+            id = i
+            break
+        self.clients[id] = Player(transport)
+        return id
 
     def remove_client(self, address):
         if not address in self.clients:
