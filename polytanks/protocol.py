@@ -20,5 +20,9 @@ CONNECTED = 2
 DISCONNECT = 3
 
 connected_struct = struct.Struct("!ii")
+
 def connected(id):
     return connected_struct.pack(CONNECTED, id)
+
+def command(response, size=4):
+    return int.from_bytes(response[:size], "big")

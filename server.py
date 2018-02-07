@@ -30,7 +30,8 @@ class ServerProtocol(asyncio.Protocol):
         if command == protocol.CONNECT:
             player_id = self.server.add_client(self.transport)
             if player_id:
-                self.transport.write(protocol.connected(player_id))
+                self.transport.write(
+                    protocol.connected_struct.pack(protocol.CONNECTED, player_id))
             else:
                 self.transport.write(b"NO")
         elif command == protocol.DISCONNECT:

@@ -134,30 +134,44 @@ class Screen(Scene):
 class Client:
     def __init__(self):
         self.selectors = selectors.DefaultSelector()
-        self._connected = False
+        self.remote_server = None
+        self.id = 0
 
     def __del__(self):
         self.selectors.close()
 
+    @property
+    def connected(self):
+        return self.id > 0
+
     def connect_to_server(self, address):
-        conn = socket.socket()
-        conn.connect(address)
-        conn.send(protocol.CONNECT.to_bytes(4, "big"))
-        response = conn.recv(8)
-        if response == b"OK":
-            self._connected = True
-        conn.close()
+        with socket.socket() as conn:
+            conn.connect(address)
+            conn.send(protocol.CONNECT.to_bytes(4, "big"))
+            response = conn.recv(32)
+            command = protocol.command(response)
+            if command == protocol.CONNECTED:
+                self.id = int.from_bytes(response[4:8], "big")
+                self.remote_server = address
 
     def disconnect_from_server(self):
         if not self._connected:
             return
+        with socket.socket() as conn:
+            conn.connect(self.remote_server)
+            conn.send(protocol.DISCONNECT.to_bytes(4, "big"))
+            response = conn.recv(8)
+            if response == b"OK":
+                self.id = 0
+                self.remote_server = None
+
 
 if __name__ == "__main__":
     ADDRESS = ("127.0.0.1", 1337)
     client = Client()
     client.connect_to_server(ADDRESS)
-    print("connected", client._connected)
-    client.disconnect_from_server()
+    print("connected", client.connected)
+    # client.disconnect_from_server()
     # director = Director(width=WIDTH, height=HEIGHT)
     # director.scene = Screen()
     # pyglet.app.run()
