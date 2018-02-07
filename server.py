@@ -24,9 +24,8 @@ class ServerProtocol(asyncio.Protocol):
         print("Connection made", transport.get_extra_info("peername"))
 
     def data_received(self, data):
-        peername = self.transport.get_extra_info("peername")
         print("data_received", data, "from", self.transport.get_extra_info("peername"))
-        command = int.from_bytes(data, "big")
+        command = protocol.command(data)
         if command == protocol.CONNECT:
             player_id = self.server.add_client(self.transport)
             if player_id:
@@ -35,7 +34,8 @@ class ServerProtocol(asyncio.Protocol):
             else:
                 self.transport.write(b"NO")
         elif command == protocol.DISCONNECT:
-            if self.server.remove_client(peername):
+            id_ = int.from_bytes(data[4:8], "big")
+            if self.server.remove_client(id_):
                 self.transport.write(b"OK")
             else:
                 self.transport.write(b"NO")
@@ -80,10 +80,10 @@ class Server:
         self.clients[id] = Player(transport)
         return id
 
-    def remove_client(self, address):
-        if not address in self.clients:
+    def remove_client(self, id_):
+        if not id_ in self.clients:
             return False
-        del self.clients[address]
+        del self.clients[id_]
         return True
 
 if __name__ == "__main__":

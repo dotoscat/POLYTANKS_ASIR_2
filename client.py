@@ -162,9 +162,10 @@ class Client:
     def disconnect_from_server(self):
         if not self.connected:
             return
-        self.server_connection.connect(self.remote_server)
-        self.server_connection.send(protocol.DISCONNECT.to_bytes(4, "big"))
+        self.server_connection.send(
+            protocol.disconnect_struct.pack(protocol.DISCONNECT, self.id))
         response = self.server_connection.recv(32)
+        print("response", response)
         if response == b"OK":
             self.id = 0
             self.remote_server = None
@@ -176,7 +177,7 @@ if __name__ == "__main__":
     client = Client()
     client.connect_to_server(ADDRESS)
     print("connected", client.connected)
-    # client.disconnect_from_server()
+    client.disconnect_from_server()
     # director = Director(width=WIDTH, height=HEIGHT)
     # director.scene = Screen()
     # pyglet.app.run()
