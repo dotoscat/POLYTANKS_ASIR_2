@@ -39,7 +39,6 @@ class ServerProtocol(asyncio.Protocol):
                 self.transport.write(b"OK")
             else:
                 self.transport.write(b"NO")
-        self.transport.close()
         print("clients", self.server.clients)
 
     def connection_lost(self, exc):

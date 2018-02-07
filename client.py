@@ -136,6 +136,7 @@ class Client:
         self.selectors = selectors.DefaultSelector()
         self.remote_server = None
         self.id = 0
+        self.server_connection = None
 
     def __del__(self):
         self.selectors.close()
@@ -145,25 +146,29 @@ class Client:
         return self.id > 0
 
     def connect_to_server(self, address):
-        with socket.socket() as conn:
-            conn.connect(address)
-            conn.send(protocol.CONNECT.to_bytes(4, "big"))
-            response = conn.recv(32)
-            command = protocol.command(response)
-            if command == protocol.CONNECTED:
-                self.id = int.from_bytes(response[4:8], "big")
-                self.remote_server = address
+        if self.connected:
+            return
+        self.server_connection = socket.socket()
+        self.server_connection.connect(address)
+        self.server_connection.send(protocol.CONNECT.to_bytes(4, "big"))
+        response = self.server_connection.recv(32)
+        command = protocol.command(response)
+        if command == protocol.CONNECTED:
+            self.id = int.from_bytes(response[4:8], "big")
+            self.remote_server = address
+        else:
+            self.server_connection.close()
 
     def disconnect_from_server(self):
-        if not self._connected:
+        if not self.connected:
             return
-        with socket.socket() as conn:
-            conn.connect(self.remote_server)
-            conn.send(protocol.DISCONNECT.to_bytes(4, "big"))
-            response = conn.recv(8)
-            if response == b"OK":
-                self.id = 0
-                self.remote_server = None
+        self.server_connection.connect(self.remote_server)
+        self.server_connection.send(protocol.DISCONNECT.to_bytes(4, "big"))
+        response = self.server_connection.recv(32)
+        if response == b"OK":
+            self.id = 0
+            self.remote_server = None
+            self.server_connection.close()
 
 
 if __name__ == "__main__":
