@@ -59,10 +59,8 @@ class GameProtocol(asyncio.DatagramProtocol):
         self.transport.sendto(data, addr)
 
     def connection_made(self, transport):
+        print("GameProtocol connection_made")
         self.transport = transport
-
-    def __del__(self):
-        print("Call GameProtocol __del__")
 
 class Server:
     def __init__(self, max_n_players, host=HOST):
@@ -73,7 +71,7 @@ class Server:
         self.game_coro = self.loop.create_datagram_endpoint(
             lambda: GameProtocol(self), local_addr=host
         )
-        self.transport, self.game = self.loop.run_until_complete(self.game_coro)
+        self.game_transport, self.game = self.loop.run_until_complete(self.game_coro)
         self.clients = {}
         self.max_n_players = max_n_players
 
