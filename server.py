@@ -49,12 +49,31 @@ class ServerProtocol(asyncio.Protocol):
         else:
             print("error", exc)
 
+class GameProtocol(asyncio.DatagramProtocol):
+    def __init__(self, server):
+        self.server = server
+        self.transport = None
+
+    def datagram_received(self, data, addr):
+        print("{} bytes received from {}".format(len(data), addr))
+        self.transport.sendto(data, addr)
+
+    def connection_made(self, transport):
+        self.transport = transport
+
+    def __del__(self):
+        print("Call GameProtocol __del__")
+
 class Server:
     def __init__(self, max_n_players, host=HOST):
         self.loop = asyncio.get_event_loop()
         self.server_coro = self.loop.create_server(
             lambda: ServerProtocol(weakref.proxy(self)), *host)
         self.server = self.loop.run_until_complete(self.server_coro)
+        self.game_coro = self.loop.create_datagram_endpoint(
+            lambda: GameProtocol(self), local_addr=host
+        )
+        self.transport, self.game = self.loop.run_until_complete(self.game_coro)
         self.clients = {}
         self.max_n_players = max_n_players
 
