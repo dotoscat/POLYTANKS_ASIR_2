@@ -69,7 +69,7 @@ class Server:
             lambda: ServerProtocol(weakref.proxy(self)), *host)
         self.server = self.loop.run_until_complete(self.server_coro)
         self.game_coro = self.loop.create_datagram_endpoint(
-            lambda: GameProtocol(self), local_addr=host
+            lambda: GameProtocol(weakref.proxy(self)), local_addr=host
         )
         self.game_transport, self.game = self.loop.run_until_complete(self.game_coro)
         self.clients = {}
