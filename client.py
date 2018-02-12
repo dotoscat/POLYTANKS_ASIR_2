@@ -145,8 +145,18 @@ class Client:
     @property
     def connected(self):
         return self.id > 0
+    
+    def step(self):
+        if not self.connected:
+            return
+        events = self.selectors.select(0)
+        for key, mask in events:
+            callback = key.data
+            callback(key.fileobj)
 
-    def connect_to_server(self, address):
+    def connect_to_server(self, address, callback):
+        if not callable(callback):
+            raise TypeError("callback is not callable. Passed {} instead.".format(type(callback)))
         if self.connected:
             return
         self.server_connection = socket.socket()
@@ -157,9 +167,11 @@ class Client:
         if command == protocol.CONNECTED:
             self.id = int.from_bytes(response[4:8], "big")
             self.server_address = address
-            self.server_game = socket.socket(type=socket.SOCK_DGRAM)
-            self.server_game.connect(address)
-            self.server_game.setblocking(False)
+            self.game_connection = socket.socket(type=socket.SOCK_DGRAM)
+            self.game_connection.connect(address)
+            self.game_connection.setblocking(False)
+            print("game_connection", self.game_connection)
+            self.selectors.register(self.game_connection, selectors.EVENT_READ, callback)
         else:
             self.server_connection.close()
 
@@ -173,6 +185,7 @@ class Client:
         if response == b"OK":
             self.id = 0
             self.server_address = None
+            self.selectors.unregister(self.game_connection)
             self.server_connection.close()
             self.game_connection.close()
 
@@ -188,11 +201,14 @@ class Main(Scene):
         pass
 
     def update(self, dt):
-        pass
+       self.client.step() 
+
+    def udp_from_server(self, socket):
+       socket.send(b"buh!")
 
     def on_key_press(self, symbol, modifiers):
         if symbol == key.C:
-            self.client.connect_to_server(ADDRESS)
+            self.client.connect_to_server(ADDRESS, self.udp_from_server)
         elif symbol == key.D:
             self.client.disconnect_from_server()
 
