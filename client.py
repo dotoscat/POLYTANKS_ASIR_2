@@ -134,7 +134,7 @@ class Screen(Scene):
 class Client:
     def __init__(self):
         self.selectors = selectors.DefaultSelector()
-        self.remote_server = None
+        self.server_address = None
         self.id = 0
         self.server_connection = None
 
@@ -155,7 +155,7 @@ class Client:
         command = protocol.command(response)
         if command == protocol.CONNECTED:
             self.id = int.from_bytes(response[4:8], "big")
-            self.remote_server = address
+            self.server_address = address
         else:
             self.server_connection.close()
 
