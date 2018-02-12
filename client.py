@@ -137,6 +137,7 @@ class Client:
         self.server_address = None
         self.id = 0
         self.server_connection = None
+        self.game_connection = None
 
     def __del__(self):
         self.selectors.close()
@@ -156,6 +157,9 @@ class Client:
         if command == protocol.CONNECTED:
             self.id = int.from_bytes(response[4:8], "big")
             self.server_address = address
+            self.server_game = socket.socket(type=socket.SOCK_DGRAM)
+            self.server_game.connect(address)
+            self.server_game.setblocking(False)
         else:
             self.server_connection.close()
 
@@ -168,8 +172,9 @@ class Client:
         print("response", response)
         if response == b"OK":
             self.id = 0
-            self.remote_server = None
+            self.server_address = None
             self.server_connection.close()
+            self.game_connection.close()
 
 class Main(Scene):
     def __init__(self, client):
