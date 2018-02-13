@@ -65,6 +65,9 @@ class GameProtocol(asyncio.DatagramProtocol):
 class Server:
     SNAPSHOT_RATE = 1./20.
     def __init__(self, max_n_players, host=HOST):
+        self.clients = {}
+        self.max_n_players = max_n_players
+        self.last_snapshot_time = 0.
         self.loop = asyncio.get_event_loop()
         self.server_coro = self.loop.create_server(
             lambda: ServerProtocol(weakref.proxy(self)), *host)
@@ -74,9 +77,6 @@ class Server:
         )
         self.game_transport, self.game = self.loop.run_until_complete(self.game_coro)
         self.loop.run_until_complete(self.step())
-        self.clients = {}
-        self.max_n_players = max_n_players
-        self.last_snapshot_time = 0.
 
     async def step(self):
         self.last_snapshot_time = self.loop.time()
@@ -88,7 +88,9 @@ class Server:
         current_time = self.loop.time()
         if current_time - self.last_snapshot_time < self.SNAPSHOT_RATE:
             return
-        print("send snapshot at", current_time)
+        # print("send snapshot at", current_time)
+        for client in self.clients:
+            player = self.clients[client]
 
     def run(self):
         try:
