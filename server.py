@@ -72,9 +72,15 @@ class Server:
             lambda: GameProtocol(weakref.proxy(self)), local_addr=host
         )
         self.game_transport, self.game = self.loop.run_until_complete(self.game_coro)
+        self.loop.run_until_complete(self.step())
         self.clients = {}
         self.max_n_players = max_n_players
 
+    async def step(self):
+        while True:
+            await asyncio.sleep(1)
+            # print("Hola", self.loop.time())
+ 
     def run(self):
         try:
             self.loop.run_forever()

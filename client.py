@@ -201,10 +201,10 @@ class Main(Scene):
         pass
 
     def update(self, dt):
-       self.client.step() 
+        self.client.step() 
 
     def udp_from_server(self, socket):
-       socket.send(b"buh!")
+        print("udp message from server", socket.recv(1024))
 
     def on_key_press(self, symbol, modifiers):
         if symbol == key.C:
