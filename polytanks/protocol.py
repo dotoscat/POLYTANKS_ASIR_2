@@ -18,9 +18,12 @@ import struct
 CONNECT = 1
 CONNECTED = 2
 DISCONNECT = 3
+SNAPSHOT = 5
+SNAPSHOT_ACK = 6
 
-connected_struct = struct.Struct("!ii")
-disconnect_struct = struct.Struct("!ii")
+connected_struct = struct.Struct("!BB")
+disconnect_struct = struct.Struct("!BB")
+snapshotack_struct = struct.Struct("!BB")
 
-def command(data, size=4):
-    return int.from_bytes(data[:size], "big")
+def command(data):
+    return int.from_bytes(data[:1], "big")

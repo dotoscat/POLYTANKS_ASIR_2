@@ -35,7 +35,7 @@ class ServerProtocol(asyncio.Protocol):
             else:
                 self.transport.write(b"NO")
         elif command == protocol.DISCONNECT:
-            id_ = int.from_bytes(data[4:8], "big")
+            id_ = int.from_bytes(data[1:2], "big")
             player = self.server.remove_client(id_)
             if player:
                 self.transport.write(b"OK")

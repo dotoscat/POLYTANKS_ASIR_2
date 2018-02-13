@@ -161,11 +161,12 @@ class Client:
             return
         self.server_connection = socket.socket()
         self.server_connection.connect(address)
-        self.server_connection.send(protocol.CONNECT.to_bytes(4, "big"))
-        response = self.server_connection.recv(32)
+        self.server_connection.send(protocol.CONNECT.to_bytes(1, "big"))
+        response = self.server_connection.recv(4)
         command = protocol.command(response)
         if command == protocol.CONNECTED:
-            self.id = int.from_bytes(response[4:8], "big")
+            print("connected", response)
+            self.id = int.from_bytes(response[1:2], "big")
             self.server_address = address
             self.game_connection = socket.socket(type=socket.SOCK_DGRAM)
             self.game_connection.connect(address)
@@ -180,7 +181,7 @@ class Client:
             return
         self.server_connection.send(
             protocol.disconnect_struct.pack(protocol.DISCONNECT, self.id))
-        response = self.server_connection.recv(32)
+        response = self.server_connection.recv(4)
         print("response", response)
         if response == b"OK":
             self.id = 0
