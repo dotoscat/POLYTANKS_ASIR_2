@@ -1,6 +1,7 @@
 #/usr/bin/env python
 import sys
 import weakref
+import socket
 import asyncio
 import signal
 from polytanks import protocol
@@ -72,8 +73,12 @@ class Server:
         self.server_coro = self.loop.create_server(
             lambda: ServerProtocol(weakref.proxy(self)), *host)
         self.server = self.loop.run_until_complete(self.server_coro)
+        game_socket = socket.socket(type=socket.SOCK_DGRAM)
+        game_socket.bind(host)
+        game_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, True)
+        game_socket.setblocking(False)
         self.game_coro = self.loop.create_datagram_endpoint(
-            lambda: GameProtocol(weakref.proxy(self)), local_addr=host
+            lambda: GameProtocol(weakref.proxy(self)), sock=game_socket
         )
         self.game_transport, self.game = self.loop.run_until_complete(self.game_coro)
         self.loop.run_until_complete(self.step())
