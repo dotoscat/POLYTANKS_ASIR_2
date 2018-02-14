@@ -169,9 +169,10 @@ class Client:
             self.id = int.from_bytes(response[1:2], "big")
             self.server_address = address
             self.game_connection = socket.socket(type=socket.SOCK_DGRAM)
-            self.game_connection.connect(address)
+            print("server_address", address)
             self.game_connection.setblocking(False)
-            print("game_connection", self.game_connection)
+            self.game_connection.connect(address)
+            print("game_connection port", self.game_connection.getsockname())
             self.selectors.register(self.game_connection, selectors.EVENT_READ, callback)
         else:
             self.server_connection.close()

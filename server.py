@@ -74,9 +74,8 @@ class Server:
             lambda: ServerProtocol(weakref.proxy(self)), *host)
         self.server = self.loop.run_until_complete(self.server_coro)
         game_socket = socket.socket(type=socket.SOCK_DGRAM)
-        game_socket.bind(host)
-        game_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, True)
         game_socket.setblocking(False)
+        game_socket.bind(host)
         self.game_coro = self.loop.create_datagram_endpoint(
             lambda: GameProtocol(weakref.proxy(self)), sock=game_socket
         )
@@ -94,8 +93,9 @@ class Server:
         if current_time - self.last_snapshot_time < self.SNAPSHOT_RATE:
             return
         # print("send snapshot at", current_time)
-        for client in self.clients:
-            player = self.clients[client]
+        # self.game_transport.sendto(b"broadcast!\n", ("<broadcast>", 1337)) # TODO: store port, or use address port
+        # for client in self.clients:
+        #    player = self.clients[client]
 
     def run(self):
         try:
