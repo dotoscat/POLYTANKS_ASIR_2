@@ -17,7 +17,7 @@ import struct
 
 CONNECT = 1
 CONNECTED = 2
-SEND_PORT = 3
+SEND_GAME_PORT = 3
 DISCONNECT = 4
 SNAPSHOT = 5
 SNAPSHOT_ACK = 6
@@ -25,7 +25,7 @@ SNAPSHOT_ACK = 6
 connected_struct = struct.Struct("!BB")
 disconnect_struct = struct.Struct("!BB")
 snapshotack_struct = struct.Struct("!BB")
-sendport_struct = struct.Struct("!BH")
+sendgameport_struct = struct.Struct("!BBH")
 
 def command(data):
     return int.from_bytes(data[:1], "big")

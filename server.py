@@ -12,9 +12,12 @@ HOST = ("127.0.0.1", 1337)
 class Player:
     def __init__(self, transport):
         self.server_transport = transport
+        self.game_port = None
     def __del__(self):
         print("close transport")
         self.server_transport.close()
+    def set_game_port(self, port):
+        self.game_port = port
 
 class ServerProtocol(asyncio.Protocol):
     def __init__(self, server):
@@ -42,6 +45,10 @@ class ServerProtocol(asyncio.Protocol):
                 self.transport.write(b"OK")
             else:
                 self.transport.write(b"NO")
+        elif command == protocol.SEND_GAME_PORT:
+            command, player_id, port = protocol.sendgameport_struct.unpack(data) 
+            self.server.clients[player_id].set_game_port(port)
+            print("game port", player_id, port)
         print("clients", self.server.clients)
 
     def connection_lost(self, exc):

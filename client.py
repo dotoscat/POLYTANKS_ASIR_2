@@ -172,7 +172,10 @@ class Client:
             print("server_address", address)
             self.game_connection.setblocking(False)
             self.game_connection.connect(address)
-            print("game_connection port", self.game_connection.getsockname())
+            game_address = self.game_connection.getsockname()
+            print("game_connection port", game_address)
+            self.server_connection.send(
+                protocol.sendgameport_struct.pack(protocol.SEND_GAME_PORT, self.id, game_address[1]))
             self.selectors.register(self.game_connection, selectors.EVENT_READ, callback)
         else:
             self.server_connection.close()
