@@ -16,8 +16,13 @@ class Player:
     def __del__(self):
         print("close transport")
         self.server_transport.close()
-    def set_game_port(self, port):
-        self.game_port = port
+    def set_game_address(self, port):
+        """
+        Parameters:
+            port (int): Port of the udp connection
+        """
+        client_address = self.server_transport.get_extra_info("peername")
+        self.game_address = (client_address[0], port)
 
 class ServerProtocol(asyncio.Protocol):
     def __init__(self, server):
@@ -47,7 +52,7 @@ class ServerProtocol(asyncio.Protocol):
                 self.transport.write(b"NO")
         elif command == protocol.SEND_GAME_PORT:
             command, player_id, port = protocol.sendgameport_struct.unpack(data) 
-            self.server.clients[player_id].set_game_port(port)
+            self.server.clients[player_id].set_game_address(port)
             print("game port", player_id, port)
         print("clients", self.server.clients)
 
@@ -101,8 +106,11 @@ class Server:
             return
         # print("send snapshot at", current_time)
         # self.game_transport.sendto(b"broadcast!\n", ("<broadcast>", 1337)) # TODO: store port, or use address port
-        # for client in self.clients:
-        #    player = self.clients[client]
+        for client in self.clients:
+            player = self.clients[client]
+            data = int.to_bytes(protocol.SNAPSHOT, 1, "big")
+            data += b"snapshot"
+            self.game_transport.sendto(data, player.game_address)
 
     def run(self):
         try:

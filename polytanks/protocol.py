@@ -22,6 +22,7 @@ DISCONNECT = 4
 SNAPSHOT = 5
 SNAPSHOT_ACK = 6
 
+# CONNECT is send as a single byte
 connected_struct = struct.Struct("!BB")
 disconnect_struct = struct.Struct("!BB")
 snapshotack_struct = struct.Struct("!BB")
