@@ -209,7 +209,12 @@ class Main(Scene):
         self.client.step() 
 
     def udp_from_server(self, socket):
-        print("udp message from server", socket.recv(1024))
+        data = socket.recv(1024)
+        command = protocol.command(data)
+        if command == protocol.SNAPSHOT:
+            response = protocol.snapshotack_struct.pack(protocol.SNAPSHOT_ACK, self.client.id)
+            socket.send(response)
+            print("udp message from server", data)
 
     def on_key_press(self, symbol, modifiers):
         if symbol == key.C:

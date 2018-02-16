@@ -13,6 +13,11 @@ class Player:
     def __init__(self, transport):
         self.server_transport = transport
         self.game_port = None
+        self.send_time = 0.
+        self.ack_time = 0.
+    @property
+    def offline_by(self, time, current_time):
+        return self.ack_time < current_time and current_time - self.send_time > time 
     def __del__(self):
         print("close transport")
         self.server_transport.close()
@@ -23,6 +28,9 @@ class Player:
         """
         client_address = self.server_transport.get_extra_info("peername")
         self.game_address = (client_address[0], port)
+    @property
+    def ping(self):
+        return (self.ack_time - self.send_time)/2.
 
 class ServerProtocol(asyncio.Protocol):
     def __init__(self, server):
@@ -68,8 +76,11 @@ class GameProtocol(asyncio.DatagramProtocol):
         self.transport = None
 
     def datagram_received(self, data, addr):
+        command = protocol.command(data)
         print("{} bytes received from {}".format(len(data), addr))
-        self.transport.sendto(data, addr)
+        if command == protocol.SNAPSHOT_ACK:
+            command, id = protocol.snapshotack_struct.unpack(data)
+            self.server.ack_client(id)
 
     def connection_made(self, transport):
         print("GameProtocol connection_made")
@@ -105,11 +116,12 @@ class Server:
         if current_time - self.last_snapshot_time < self.SNAPSHOT_RATE:
             return
         # print("send snapshot at", current_time)
-        # self.game_transport.sendto(b"broadcast!\n", ("<broadcast>", 1337)) # TODO: store port, or use address port
         for client in self.clients:
             player = self.clients[client]
+            print("player ping", player.ping)
             data = int.to_bytes(protocol.SNAPSHOT, 1, "big")
             data += b"snapshot"
+            player.send_time = self.loop.time()
             self.game_transport.sendto(data, player.game_address)
 
     def run(self):
@@ -142,6 +154,9 @@ class Server:
         player = self.clients[id_]
         del self.clients[id_]
         return player
+
+    def ack_client(self, id):
+        self.clients[id].ack_time = self.loop.time()
 
 if __name__ == "__main__":
     print("Hola mundo")
