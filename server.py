@@ -15,9 +15,6 @@ class Player:
         self.game_port = None
         self.send_time = 0.
         self.ack_time = 0.
-    @property
-    def offline_by(self, time, current_time):
-        return self.ack_time < current_time and current_time - self.send_time > time 
     def __del__(self):
         print("close transport")
         self.server_transport.close()
@@ -31,6 +28,9 @@ class Player:
     @property
     def ping(self):
         return (self.ack_time - self.send_time)/2.
+    @property
+    def response_time(self):
+        return self.ack_time - self.send_time
 
 class ServerProtocol(asyncio.Protocol):
     def __init__(self, server):
@@ -108,9 +108,17 @@ class Server:
     async def step(self):
         self.last_snapshot_time = self.loop.time()
         while True:
+            self.clean_clients()
             self.send_snapshot()
             await asyncio.sleep(1./60.)
  
+    def clean_clients(self):
+        offline = [id for id in self.clients
+            if self.clients[id].response_time < -3.]
+        for id in offline:
+            self.remove_client(id)
+            print("Remove client with id {}".format(id))
+
     def send_snapshot(self):
         current_time = self.loop.time()
         if current_time - self.last_snapshot_time < self.SNAPSHOT_RATE:
