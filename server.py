@@ -105,10 +105,11 @@ class Server:
 
     async def step(self):
         self.last_snapshot_time = self.loop.time()
+        GAME_RATE = 1./60.
         while True:
-            self.clean_clients(
+            self.clean_clients()
             self.send_snapshot()
-            # await asyncio.sleep(1.)
+            await asyncio.sleep(GAME_RATE)
 
     def clean_clients(self):
         offline = [id for id in self.clients
