@@ -7,12 +7,10 @@ import signal
 from polytanks import protocol
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-HOST = ("127.0.0.1", 1337)
-
 class Player:
     def __init__(self, transport):
         self.server_transport = transport
-        self.game_port = None
+        self.game_address = None
         self.send_time = 0.
         self.ack_time = 0.
     def __del__(self):
@@ -27,10 +25,10 @@ class Player:
         self.game_address = (client_address[0], port)
     @property
     def ping(self):
-        return (self.ack_time - self.send_time)/2.
+        return (self.send_time - self.ack_time)/2.
     @property
     def response_time(self):
-        return self.ack_time - self.send_time
+        return self.send_time - self.ack_time
 
 class ServerProtocol(asyncio.Protocol):
     def __init__(self, server):
@@ -60,7 +58,7 @@ class ServerProtocol(asyncio.Protocol):
                 self.transport.write(b"NO")
         elif command == protocol.SEND_GAME_PORT:
             command, player_id, port = protocol.sendgameport_struct.unpack(data) 
-            self.server.clients[player_id].set_game_address(port)
+            self.server.set_game_address(player_id, port)
             print("game port", player_id, port)
         print("clients", self.server.clients)
 
@@ -88,7 +86,7 @@ class GameProtocol(asyncio.DatagramProtocol):
 
 class Server:
     SNAPSHOT_RATE = 1./20.
-    def __init__(self, max_n_players, host=HOST):
+    def __init__(self, max_n_players, host):
         self.clients = {}
         self.max_n_players = max_n_players
         self.last_snapshot_time = 0.
@@ -108,13 +106,13 @@ class Server:
     async def step(self):
         self.last_snapshot_time = self.loop.time()
         while True:
-            self.clean_clients()
+            self.clean_clients(
             self.send_snapshot()
-            await asyncio.sleep(1./60.)
- 
+            # await asyncio.sleep(1.)
+
     def clean_clients(self):
         offline = [id for id in self.clients
-            if self.clients[id].response_time < -3.]
+            if self.clients[id].response_time > 3.]
         for id in offline:
             self.remove_client(id)
             print("Remove client with id {}".format(id))
@@ -126,11 +124,20 @@ class Server:
         # print("send snapshot at", current_time)
         for client in self.clients:
             player = self.clients[client]
+            if player.game_address is None:
+                continue
             print("player ping", player.ping)
             data = int.to_bytes(protocol.SNAPSHOT, 1, "big")
             data += b"snapshot"
             player.send_time = self.loop.time()
             self.game_transport.sendto(data, player.game_address)
+
+    def set_game_address(self, player_id, port):
+        player = self.clients[player_id]
+        player.set_game_address(port)
+        current_time = self.loop.time()
+        player.ack_time = current_time
+        player.send_time = current_time
 
     def run(self):
         try:
@@ -167,6 +174,6 @@ class Server:
         self.clients[id].ack_time = self.loop.time()
 
 if __name__ == "__main__":
-    print("Hola mundo")
-    server = Server(2)
+    HOST = ("127.0.0.1", 1337)
+    server = Server(2, HOST)
     server.run()
