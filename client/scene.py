@@ -1,8 +1,9 @@
 import toyblock3
 from pyglet.window import key
-from polytanks import level, assets, protocol
+from polytanks import level, protocol
 from polytanks.entity import Platform, Player
 from ogf4py.scene import Scene
+from . import assets
 
 class Screen(Scene):
     def __init__(self):
