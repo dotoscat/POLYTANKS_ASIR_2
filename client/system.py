@@ -1,4 +1,5 @@
 import toyblock3
+from polytanks.constants import UNIT
 
 class SpritesSystem(toyblock3.System):
     def _update(self, entity):
