@@ -1,23 +1,19 @@
 import pyglet
+import polytanks.entity as pentity
 from . import assets
+from .component import TankGraphic
 
-# TODO: inherit
-class Platform:
+class Platform(pentity.Platform):
     SYSTEMS = ()
-    Sprite = pyglet.sprite.Sprite
     def __init__(self, batch, group):
-        self.sprite = self.Sprite(assets.images["platform"], batch=batch, group=group)
+        self.sprite = pyglet.sprite.Sprite(assets.images["platform"], batch=batch, group=group)
     def reset(self):
         pass
 
-class Player:
+class Player(pentity.Player):
     SYSTEMS = (input_system, physics_system, sprites_system)
-    Input = KeyControl
-    Body = component.Body
-    Sprite = TankGraphic
     def __init__(self, batch, groups):
-        self.input = self.Input() 
-        self.sprite = self.Sprite(batch, groups, 1)
-        self.body = component.Body()
+        super.__init__()
+        self.sprite = TankGraphic(batch, groups, 1)
     def reset(self):
         pass
