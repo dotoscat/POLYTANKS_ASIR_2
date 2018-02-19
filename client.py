@@ -13,20 +13,8 @@ import client.client
 from client.client import Client
 from client.scene import Main
 
-class InputSystem(toyblock3.System):
-    def _update(self, entity):
-        entity.body.vel_x = entity.input.move*UNIT*2.
-        entity.sprite.update_cannon_angle(entity.input.pointer_x, entity.input.pointer_y)
 
 input_system = InputSystem()
-
-class SpritesSystem(toyblock3.System):
-    def _update(self, entity):
-        body = entity.body
-        sprite = entity.sprite
-        sprite.x = body.x
-        sprite.y = body.y
-
 sprites_system = SpritesSystem()
 physics_system = system.PhysicsSystem(1./60.)
 
