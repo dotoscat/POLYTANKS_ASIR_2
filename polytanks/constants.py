@@ -16,3 +16,4 @@
 WIDTH = 640
 HEIGHT = 360
 UNIT = 16.
+FPS = 1./60.

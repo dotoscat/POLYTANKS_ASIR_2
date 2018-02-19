@@ -1,6 +1,6 @@
 from math import atan2, degrees
 import pyglet
-from polytanks import assets
+from . import assets
 
 class TankGraphic:
     def __init__(self, batch, groups, group_start):
