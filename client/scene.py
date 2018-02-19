@@ -1,9 +1,9 @@
 import toyblock3
 from pyglet.window import key
 from polytanks import level, protocol
-from polytanks.entity import Platform, Player
 from ogf4py.scene import Scene
-from . import assets
+from .entity import Platform, Player
+from . import assets, system
 
 class Screen(Scene):
     def __init__(self):
@@ -16,9 +16,9 @@ class Screen(Scene):
         self.player = self.pools["player"]()
         self.player.body.x = 64.
         self.player.body.y = 64.
-        self.input_system = input_system
-        self.physics = physics_system
-        self.sprites_system = sprites_system
+        self.input_system = system.input
+        self.physics = system.polytanks_system.physics
+        self.sprites_system = system.sprite
         level.load_level(level.basic, self.pools["platform"])
 
     def init(self):
