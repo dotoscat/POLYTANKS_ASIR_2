@@ -1,5 +1,6 @@
 import toyblock3
-from polytanks import level
+from polytanks import level, assets
+from ogf4py.scene import Scene
 
 class Screen(Scene):
     def __init__(self):
