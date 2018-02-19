@@ -1,5 +1,7 @@
 import toyblock3
-from polytanks import level, assets
+from pyglet.window import key
+from polytanks import level, assets, protocol
+from polytanks.entity import Platform, Player
 from ogf4py.scene import Scene
 
 class Screen(Scene):
@@ -46,9 +48,10 @@ class Screen(Scene):
         self.player.input.pointer_y = y
 
 class Main(Scene):
-    def __init__(self, client):
+    def __init__(self, client, address):
         super().__init__(1)
         self.client = client
+        self.address = address
 
     def init(self):
         pass
@@ -69,6 +72,6 @@ class Main(Scene):
 
     def on_key_press(self, symbol, modifiers):
         if symbol == key.C:
-            self.client.connect_to_server(ADDRESS, self.udp_from_server)
+            self.client.connect_to_server(self.address, self.udp_from_server)
         elif symbol == key.D:
             self.client.disconnect_from_server()
