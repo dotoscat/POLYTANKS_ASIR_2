@@ -1,4 +1,4 @@
-class KeyControl:
+class Control:
     def __init__(self):
         self.move = 0.
         self.pointer_x = 0.

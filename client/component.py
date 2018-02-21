@@ -4,8 +4,8 @@ from pyglet.window import key
 from . import assets
 from polytanks import component
 
-component.KeyControl.left_keys = (key.A, key.LEFT)
-component.KeyControl.right_keys = (key.D, key.RIGHT) 
+component.Control.left_keys = (key.A, key.LEFT)
+component.Control.right_keys = (key.D, key.RIGHT) 
 
 class TankGraphic:
     def __init__(self, batch, groups, group_start):

@@ -3,7 +3,7 @@ from . import component
 
 class Player:
     def __init__(self):
-        self.input = component.KeyControl() 
+        self.input = component.Control() 
         self.body = Body()
     def reset(self):
         pass
