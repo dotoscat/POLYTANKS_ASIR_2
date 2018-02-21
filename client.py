@@ -11,6 +11,6 @@ if __name__ == "__main__":
     ADDRESS = ("127.0.0.1", 1337)
     client = Client()
     director = Director(width=WIDTH, height=HEIGHT)
-    director.scene = Main(client, ADDRESS)
-    # director.scene = Screen()
+    # director.scene = Main(client, ADDRESS)
+    director.scene = Screen(client)
     pyglet.app.run()

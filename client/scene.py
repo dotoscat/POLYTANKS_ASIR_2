@@ -1,4 +1,5 @@
 import toyblock3
+import pyglet
 from pyglet.window import key
 from polytanks import level, protocol
 from ogf4py.scene import Scene
@@ -6,8 +7,10 @@ from .entity import Platform, Player
 from . import assets, system
 
 class Screen(Scene):
-    def __init__(self):
+    INPUT_PER_SEC = 1./20.
+    def __init__(self, client):
         super().__init__(3)
+        self.client = client
         self.pools = {
             "player": toyblock3.Manager(Player, 4, self.batch, self.groups),
             "platform": toyblock3.Pool(Platform, 64, self.batch, self.groups[0])
@@ -23,6 +26,7 @@ class Screen(Scene):
 
     def init(self):
         self.director.set_mouse_cursor(assets.cursor)
+        pyglet.clock.schedule_interval(self.send_input_to_server, self.INPUT_PER_SEC)
 
     def quit(self):
         pass
@@ -31,6 +35,10 @@ class Screen(Scene):
         self.input_system()
         self.physics()
         self.sprites_system()
+
+    def send_input_to_server(self, dt):
+       input = self.player.input
+       print("send input to server", dt) 
 
     def on_key_press(self, symbol, modifiers):
         if symbol in self.player.input.left_keys:
