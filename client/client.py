@@ -52,15 +52,15 @@ class Client:
             self.server_connection.close()
 
     def disconnect_from_server(self):
-            if not self.connected:
-                return
-            self.server_connection.send(
-                protocol.disconnect_struct.pack(protocol.DISCONNECT, self.id))
-            response = self.server_connection.recv(4)
-            print("response", response)
-            if response == b"OK":
-                self.id = 0
-                self.server_address = None
-                self.selectors.unregister(self.game_connection)
-                self.server_connection.close()
-                self.game_connection.close()
+        if not self.connected:
+            return
+        self.server_connection.send(
+            protocol.disconnect_struct.pack(protocol.DISCONNECT, self.id))
+        response = self.server_connection.recv(4)
+        print("response", response)
+        if response == b"OK":
+            self.id = 0
+            self.server_address = None
+            self.selectors.unregister(self.game_connection)
+            self.server_connection.close()
+            self.game_connection.close()
