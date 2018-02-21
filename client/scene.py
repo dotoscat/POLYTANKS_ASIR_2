@@ -56,7 +56,7 @@ class Screen(Scene):
             self.player.input.move = -1.
         if symbol in self.player.input.right_keys:
             self.player.input.move = 1.
-        if symbol == key.L and self.client.disconnect_from_server:
+        if symbol == key.L and self.client.disconnect_from_server():
             Director.set_scene("main")
 
     def on_key_release(self, symbol, modifiers):
