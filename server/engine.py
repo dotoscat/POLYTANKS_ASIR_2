@@ -2,8 +2,11 @@ from itertools import count
 from polytanks.engine import AbstractEngine
 
 class Engine(AbstractEngine):
-    def __init__(self, pools, start_id):
-        super().__init__(pools, start_id)
+    def __init__(self, start_id):
+        pools = {}
+        super().__init__(pools)
+        self.start_id = start_id
+        self.id_generator = None
         self.regenerate_id()
 
     def update(self, dt):

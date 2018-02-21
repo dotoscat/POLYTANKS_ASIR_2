@@ -18,6 +18,7 @@ import socket
 import asyncio
 from polytanks import protocol
 from . import player
+from .engine import Engine
 from . import protocol as server_protocol
 Player = player.Player
 ServerProtocol = server_protocol.ServerProtocol
