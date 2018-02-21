@@ -48,8 +48,10 @@ class Client:
             self.server_connection.send(
                 protocol.sendgameport_struct.pack(protocol.SEND_GAME_PORT, self.id, game_address[1]))
             self.selectors.register(self.game_connection, selectors.EVENT_READ, callback)
+            return True
         else:
             self.server_connection.close()
+            return False
 
     def disconnect_from_server(self):
         if not self.connected:
@@ -64,3 +66,5 @@ class Client:
             self.selectors.unregister(self.game_connection)
             self.server_connection.close()
             self.game_connection.close()
+            return True
+        return False

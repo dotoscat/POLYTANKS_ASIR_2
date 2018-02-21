@@ -3,6 +3,7 @@ import pyglet
 from pyglet.window import key
 from polytanks import level, protocol
 from ogf4py.scene import Scene
+from ogf4py.director import Director
 from .entity import Platform, Player
 from . import assets, system
 
@@ -29,9 +30,11 @@ class Screen(Scene):
         pyglet.clock.schedule_interval(self.send_input_to_server, self.INPUT_PER_SEC)
 
     def quit(self):
-        pass
+        self.director.set_mouse_cursor(None)
+        pyglet.clock.unschedule(self.send_input_to_server)
 
     def update(self, dt):
+        self.client.step()
         self.input_system()
         self.physics()
         self.sprites_system()
@@ -40,11 +43,21 @@ class Screen(Scene):
        input = self.player.input
        print("send input to server", dt) 
 
+    def udp_from_server(self, socket):
+        data = socket.recv(1024)
+        command = protocol.command(data)
+        if command == protocol.SNAPSHOT:
+            response = protocol.snapshotack_struct.pack(protocol.SNAPSHOT_ACK, self.client.id)
+            socket.send(response)
+            print("udp message from server", data)
+
     def on_key_press(self, symbol, modifiers):
         if symbol in self.player.input.left_keys:
             self.player.input.move = -1.
         if symbol in self.player.input.right_keys:
             self.player.input.move = 1.
+        if symbol == key.L and self.client.disconnect_from_server:
+            Director.set_scene("main")
 
     def on_key_release(self, symbol, modifiers):
         if symbol in self.player.input.left_keys:
@@ -71,16 +84,7 @@ class Main(Scene):
     def update(self, dt):
         self.client.step() 
 
-    def udp_from_server(self, socket):
-        data = socket.recv(1024)
-        command = protocol.command(data)
-        if command == protocol.SNAPSHOT:
-            response = protocol.snapshotack_struct.pack(protocol.SNAPSHOT_ACK, self.client.id)
-            socket.send(response)
-            print("udp message from server", data)
-
     def on_key_press(self, symbol, modifiers):
-        if symbol == key.C:
-            self.client.connect_to_server(self.address, self.udp_from_server)
-        elif symbol == key.D:
-            self.client.disconnect_from_server()
+        if (symbol == key.C and
+        self.client.connect_to_server(self.address, Director.get_scene("game").udp_from_server)):
+            Director.set_scene("game")
