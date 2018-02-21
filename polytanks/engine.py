@@ -1,12 +1,16 @@
 class AbstractEngine:
-    def __init__(self, pools):
+    def __init__(self, pools, start_id):
         types = ("player",)
         for t in types:
             if t not in pools:
                 raise Exception("{} not found in pools".format(t))
         self.pools = pools
         self.entities = {}
+        self.start_id = start_id
     
+    def regenerate_id(self):
+        raise NotImplementedError
+
     def add_player(self, id=None):
         player_pool = self.pools.get("player")
         player = player_pool()
