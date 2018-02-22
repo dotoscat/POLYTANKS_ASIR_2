@@ -13,16 +13,31 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from collections import deque
+from polytanks.snapshot import PlayerSnapshot, MAX_SNAPSHOTS
+
 class Player:
+    MAX_SNAPSHOTS = 32
     def __init__(self, transport):
         self.server_transport = transport
         self.game_address = None
         self.send_time = 0.
         self.ack_time = 0.
+        self.snapshots = deque()
 
     def __del__(self):
+        while(self.snapshots):
+            snapshot = self.snapshots.pop()
+            snapshot.free()
         print("close transport")
         self.server_transport.close()
+
+    def add_snapshot(self, snapshot):
+        snapshot.borrow()
+        self.snapshots.appendleft(snapshot)
+        if(len(self.snapshots) >= MAX_SNAPSHOTS):
+            removed = self.snapshots.pop()
+            removed.free()
 
     def set_game_address(self, port):
         """

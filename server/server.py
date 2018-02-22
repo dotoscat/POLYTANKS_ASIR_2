@@ -78,17 +78,19 @@ class Server:
             print("Remove client with id {}".format(id))
 
     def send_snapshot(self):
+        if not self.clients:
+            return
         current_time = self.loop.time()
         if current_time - self.last_snapshot_time < self.SNAPSHOT_RATE:
             return
         # print("send snapshot at", current_time)
         shot = snapshot.Snapshot()
         shot.from_engine(self.engine)
-        shot.free()
         for client in self.clients:
             player = self.clients[client]
             if player.game_address is None:
                 continue
+            player.add_snapshot(shot)
             # print("player ping", player.ping)
             data = int.to_bytes(protocol.SNAPSHOT, 1, "big")
             data += b"snapshot"

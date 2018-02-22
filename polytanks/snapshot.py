@@ -1,5 +1,7 @@
 import toyblock3
 
+MAX_SNAPSHOTS = 32*4
+
 class Body_:
     def __init__(self):
         self.x = 0.
@@ -9,11 +11,12 @@ class Body_:
         self.x = 0.
         self.y = 0.
 
-Body = toyblock3.Pool(Body_, 64)
+Body = toyblock3.Pool(Body_, MAX_SNAPSHOTS)
 
-class Snapshot_:
+class SnapshotMixin:
     def __init__(self):
         self.players = {}
+        self._borrowed = 0
 
     def from_engine(self, engine):
         players = engine.players
@@ -27,7 +30,16 @@ class Snapshot_:
             self.players[id].free()
         self.players.clear()
 
-Snapshot = toyblock3.Pool(Snapshot_, 64)
+    def borrow(self):
+        self._borrowed += 1
+
+    def free(self):
+        self._borrowed -= 1
+        if self._borrowed:
+            return
+        super().free() 
+
+Snapshot = toyblock3.Pool(SnapshotMixin, MAX_SNAPSHOTS)
     
 class PlayerSnapshot_:
     def __init__(self):
@@ -36,6 +48,7 @@ class PlayerSnapshot_:
 
     def reset(self):
         self.ack = False
+        self.snapshot.free()
         self.snapshot = None
 
-PlayerSnapshot = toyblock3.Pool(PlayerSnapshot_, 256)
+PlayerSnapshot = toyblock3.Pool(PlayerSnapshot_, MAX_SNAPSHOTS*4)
