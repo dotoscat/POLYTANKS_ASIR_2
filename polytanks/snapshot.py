@@ -1,6 +1,6 @@
 import toyblock3
 
-MAX_SNAPSHOTS = 32*4
+MAX_SNAPSHOTS = 64*4
 
 class Body_:
     def __init__(self):
@@ -11,7 +11,7 @@ class Body_:
         self.x = 0.
         self.y = 0.
 
-Body = toyblock3.Pool(Body_, MAX_SNAPSHOTS)
+Body = toyblock3.Pool(Body_, MAX_SNAPSHOTS*4)
 
 class SnapshotMixin:
     def __init__(self):
