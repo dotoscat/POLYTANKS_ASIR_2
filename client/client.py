@@ -25,6 +25,9 @@ class Client:
             callback = key.data
             callback(key.fileobj)
 
+    def game_send(self, data):
+        self.game_connection.sendall(data)
+
     def connect_to_server(self, address, callback):
         if not callable(callback):
             raise TypeError("callback is not callable. Passed {} instead.".format(type(callback)))

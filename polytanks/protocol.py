@@ -21,12 +21,14 @@ SEND_GAME_PORT = 3
 DISCONNECT = 4
 SNAPSHOT = 5
 SNAPSHOT_ACK = 6
+INPUT = 7
 
 # CONNECT is send as a single byte
 connected_struct = struct.Struct("!BB")
 disconnect_struct = struct.Struct("!BB")
 snapshotack_struct = struct.Struct("!BB")
 sendgameport_struct = struct.Struct("!BBH")
+input_struct = struct.Struct("!BBf") # TODO: Add jump press, shoot press and cannon angle later
 
 def command(data):
     return int.from_bytes(data[:1], "big")

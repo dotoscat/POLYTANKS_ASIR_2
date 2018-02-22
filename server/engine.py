@@ -15,7 +15,8 @@ class Engine(AbstractEngine):
         self.regenerate_id()
 
     def update(self, dt):
-        pass
+        input()
+        physics()
 
     def generate_id(self):
         return next(self.id_generator)

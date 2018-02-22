@@ -40,8 +40,11 @@ class Screen(Scene):
         self.sprites_system()
 
     def send_input_to_server(self, dt):
-       input = self.player.input
-       print("send input to server", dt) 
+        input = self.player.input
+        data_input = protocol.input_struct.pack(protocol.INPUT, self.client.id,
+            input.move)
+        self.client.game_send(data_input)
+        # print("send input to server", dt) 
 
     def udp_from_server(self, socket):
         data = socket.recv(1024)
@@ -49,7 +52,7 @@ class Screen(Scene):
         if command == protocol.SNAPSHOT:
             response = protocol.snapshotack_struct.pack(protocol.SNAPSHOT_ACK, self.client.id)
             socket.send(response)
-            print("udp message from server", data)
+            # print("udp message from server", data)
 
     def on_key_press(self, symbol, modifiers):
         if symbol in self.player.input.left_keys:
