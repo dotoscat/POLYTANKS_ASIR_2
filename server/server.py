@@ -143,4 +143,4 @@ class Server:
         return player
 
     def ack_client(self, id):
-        self.clients[id].ack_time = self.loop.time()
+        self.clients[id].ack(self.loop.time())

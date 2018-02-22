@@ -32,6 +32,12 @@ class Player:
         print("close transport")
         self.server_transport.close()
 
+    def ack(self, time):
+        if not self.snapshots:
+            return
+        self.ack_time = time
+        self.snapshots[0].ack = True
+
     def add_snapshot(self, snapshot):
         snapshot.borrow()
         player_snapshot = PlayerSnapshot()
