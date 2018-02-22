@@ -30,10 +30,13 @@ class GameProtocol(asyncio.DatagramProtocol):
 
     def datagram_received(self, data, addr):
         command = protocol.command(data)
-        print("{} bytes received from {}".format(len(data), addr))
+        # print("{} bytes received from {}".format(len(data), addr))
         if command == protocol.SNAPSHOT_ACK:
             command, id = protocol.snapshotack_struct.unpack(data)
             self.server.ack_client(id)
+        elif command == protocol.INPUT:
+            command, id, move = protocol.input_struct.unpack(data)
+            self.server.apply_input(id, move)
 
     def connection_made(self, transport):
         print("GameProtocol connection_made")
@@ -83,11 +86,16 @@ class Server:
             player = self.clients[client]
             if player.game_address is None:
                 continue
-            print("player ping", player.ping)
+            # print("player ping", player.ping)
             data = int.to_bytes(protocol.SNAPSHOT, 1, "big")
             data += b"snapshot"
             player.send_time = self.loop.time()
             self.game_transport.sendto(data, player.game_address)
+
+    def apply_input(self, id, move):
+        player_input = self.engine.entities[id]
+        player_input.move = move
+
 
     def set_game_address(self, player_id, port):
         player = self.clients[player_id]
