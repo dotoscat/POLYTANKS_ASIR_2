@@ -16,7 +16,7 @@
 import weakref
 import socket
 import asyncio
-from polytanks import protocol
+from polytanks import protocol, snapshot
 from . import player
 from .engine import Engine
 from . import protocol as server_protocol
@@ -82,6 +82,9 @@ class Server:
         if current_time - self.last_snapshot_time < self.SNAPSHOT_RATE:
             return
         # print("send snapshot at", current_time)
+        shot = snapshot.Snapshot()
+        shot.from_engine(self.engine)
+        shot.free()
         for client in self.clients:
             player = self.clients[client]
             if player.game_address is None:
