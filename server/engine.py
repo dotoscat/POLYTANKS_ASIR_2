@@ -1,9 +1,14 @@
 from itertools import count
+import toyblock3
 from polytanks.engine import AbstractEngine
+from polytanks.entity import Player
+from polytanks.system import input, physics
+
+Player.SYSTEMS = (input, physics)
 
 class Engine(AbstractEngine):
-    def __init__(self, start_id):
-        pools = {}
+    def __init__(self, n_players, start_id):
+        pools = {"player": toyblock3.Manager(Player, n_players)}
         super().__init__(pools)
         self.start_id = start_id
         self.id_generator = None

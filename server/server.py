@@ -42,6 +42,7 @@ class GameProtocol(asyncio.DatagramProtocol):
 class Server:
     SNAPSHOT_RATE = 1./20.
     def __init__(self, max_n_players, host):
+        self.engine = Engine(max_n_players, max_n_players + 1)
         self.clients = {}
         self.max_n_players = max_n_players
         self.last_snapshot_time = 0.
@@ -116,6 +117,7 @@ class Server:
                 continue
             id = i
             break
+        self.engine.add_player(id)
         self.clients[id] = Player(transport)
         return id
 
@@ -123,6 +125,7 @@ class Server:
         if not id_ in self.clients:
             return None
         player = self.clients[id_]
+        self.engine.remove(id_)
         del self.clients[id_]
         return player
 
