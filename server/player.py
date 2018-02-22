@@ -34,7 +34,9 @@ class Player:
 
     def add_snapshot(self, snapshot):
         snapshot.borrow()
-        self.snapshots.appendleft(snapshot)
+        player_snapshot = PlayerSnapshot()
+        player_snapshot.snapshot = snapshot
+        self.snapshots.appendleft(player_snapshot)
         if(len(self.snapshots) >= MAX_SNAPSHOTS):
             removed = self.snapshots.pop()
             removed.free()
