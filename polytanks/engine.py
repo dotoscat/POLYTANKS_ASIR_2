@@ -6,6 +6,7 @@ class AbstractEngine:
                 raise Exception("{} not found in pools".format(t))
         self.pools = pools
         self.entities = {}
+        self.players = {}
     
     def regenerate_id(self):
         raise NotImplementedError
@@ -17,6 +18,7 @@ class AbstractEngine:
             return 
         id = id if isinstance(id, int) else self.generate_id()
         self.entities[id] = player
+        self.players[id] = player
         return (id, player)
 
     def remove(self, id):
@@ -26,6 +28,11 @@ class AbstractEngine:
         entity.free()
         del self.entities[id]
         return True
+
+    def remove_player(self, id):
+        removed = self.remove(id)
+        if removed:
+            del self.players[id]
 
     def update(self, dt):
         raise NotImplementedError

@@ -133,7 +133,7 @@ class Server:
         if not id_ in self.clients:
             return None
         player = self.clients[id_]
-        self.engine.remove(id_)
+        self.engine.remove_player(id_)
         del self.clients[id_]
         return player
 
