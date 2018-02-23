@@ -17,7 +17,7 @@ class Body_:
 
 Body = toyblock3.Pool(Body_, MAX_SNAPSHOTS*4)
 
-body_struct = struct.Struct("!iff")
+body_struct = struct.Struct("!Bff")
 
 class MASTER_SNAPSHOT:
     players = {}
