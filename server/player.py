@@ -14,7 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from collections import deque
-from polytanks.snapshot import PlayerSnapshot, MAX_SNAPSHOTS
+from itertools import islice
+from polytanks.snapshot import PlayerSnapshot, MAX_SNAPSHOTS, MASTER_SNAPSHOT
 
 class Player:
     MAX_SNAPSHOTS = 32
@@ -37,15 +38,29 @@ class Player:
             return
         self.ack_time = time
         self.snapshots[0].ack = True
+        # print("ack", self.snapshots[0])
 
     def add_snapshot(self, snapshot):
         snapshot.borrow()
         player_snapshot = PlayerSnapshot()
         player_snapshot.snapshot = snapshot
         self.snapshots.appendleft(player_snapshot)
-        if(len(self.snapshots) >= MAX_SNAPSHOTS):
+        if(len(self.snapshots) >= Player.MAX_SNAPSHOTS):
             removed = self.snapshots.pop()
             removed.free()
+
+    def get_diff_data(self):
+        if not self.snapshots:
+            return b''
+        first_snapshot = self.snapshots[0].snapshot
+        #print("first snapshot ack", self.snapshots[0], self.snapshots[0].ack)
+        for snapshot in islice(self.snapshots, 1, None):
+            # print("this", snapshot, snapshot.ack)
+            if not snapshot.ack:
+                continue
+            return first_snapshot.diff(snapshot.snapshot) 
+        print("do with master snapshot")
+        return first_snapshot.diff(MASTER_SNAPSHOT)
 
     def set_game_address(self, port):
         """

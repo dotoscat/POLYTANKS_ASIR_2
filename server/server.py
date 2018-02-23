@@ -91,6 +91,8 @@ class Server:
             if player.game_address is None:
                 continue
             player.add_snapshot(shot)
+            diff_data = player.get_diff_data()
+            print("diff data", diff_data)
             # print("player ping", player.ping)
             data = int.to_bytes(protocol.SNAPSHOT, 1, "big")
             data += b"snapshot"
