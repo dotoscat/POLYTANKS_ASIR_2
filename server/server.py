@@ -93,10 +93,9 @@ class Server:
                 continue
             player.add_snapshot(shot)
             diff_data = player.get_diff_data()
-            print("diff data", diff_data)
-            # print("player ping", player.ping)
+            # print("diff data", diff_data)
             data = int.to_bytes(protocol.SNAPSHOT, 1, "big")
-            data += b"snapshot"
+            data += diff_data
             player.send_time = self.loop.time()
             self.game_transport.sendto(data, player.game_address)
 
