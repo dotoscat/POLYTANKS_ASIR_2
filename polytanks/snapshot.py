@@ -1,3 +1,4 @@
+import struct
 import toyblock3
 
 MAX_SNAPSHOTS = 64*4
@@ -11,7 +12,15 @@ class Body_:
         self.x = 0.
         self.y = 0.
 
+    def diff(self, body):
+        return self.x != body.x or self.y != body.y
+
 Body = toyblock3.Pool(Body_, MAX_SNAPSHOTS*4)
+
+body_struct = struct.Struct("!iff")
+
+class MASTER_SNAPSHOT:
+    players = {}
 
 class SnapshotMixin:
     def __init__(self):
@@ -38,6 +47,22 @@ class SnapshotMixin:
         if self._borrowed:
             return
         super().free() 
+
+    def diff(self, other_snapshot):
+        data = bytearray() 
+        player_data = bytearray()
+        n_players = 0
+        for id in self.players:
+            player = self.players[id]
+            other_player = other_snapshot.players.get(id)
+            if not other_player:
+                continue
+            if player.diff(other_player):
+                n_players += 1
+                player_data += body_struct.pack(id, player.x, player.y)
+        data += int.to_bytes(n_players, 1, "big")
+        data += player_data
+        return data
 
 Snapshot = toyblock3.Pool(SnapshotMixin, MAX_SNAPSHOTS)
     

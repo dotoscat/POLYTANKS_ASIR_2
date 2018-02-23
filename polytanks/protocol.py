@@ -26,6 +26,7 @@ INPUT = 7
 # CONNECT is send as a single byte
 connected_struct = struct.Struct("!BB")
 disconnect_struct = struct.Struct("!BB")
+snapshot_struct = struct.Struct("!BB")
 snapshotack_struct = struct.Struct("!BB")
 sendgameport_struct = struct.Struct("!BBH")
 input_struct = struct.Struct("!BBf") # TODO: Add jump press, shoot press and cannon angle later
