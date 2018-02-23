@@ -67,6 +67,7 @@ class Server:
         GAME_RATE = 1./60.
         while True:
             self.clean_clients()
+            self.engine.update(GAME_RATE)
             self.send_snapshot()
             await asyncio.sleep(GAME_RATE)
 
@@ -100,9 +101,8 @@ class Server:
             self.game_transport.sendto(data, player.game_address)
 
     def apply_input(self, id, move):
-        player_input = self.engine.entities[id]
+        player_input = self.engine.entities[id].input
         player_input.move = move
-
 
     def set_game_address(self, player_id, port):
         player = self.clients[player_id]

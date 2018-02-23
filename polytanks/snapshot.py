@@ -32,7 +32,12 @@ class SnapshotMixin:
         for id in players:
             player = players[id]
             body = player.body
-            self.players[id] = Body(body.x, body.y)
+            # TODO: Modify toyblock3.Pool to accept variable arguments and keywords
+            # self.players[id] = Body(body.x, body.y)
+            snapshot_body = Body()
+            snapshot_body.x = body.x
+            snapshot_body.y = body.y
+            self.players[id] = snapshot_body
 
     def reset(self):
         for id in self.players:

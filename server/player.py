@@ -59,7 +59,7 @@ class Player:
             if not snapshot.ack:
                 continue
             return first_snapshot.diff(snapshot.snapshot) 
-        print("do with master snapshot")
+        # print("do with master snapshot")
         return first_snapshot.diff(MASTER_SNAPSHOT)
 
     def set_game_address(self, port):
