@@ -51,6 +51,7 @@ class Screen(Scene):
     def apply_snapshot_data(self, data):
         tsnapshot = snapshot.Snapshot()
         tsnapshot.from_diff_data(data)
+        tsnapshot.apply_to_engine(self.engine)
         tsnapshot.free()
         # print("client receives", data)
 

@@ -52,6 +52,16 @@ class SnapshotMixin:
                 body.y = y
                 self.players[id] = body
     
+    def apply_to_engine(self, engine):
+        players = self.players
+        for id in self.players:
+            engine_player = engine.players.get(id)
+            if not engine_player:
+                continue
+            player = players[id]
+            engine_player.x = player.x
+            engine_player.y = player.y
+    
     def reset(self):
         for id in self.players:
             self.players[id].free()
