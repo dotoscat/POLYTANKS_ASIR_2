@@ -28,7 +28,7 @@ class Client:
     def game_send(self, data):
         self.game_connection.sendall(data)
 
-    def connect_to_server(self, address, callback):
+    def connect_to_server(self, address, callback, server_callback):
         if not callable(callback):
             raise TypeError("callback is not callable. Passed {} instead.".format(type(callback)))
         if self.connected:
@@ -51,6 +51,8 @@ class Client:
             self.server_connection.send(
                 protocol.sendgameport_struct.pack(protocol.SEND_GAME_PORT, self.id, game_address[1]))
             self.selectors.register(self.game_connection, selectors.EVENT_READ, callback)
+            self.server_connection.setblocking(False)
+            self.selectors.register(self.server_connection, selectors.EVENT_READ, server_callback)
             return True
         else:
             self.server_connection.close()
@@ -67,6 +69,7 @@ class Client:
             self.id = 0
             self.server_address = None
             self.selectors.unregister(self.game_connection)
+            self.selectors.unregister(self.server_connection)
             self.server_connection.close()
             self.game_connection.close()
             return True
