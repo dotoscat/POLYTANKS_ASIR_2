@@ -38,6 +38,19 @@ class SnapshotMixin:
             snapshot_body.x = body.x
             snapshot_body.y = body.y
             self.players[id] = snapshot_body
+
+    def from_diff_data(self, data):
+        n_players = int.from_bytes(data[:1], "big")
+        # print("diff data", data, "n_players", n_players)
+        if n_players:
+            # print("body_struct.size", body_struct.size, len(data))
+            player_data = data[1:body_struct.size*n_players+1]
+            # print("player data", player_data, len(player_data))
+            for id, x, y in body_struct.iter_unpack(player_data):
+                body = Body()
+                body.x = x
+                body.y = y
+                self.players[id] = body
     
     def reset(self):
         for id in self.players:

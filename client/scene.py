@@ -1,7 +1,7 @@
 import toyblock3
 import pyglet
 from pyglet.window import key
-from polytanks import level, protocol
+from polytanks import level, protocol, snapshot
 from ogf4py.scene import Scene
 from ogf4py.director import Director
 from . import assets
@@ -41,6 +41,7 @@ class Screen(Scene):
         data = socket.recv(1024)
         command = protocol.command(data)
         if command == protocol.SNAPSHOT:
+            print("snapshot payload", data)
             snapshot_data = data[1:]
             response = protocol.snapshotack_struct.pack(protocol.SNAPSHOT_ACK, self.client.id)
             socket.send(response)
@@ -48,7 +49,9 @@ class Screen(Scene):
             # print("udp message from server", data)
 
     def apply_snapshot_data(self, data):
-        pass
+        tsnapshot = snapshot.Snapshot()
+        tsnapshot.from_diff_data(data)
+        tsnapshot.free()
         # print("client receives", data)
 
 
