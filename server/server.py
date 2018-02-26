@@ -101,7 +101,7 @@ class Server:
 
     def apply_input(self, id, move):
         player_input = self.engine.entities[id].input
-        player_input.move = 1. #TODO: assign move
+        player_input.move = move
 
     def set_game_address(self, player_id, port):
         player = self.clients[player_id]
@@ -131,7 +131,9 @@ class Server:
                 continue
             id = i
             break
-        self.engine.add_player(id)
+        player = self.engine.add_player(id)[1]
+        player.body.y = 64.
+        player.body.x = 64.
         self.clients[id] = Player(transport)
         return id
 

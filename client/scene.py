@@ -13,18 +13,18 @@ class Screen(Scene):
         super().__init__(3)
         self.client = client
         self.engine = Engine(self.batch, self.groups)
-        self.player = self.engine.add_player()[1]
-        self.player.body.x = 64.
-        self.player.body.y = 64.
+        self.player = None
         # level.load_level(level.basic, self.pools["platform"])
 
     def init(self):
         self.director.set_mouse_cursor(assets.cursor)
+        self.player = self.engine.add_player(self.client.id)[1]
         pyglet.clock.schedule_interval(self.send_input_to_server, self.INPUT_PER_SEC)
 
     def quit(self):
         self.director.set_mouse_cursor(None)
         pyglet.clock.unschedule(self.send_input_to_server)
+        self.engine.remove_player(self.client.id)
 
     def update(self, dt):
         self.client.step()
@@ -41,7 +41,7 @@ class Screen(Scene):
         data = socket.recv(1024)
         command = protocol.command(data)
         if command == protocol.SNAPSHOT:
-            print("snapshot payload", data)
+            # print("snapshot payload", data)
             snapshot_data = data[1:]
             response = protocol.snapshotack_struct.pack(protocol.SNAPSHOT_ACK, self.client.id)
             socket.send(response)
