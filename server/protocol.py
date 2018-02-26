@@ -46,6 +46,9 @@ class ServerProtocol(asyncio.Protocol):
             command, player_id, port = protocol.sendgameport_struct.unpack(data) 
             self.server.set_game_address(player_id, port)
             print("game port", player_id, port)
+        elif command == protocol.REQUEST_SNAPSHOT:
+            command, player_id = protocol.request_snapshot_struct.unpack(data)
+            print("player {} requests a full snapshot".format(player_id))
         print("clients", self.server.clients)
 
     def connection_lost(self, exc):

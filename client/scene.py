@@ -20,6 +20,7 @@ class Screen(Scene):
         self.director.set_mouse_cursor(assets.cursor)
         self.player = self.engine.add_player(self.client.id)[1]
         pyglet.clock.schedule_interval(self.send_input_to_server, self.INPUT_PER_SEC)
+        self.client.server_send(protocol.request_snapshot_struct.pack(protocol.REQUEST_SNAPSHOT, self.client.id))
 
     def quit(self):
         self.director.set_mouse_cursor(None)
@@ -50,6 +51,10 @@ class Screen(Scene):
 
     def tcp_from_server(self, socket):
         data = socket.recv(1024)
+        command = protocol.command(data)
+        if command == protocol.SNAPSHOT:
+            snapshot_data = data[1:]
+            self.apply_snapshot_data(snapshot_data)
 
     def apply_snapshot_data(self, data):
         tsnapshot = snapshot.Snapshot()
