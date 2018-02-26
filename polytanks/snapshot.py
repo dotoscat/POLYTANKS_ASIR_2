@@ -38,7 +38,7 @@ class SnapshotMixin:
             snapshot_body.x = body.x
             snapshot_body.y = body.y
             self.players[id] = snapshot_body
-
+    
     def reset(self):
         for id in self.players:
             self.players[id].free()
