@@ -147,3 +147,13 @@ class Server:
 
     def ack_client(self, id):
         self.clients[id].ack(self.loop.time())
+
+    def send_requested_snapshot(self, id):
+        shot = snapshot.Snapshot()
+        shot.from_engine(self.engine)
+        diff_data = shot.diff(snapshot.MASTER_SNAPSHOT)
+        data = int.to_bytes(protocol.SNAPSHOT, 1, "big")
+        data += diff_data
+        player = self.clients[id]
+        player.server_transport.write(data)
+        shot.free()

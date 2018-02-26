@@ -48,6 +48,7 @@ class ServerProtocol(asyncio.Protocol):
             print("game port", player_id, port)
         elif command == protocol.REQUEST_SNAPSHOT:
             command, player_id = protocol.request_snapshot_struct.unpack(data)
+            self.server.send_requested_snapshot(player_id)
             print("player {} requests a full snapshot".format(player_id))
         print("clients", self.server.clients)
 

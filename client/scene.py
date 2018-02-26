@@ -53,6 +53,7 @@ class Screen(Scene):
         data = socket.recv(1024)
         command = protocol.command(data)
         if command == protocol.SNAPSHOT:
+            print("Received requested snapshot from server")
             snapshot_data = data[1:]
             self.apply_snapshot_data(snapshot_data)
 
