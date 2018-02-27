@@ -52,8 +52,7 @@ class Screen(Scene):
             self.apply_snapshot_data(snapshot_data)
             # print("udp message from server", data)
 
-    def tcp_from_server(self, socket):
-        data = socket.recv(1024)
+    def tcp_from_server(self, data):
         command = protocol.command(data)
         if command == protocol.SNAPSHOT:
             snapshot_data = data[1:]
@@ -104,5 +103,8 @@ class Main(Scene):
     def on_key_press(self, symbol, modifiers):
         if symbol == key.C:
             game_scene = Director.get_scene("game")
-            if self.client.connect_to_server(self.address, game_scene.udp_from_server, game_scene.tcp_from_server):
-                Director.set_scene("game")
+            self.client.connect_to_server(self.address, game_scene.udp_from_server,
+                game_scene.tcp_from_server, self._connected)
+
+    def _connected(self):
+        Director.set_scene("game")
