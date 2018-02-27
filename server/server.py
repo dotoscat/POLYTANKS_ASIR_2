@@ -43,7 +43,7 @@ class GameProtocol(asyncio.DatagramProtocol):
         self.transport = transport
 
 class Server:
-    SNAPSHOT_RATE = 1./20.
+    SNAPSHOT_RATE = 1./15.
     def __init__(self, max_n_players, host):
         self.engine = Engine(max_n_players, max_n_players + 1)
         self.clients = {}

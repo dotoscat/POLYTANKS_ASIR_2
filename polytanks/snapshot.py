@@ -76,16 +76,12 @@ class SnapshotMixin:
     def diff(self, other_snapshot):
         data = bytearray() 
         player_data = bytearray()
-        n_players = 0
         for id in self.players:
             player = self.players[id]
             other_player = other_snapshot.players.get(id)
-            if not other_player:
-                continue
-            if player.diff(other_player):
-                n_players += 1
+            if not other_player or player.diff(other_player):
                 player_data += body_struct.pack(id, player.x, player.y)
-        data += int.to_bytes(n_players, 1, "big")
+        data += int.to_bytes(len(self.players), 1, "big")
         data += player_data
         return data
 
