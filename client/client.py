@@ -60,15 +60,15 @@ class Client:
         self.success_callback = None
     
     def _disconnected(self):
+        self.success_callback()
+        self.success_callback = None
         self.id = 0
+        self.control_register = None
         self.server_address = None
         self.selectors.unregister(self.game_connection)
         self.selectors.unregister(self.server_connection)
-        self.control_register = None
         self.game_connection.close()
         self.server_connection.close()
-        self.success_callback()
-        self.success_callback = None
 
     def connect_to_server(self, address, callback, server_callback, success_callback):
         if not callable(callback):
