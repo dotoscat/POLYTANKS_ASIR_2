@@ -17,11 +17,9 @@ import weakref
 import socket
 import asyncio
 from polytanks import protocol, snapshot
-from . import player
+from .player import Player
 from .engine import Engine
-from . import protocol as server_protocol
-Player = player.Player
-ServerProtocol = server_protocol.ServerProtocol
+from .protocol import ServerProtocol
 
 class GameProtocol(asyncio.DatagramProtocol):
     def __init__(self, server):
@@ -66,6 +64,7 @@ class Server:
         self.last_snapshot_time = self.loop.time()
         GAME_RATE = 1./60.
         while True:
+            # print(self, len(self.connecting_clients), self.connecting_clients.get(1))
             self.clean_clients()
             self.engine.update(GAME_RATE)
             self.send_snapshot()
@@ -81,6 +80,7 @@ class Server:
     def send_snapshot(self):
         if not self.clients:
             return
+
         current_time = self.loop.time()
         if current_time - self.last_snapshot_time < self.SNAPSHOT_RATE:
             return
@@ -104,7 +104,7 @@ class Server:
         player_input.move = move
 
     def set_game_address(self, player_id, port):
-        player = self.clients[player_id]
+        player = self.clients[player_id] 
         player.set_game_address(port)
         current_time = self.loop.time()
         player.ack_time = current_time
@@ -131,10 +131,10 @@ class Server:
                 continue
             id = i
             break
-        player = self.engine.add_player(id)[1]
-        player.body.y = 64.
-        player.body.x = 64.
         self.clients[id] = Player(transport)
+        eng_player = self.engine.add_player(id)[1]
+        eng_player.body.y = 64.
+        eng_player.body.x = 64.
         return id
 
     def remove_client(self, id_):

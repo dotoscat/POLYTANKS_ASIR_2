@@ -11,6 +11,7 @@ class Client:
         self.game_connection = None
         self.server_callback = None
         self.control_register = None
+        self.success_callback = None
 
     def __del__(self):
         self.selectors.close()
@@ -22,7 +23,7 @@ class Client:
     def step(self):
         if not self.control_register:
             return
-        events = self.selectors.select()
+        events = self.selectors.select(0)
         for key, mask in events:
             callback = key.data
             callback(key.fileobj)
@@ -56,6 +57,7 @@ class Client:
         self.server_connection.send(
             protocol.sendgameport_struct.pack(protocol.SEND_GAME_PORT, self.id, game_address[1]))
         self.selectors.register(self.game_connection, selectors.EVENT_READ, self.game_callback)
+        self.success_callback()
 
     def connect_to_server(self, address, callback, server_callback, success_callback):
         if not callable(callback):
