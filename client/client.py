@@ -10,6 +10,7 @@ class Client:
         self.server_connection = None
         self.game_connection = None
         self.server_callback = None
+        self.control_register = None
 
     def __del__(self):
         self.selectors.close()
@@ -19,9 +20,9 @@ class Client:
         return self.id > 0
     
     def step(self):
-        if not self.connected:
+        if not self.control_register:
             return
-        events = self.selectors.select(0)
+        events = self.selectors.select()
         for key, mask in events:
             callback = key.data
             callback(key.fileobj)
@@ -34,6 +35,7 @@ class Client:
 
     def manage_server_connection(self, socket):
         data = socket.recv(1024)
+        print("manage tcp", data)
         command = protocol.command(data)
         if command == b'OK':
             pass
@@ -54,8 +56,6 @@ class Client:
         self.server_connection.send(
             protocol.sendgameport_struct.pack(protocol.SEND_GAME_PORT, self.id, game_address[1]))
         self.selectors.register(self.game_connection, selectors.EVENT_READ, self.game_callback)
-        self.server_connection.setblocking(False)
-        self.selectors.register(self.server_connection, selectors.EVENT_READ, self.manage_server_connection)
 
     def connect_to_server(self, address, callback, server_callback, success_callback):
         if not callable(callback):
@@ -65,9 +65,12 @@ class Client:
         if self.connected:
             return
         self.server_connection = socket.socket()
-        self.server_connection.setblocking(False)
         self.server_connection.connect(address)
+        self.server_connection.setblocking(False)
         self.server_connection.send(protocol.CONNECT.to_bytes(1, "big"))
+        self.control_register = self.selectors.register(self.server_connection,
+            selectors.EVENT_READ, self.manage_server_connection)
+        # print(self.server_connection.recv(1024))
         self.server_address = address
         self.game_callback = callback
         self.server_callback = server_callback
