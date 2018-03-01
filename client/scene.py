@@ -20,11 +20,12 @@ class Screen(Scene):
         self.director.set_mouse_cursor(assets.cursor)
         self.player = self.engine.add_player(self.client.id)[1]
         pyglet.clock.schedule_interval(self.send_input_to_server, self.INPUT_PER_SEC)
-        # pyglet.clock.schedule_interval(self.request_full_snapshot, 1.)
+        pyglet.clock.schedule_interval(self.request_full_snapshot, 1.)
 
     def quit(self):
         self.director.set_mouse_cursor(None)
         pyglet.clock.unschedule(self.send_input_to_server)
+        pyglet.clock.unschedule(self.request_full_snapshot)
         self.engine.remove_player(self.client.id)
 
     def request_full_snapshot(self, dt):
@@ -56,7 +57,6 @@ class Screen(Scene):
         command = protocol.command(data)
         if command == protocol.SNAPSHOT:
             snapshot_data = data[1:]
-            print("requested snapshot_data", snapshot_data)
             self.apply_snapshot_data(snapshot_data)
 
     def apply_snapshot_data(self, data):
@@ -66,14 +66,16 @@ class Screen(Scene):
         tsnapshot.free()
         # print("client receives", data)
 
+    def _disconnected(self):
+        Director.set_scene("main")
 
     def on_key_press(self, symbol, modifiers):
         if symbol in self.player.input.left_keys:
             self.player.input.move = -1.
         if symbol in self.player.input.right_keys:
             self.player.input.move = 1.
-        if symbol == key.L and self.client.disconnect_from_server():
-            Director.set_scene("main")
+        if symbol == key.L:
+            self.client.disconnect_from_server(self._disconnected)
 
     def on_key_release(self, symbol, modifiers):
         if symbol in self.player.input.left_keys:

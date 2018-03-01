@@ -36,7 +36,6 @@ class Client:
 
     def manage_server_connection(self, socket):
         data = socket.recv(1024)
-        print("manage tcp", data)
         command = protocol.command(data)
         if command == b'OK':
             pass
@@ -58,6 +57,18 @@ class Client:
             protocol.sendgameport_struct.pack(protocol.SEND_GAME_PORT, self.id, game_address[1]))
         self.selectors.register(self.game_connection, selectors.EVENT_READ, self.game_callback)
         self.success_callback()
+        self.success_callback = None
+    
+    def _disconnected(self):
+        self.id = 0
+        self.server_address = None
+        self.selectors.unregister(self.game_connection)
+        self.selectors.unregister(self.server_connection)
+        self.control_register = None
+        self.game_connection.close()
+        self.server_connection.close()
+        self.success_callback()
+        self.success_callback = None
 
     def connect_to_server(self, address, callback, server_callback, success_callback):
         if not callable(callback):
@@ -79,19 +90,11 @@ class Client:
         self.success_callback = success_callback
         # self.server_connection.close()
 
-    def disconnect_from_server(self):
+    def disconnect_from_server(self, success_callback):
+        if not callable(success_callback):
+            raise TypeError("success_callback is not callable. {} passed".format(success_callback))
         if not self.connected:
             return
+        self.success_callback = success_callback
         self.server_connection.send(
             protocol.disconnect_struct.pack(protocol.DISCONNECT, self.id))
-        response = self.server_connection.recv(4)
-        print("response", response)
-        if response == b"OK":
-            self.id = 0
-            self.server_address = None
-            self.selectors.unregister(self.game_connection)
-            self.selectors.unregister(self.server_connection)
-            self.server_connection.close()
-            self.game_connection.close()
-            return True
-        return False

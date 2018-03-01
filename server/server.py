@@ -100,8 +100,10 @@ class Server:
             self.game_transport.sendto(data, player.game_address)
 
     def apply_input(self, id, move):
-        player_input = self.engine.entities[id].input
-        player_input.move = move
+        player = self.engine.entities.get(id)
+        if not player:
+            return
+        player.input.move = move
 
     def set_game_address(self, player_id, port):
         player = self.clients[player_id] 
@@ -146,7 +148,10 @@ class Server:
         return player
 
     def ack_client(self, id):
-        self.clients[id].ack(self.loop.time())
+        player = self.clients.get(id)
+        if not player:
+            return
+        player.ack(self.loop.time())
 
     def send_requested_snapshot(self, id):
         shot = snapshot.Snapshot()
