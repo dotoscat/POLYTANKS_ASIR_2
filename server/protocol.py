@@ -38,9 +38,11 @@ class ServerProtocol(asyncio.Protocol):
                 self.transport.write(b"NO")
         elif command == protocol.DISCONNECT:
             id_ = int.from_bytes(data[1:2], "big")
-            player = self.server.remove_client(id_)
+            player = self.server.clients.get(id_)
             if player:
                 self.transport.write(b"OK")
+                self.transport.write_eof()
+                self.server.remove_client(id_)
             else:
                 self.transport.write(b"NO")
         elif command == protocol.SEND_GAME_PORT:

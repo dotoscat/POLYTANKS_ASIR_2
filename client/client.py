@@ -37,8 +37,8 @@ class Client:
     def manage_server_connection(self, socket):
         data = socket.recv(1024)
         command = protocol.command(data)
-        if command == b'OK':
-            pass
+        if data == b'OK':
+            self._disconnected()
         elif command == protocol.CONNECTED:
             self._connected(data)
         else:
