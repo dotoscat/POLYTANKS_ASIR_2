@@ -44,6 +44,7 @@ class Server:
     SNAPSHOT_RATE = 1./15.
     def __init__(self, max_n_players, host):
         self.engine = Engine(max_n_players, max_n_players + 1)
+        self.engine.load_level()
         self.clients = {}
         self.max_n_players = max_n_players
         self.last_snapshot_time = 0.
