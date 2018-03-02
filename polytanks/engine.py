@@ -1,12 +1,17 @@
+from . import level
+
 class AbstractEngine:
     def __init__(self, pools):
-        types = ("player",)
+        types = ("player", "platform")
         for t in types:
             if t not in pools:
                 raise Exception("{} not found in pools".format(t))
         self.pools = pools
         self.entities = {}
         self.players = {}
+
+    def load_level(self):
+        level.load_level(level.basic, self.pools["platform"])
     
     def regenerate_id(self):
         raise NotImplementedError
