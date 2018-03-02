@@ -5,12 +5,13 @@ from polytanks.entity import Player, Platform
 from polytanks.system import input, physics
 
 Player.SYSTEMS = (input, physics)
+Platform.SYSTEMS = ()
 
 class Engine(AbstractEngine):
     def __init__(self, n_players, start_id):
         pools = {
             "player": toyblock3.Manager(Player, n_players),
-            "platform": toyblock3.Manager(Player, 64)
+            "platform": toyblock3.Manager(Platform, 64)
         }
         super().__init__(pools)
         self.start_id = start_id

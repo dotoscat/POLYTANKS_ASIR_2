@@ -16,3 +16,8 @@ class Platform:
     def __init__(self):
         self.collisions = [CollisionRect(0., UNIT)]
     
+    def set_geometry(self, x, y, width):
+        collision = self.collisions[0]
+        collision.x = x
+        collision.y = y
+        collision.width = width

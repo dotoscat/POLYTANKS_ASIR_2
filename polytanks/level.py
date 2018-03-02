@@ -16,18 +16,27 @@
 from .constants import UNIT
 
 basic = [
-    "..............._....................",
-    "....................................",
-    "............______..................",
-    "......____.........._________.......",
     "....................................",
     "....................................",
-    "...______________________________...",
+    "....................................",
+    "....................................",
+    "....................................",
+    "....................................",
+    "...-...--..---......................",
     "....................................",
     "...................................."
 ]
 
+class Area:
+    def __init__(self):
+        self.x = 0.
+        self.y = 0.
+        self.width = 0.
+        self.height = 0.
+
 def load_level(level_info, platform_pool):
+    platform = object() # TODO: Delete later
+    area = None
     for y, l in enumerate(reversed(level_info)):
         iter_l = iter(l)
         x = 0.
@@ -35,14 +44,24 @@ def load_level(level_info, platform_pool):
             c = next(iter_l, None)
             if c is None:
                 break
-            if c != '_':
-                x += 1.
-                continue
-            platform = platform_pool()
-            # TODO: Implement collision for the platforms
-            try:
-                platform.sprite.x = x*UNIT
-                platform.sprite.y = y*UNIT
-            except AttributeError:
-                pass
+            if c == '.' and area:
+                print("platform size", area.x, area.y, area.width)
+                platform = platform_pool()
+                platform.set_geometry(area.x, area.y, area.width)
+                area = None
+                # create platform
+            elif c in ('-', '_'):
+                if not area:
+                    area = Area() 
+                    area.x = x
+                    area.y = y
+                else:
+                    area.width += UNIT
+                # platform = platform_pool()
+                # TODO: Implement collision for the platforms
+                try:
+                    platform.sprite.x = x*UNIT
+                    platform.sprite.y = y*UNIT
+                except AttributeError:
+                    pass
             x += 1.
