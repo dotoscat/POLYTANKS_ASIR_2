@@ -1,5 +1,6 @@
-from ogf4py_toyblock3.component import Body
+from ogf4py_toyblock3.component import Body, CollisionRect
 from . import component
+from .constants import UNIT
 
 class Player:
     def __init__(self):
@@ -12,4 +13,6 @@ class Player:
         self.body.vel_y = 0.
 
 class Platform:
-    pass
+    def __init__(self):
+        self.collisions = [CollisionRect(0., UNIT)]
+    
