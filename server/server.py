@@ -137,6 +137,7 @@ class Server:
         eng_player = self.engine.add_player(id)[1]
         eng_player.body.y = 64.
         eng_player.body.x = 64.
+        eng_player.body.has_gravity = True
         return id
 
     def remove_client(self, id_):

@@ -28,12 +28,13 @@ class Body:
 
     def update(self, dt, gravity):
         if self.has_gravity:
-            self.vel_y += gravity[0]*dt
-            self.vel_x += gravity[1]*dt
-        if self.max_vel_x > 0. and fabs(self.vel_x) > self.max_vel_x:
-            self.vel_x = self.max_vel_x if self.vel_x > 0. else -self.max_vel_x
-        if self.max_vel_y > 0. and fabs(self.vel_y) > self.max_vel_y:
-            self.vel_y = self.max_vel_y if self.vel_y > 0. else -self.max_vel_y
+            self.vel_y += gravity[1]*dt
+            self.vel_x += gravity[0]*dt
+        #if self.max_vel_x > 0. and fabs(self.vel_x) > self.max_vel_x:
+        #    self.vel_x = self.max_vel_x if self.vel_x > 0. else -self.max_vel_x
+        #if self.max_vel_y > 0. and fabs(self.vel_y) > self.max_vel_y:
+        #    self.vel_y = self.max_vel_y if self.vel_y > 0. else -self.max_vel_y
+        # print("update", self.vel_x, self.vel_y, gravity, dt)
         self.x += self.vel_x*dt
         self.y += self.vel_y*dt
 

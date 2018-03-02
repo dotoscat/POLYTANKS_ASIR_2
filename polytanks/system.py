@@ -10,4 +10,4 @@ class InputSystem(toyblock3.System):
 
 input = InputSystem()
 collision = system.CollisionSystem()
-physics = system.PhysicsSystem(constants.FPS)
+physics = system.PhysicsSystem(constants.FPS, (0., -UNIT))
