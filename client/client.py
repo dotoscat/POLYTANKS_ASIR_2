@@ -25,10 +25,11 @@ class Client:
             return
         events = self.selectors.select(0)
         for key, mask in events:
-            if key.fileobj.fileno() == -1:
+            fileobj = key.fileobj
+            if fileobj.fileno() == -1:
                 continue
             callback = key.data
-            callback(key.fileobj)
+            callback(fileobj)
 
     def game_send(self, data):
         self.game_connection.sendall(data)
