@@ -6,7 +6,10 @@ class Player:
         self.input = component.Control() 
         self.body = Body()
     def reset(self):
-        pass
+        self.body.x = 0.
+        self.body.y = 0.
+        self.body.vel_x = 0.
+        self.body.vel_y = 0.
 
 class Platform:
     pass
