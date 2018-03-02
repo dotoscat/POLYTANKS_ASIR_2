@@ -43,8 +43,6 @@ class Screen(Scene):
         # print("send input to server", dt) 
 
     def udp_from_server(self, socket):
-        if socket.fileno() == -1:
-            return
         data = socket.recv(1024)
         command = protocol.command(data)
         if command == protocol.SNAPSHOT:
