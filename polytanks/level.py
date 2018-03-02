@@ -31,6 +31,7 @@ class Area:
     def __init__(self):
         self.x = 0.
         self.y = 0.
+        self.tiles = 1
         self.width = 0.
         self.height = 0.
 
@@ -45,9 +46,9 @@ def load_level(level_info, platform_pool):
             if c is None:
                 break
             if c == '.' and area:
-                print("platform size", area.x, area.y, area.width)
+                print("platform size", area.x, area.y, area.tiles)
                 platform = platform_pool()
-                platform.set_geometry(area.x, area.y, area.width)
+                platform.set_geometry(area.x*UNIT, area.y*UNIT, area.tiles)
                 area = None
                 # create platform
             elif c in ('-', '_'):
@@ -56,7 +57,7 @@ def load_level(level_info, platform_pool):
                     area.x = x
                     area.y = y
                 else:
-                    area.width += UNIT
+                    area.tiles += 1
                 # platform = platform_pool()
                 # TODO: Implement collision for the platforms
                 try:
