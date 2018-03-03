@@ -58,11 +58,4 @@ def load_level(level_info, platform_pool):
                     area.y = y
                 else:
                     area.tiles += 1
-                # platform = platform_pool()
-                # TODO: Implement collision for the platforms
-                try:
-                    platform.sprite.x = x*UNIT
-                    platform.sprite.y = y*UNIT
-                except AttributeError:
-                    pass
             x += 1.
