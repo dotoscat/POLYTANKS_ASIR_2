@@ -1,23 +1,25 @@
 import pyglet
 import polytanks.entity as pentity
 from . import assets
-from .component import TankGraphic
+from .component import TankGraphic, PlatformSprite
 from . import system
 
 class Platform(pentity.Platform):
     SYSTEMS = ()
     def __init__(self, batch, group):
         super().__init__()
-        self.sprite = pyglet.sprite.Sprite(assets.images["platform"], batch=batch, group=group)
+        self.sprite = None
+        self.batch = batch
+        self.group = group
 
     def reset(self):
-        pass
+        self.sprite = None
 
     def set_geometry(self, x, y, tiles_width):
         super().set_geometry(x, y, tiles_width)
-        self.sprite.x = x
-        self.sprite.y = y
-        # Create groups of sprites for platform
+        self.sprite = PlatformSprite(
+            assets.images["platform"], tiles_width,
+            x=x, y=y, batch=self.batch, group=self.group)
 
 class Player(pentity.Player):
     SYSTEMS = (system.input, system.polytanks_system.physics, system.sprite)

@@ -3,9 +3,22 @@ import pyglet
 from pyglet.window import key
 from . import assets
 from polytanks import component
+from polytanks.constants import UNIT
 
 component.Control.left_keys = (key.A, key.LEFT)
 component.Control.right_keys = (key.D, key.RIGHT) 
+
+class PlatformSprite:
+    def __init__(self, tile, times, x=0., y=0., batch=None, group=None):
+        self.sprites = []
+        for i in range(times):
+            self.sprites.append(
+                pyglet.sprite.Sprite(tile, x=x + i*UNIT, y=y, batch=batch, group=group)
+            )
+
+    def __del__(self):
+        for sprite in self.sprites:
+            sprite.delete()
 
 class TankGraphic:
     def __init__(self, batch, groups, group_start):
