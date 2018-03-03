@@ -1,4 +1,4 @@
-#  ogf4py
+#  ogf4py_toyblock 
 #  Copyright (C) 2018 Oscar 'dotoscat' Triano
 
 #  This program is free software: you can redistribute it and/or modify
