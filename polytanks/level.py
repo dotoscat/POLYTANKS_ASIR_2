@@ -36,7 +36,6 @@ class Area:
         self.height = 0.
 
 def load_level(level_info, platform_pool):
-    platform = object() # TODO: Delete later
     area = None
     for y, l in enumerate(reversed(level_info)):
         iter_l = iter(l)
