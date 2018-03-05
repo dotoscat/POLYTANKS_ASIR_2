@@ -24,9 +24,10 @@ class SpritesSystem(toyblock3.System):
         sprite.x = body.x
         sprite.y = body.y
 
-class InputSystem(toyblock3.System):
+class InputSystem(polytanks_system.InputSystem):
     def _update(self, entity):
-        entity.body.vel_x = entity.input.move*UNIT*2.
+        super()._update(entity)
+        print("client input, player.body.vel_y", entity.body.vel_y)
         entity.sprite.update_cannon_angle(entity.input.pointer_x, entity.input.pointer_y)
 
 sprite = SpritesSystem()
