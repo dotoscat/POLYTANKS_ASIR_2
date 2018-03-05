@@ -76,7 +76,7 @@ class CollisionSystem(toyblock3.System):
                 callback = self.callbacks.get((rect.type, other_rect.type), None)
                 if not callable(callback):
                     continue
-                callback(entity, other_entity)
+                callback(entity, other_entity, rect, other_rect)
 
     def register_callback(self, pair):
         """This is a decorator where you define a callback.
