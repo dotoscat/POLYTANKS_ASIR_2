@@ -18,3 +18,5 @@ class Control:
         self.move = 0.
         self.pointer_x = 0.
         self.pointer_y = 0.
+        self.touch_floor = False
+        self.jumps = False

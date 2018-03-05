@@ -24,8 +24,11 @@ class CollisionMixin:
         collision.register_callback((PLAYER_FEET, PLATFORM))(self.player_platform)
 
     def player_platform(self, player, platform, player_rect, platform_rect):
-        print(player_rect.x, player_rect.y, platform_rect.x, platform_rect.y)
+        # print(player_rect.x, player_rect.y, platform_rect.x, platform_rect.y)
+        # print("touch_floor, has_gravity: ", player.input.touch_floor, player.body.has_gravity, player.body.vel_y)
         player.body.y = platform_rect.top + -player_rect.offset[1]
         player.body.vel_y = 0.
-        print("player y, height, top:", player_rect.y, player_rect.height, player_rect.top)
-        print("platform y, height, top:", platform_rect.y, platform_rect.height, platform_rect.top)
+        player.body.has_gravity = False
+        player.input.touch_floor = True
+        # print("player y, height, top:", player_rect.y, player_rect.height, player_rect.top)
+        #print("platform y, height, top:", platform_rect.y, platform_rect.height, platform_rect.top)

@@ -43,3 +43,6 @@ class Engine(AbstractEngine):
 
     def regenerate_id(self):
         self.id_generator = count(self.start_id)
+
+    def player_platform(self, player, platform, player_rect, platform_rect):
+        super().player_platform(player, platform, player_rect, platform_rect)

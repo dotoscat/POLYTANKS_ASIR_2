@@ -33,8 +33,8 @@ class GameProtocol(asyncio.DatagramProtocol):
             command, id = protocol.snapshotack_struct.unpack(data)
             self.server.ack_client(id)
         elif command == protocol.INPUT:
-            command, id, move = protocol.input_struct.unpack(data)
-            self.server.apply_input(id, move)
+            command, id, move, jumps = protocol.input_struct.unpack(data)
+            self.server.apply_input(id, move, jumps)
 
     def connection_made(self, transport):
         print("GameProtocol connection_made")
@@ -66,9 +66,12 @@ class Server:
         GAME_RATE = 1./60.
         while True:
             # print(self, len(self.connecting_clients), self.connecting_clients.get(1))
+            start = self.loop.time()
             self.clean_clients()
             self.engine.update(GAME_RATE)
             self.send_snapshot()
+            total = self.loop.time() - start
+            # print("took ms:", total)
             await asyncio.sleep(GAME_RATE)
 
     def clean_clients(self):
@@ -100,11 +103,12 @@ class Server:
             player.send_time = self.loop.time()
             self.game_transport.sendto(data, player.game_address)
 
-    def apply_input(self, id, move):
+    def apply_input(self, id, move, jumps):
         player = self.engine.entities.get(id)
         if not player:
             return
         player.input.move = move
+        player.input.jumps = jumps
 
     def set_game_address(self, player_id, port):
         player = self.clients[player_id] 
@@ -136,7 +140,7 @@ class Server:
             break
         self.clients[id] = Player(transport)
         eng_player = self.engine.add_player(id)[1]
-        eng_player.body.y = 64.
+        eng_player.body.y = 320.
         eng_player.body.x = 64.
         eng_player.body.has_gravity = True
         return id

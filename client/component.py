@@ -22,6 +22,7 @@ from polytanks.constants import UNIT
 
 component.Control.left_keys = (key.A, key.LEFT)
 component.Control.right_keys = (key.D, key.RIGHT) 
+component.Control.jump_keys = (key.W, key.UP)
 
 class PlatformSprite:
     def __init__(self, tile, times, x=0., y=0., batch=None, group=None):

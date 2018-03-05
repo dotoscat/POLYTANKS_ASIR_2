@@ -20,6 +20,10 @@ from .constants import UNIT, FPS
 class InputSystem(toyblock3.System):
     def _update(self, entity):
         entity.body.vel_x = entity.input.move*UNIT*2.
+        if entity.input.jumps and entity.input.touch_floor:
+            entity.body.vel_y = UNIT*3.
+        entity.body.has_gravity = True
+        entity.input.touch_floor = False
 
 input = InputSystem()
 collision = system.CollisionSystem()

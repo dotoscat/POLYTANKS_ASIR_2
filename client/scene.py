@@ -54,7 +54,7 @@ class Screen(Scene):
     def send_input_to_server(self, dt):
         input = self.player.input
         data_input = protocol.input_struct.pack(protocol.INPUT, self.client.id,
-            input.move)
+            input.move, input.jumps)
         self.client.game_send(data_input)
         # print("send input to server", dt) 
 
@@ -90,6 +90,8 @@ class Screen(Scene):
             self.player.input.move = -1.
         if symbol in self.player.input.right_keys:
             self.player.input.move = 1.
+        if symbol in self.player.input.jump_keys:
+            self.player.input.jumps = True
         if symbol == key.L:
             self.client.disconnect_from_server(self._disconnected)
 
@@ -98,6 +100,8 @@ class Screen(Scene):
             self.player.input.move = 0.
         if symbol in self.player.input.right_keys:
             self.player.input.move = 0.
+        if symbol in self.player.input.jump_keys:
+            self.player.input.jumps = False
 
     def on_mouse_motion(self, x, y, dx, dy):
         self.player.input.pointer_x = x
