@@ -63,7 +63,10 @@ class CollisionSystem(toyblock3.System):
         self.callbacks = {}
 
     def _update(self, entity):
+        print(len(self.entities))
         for rect, other_entity in product(entity.collisions, self.entities):
+            if not rect.collides_with:
+                continue
             if entity is other_entity:
                 continue
             for other_rect in other_entity.collisions:
