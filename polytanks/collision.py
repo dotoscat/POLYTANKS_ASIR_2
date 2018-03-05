@@ -13,19 +13,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-WHITE = (255, 255, 255, 255)
-RED = (255, 200, 200, 255)
-GREEN = (200, 255, 200, 255)
-BLUE = (200, 200, 255, 255)
-YELLOW = (255, 255, 200, 255)
-MAGENTA = (255, 200, 255, 255)
-CYAN = (200, 255, 255, 200)
+from .system import collision
 
-COLORS = [
-    RED,
-    GREEN,
-    BLUE,
-    YELLOW,
-    MAGENTA,
-    CYAN
-]
+PLAYER = 1
+PLATFORM = 1 << 1
+PLAYER_FEET = 1 << 2
+
+class CollisionMixin:
+    def register_collisions(self):
+        collision.register_callback((PLAYER_FOOT, PLATFORM))(self.player_platform)
+
+    def player_platform(self, player, platform):
+        print(player, platform)

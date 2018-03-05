@@ -14,13 +14,23 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.#Copyright (C) 2017  Oscar 'dotoscat' Triano <dotoscat (at) gmail (dot) com>
 
 from ogf4py_toyblock3.component import Body, CollisionRect
+import collision
 from . import component
 from .constants import UNIT
 
 class Player:
     def __init__(self):
         self.input = component.Control() 
+        self.collisions = []
         self.body = Body()
+
+        feet = CollisionRect(UNIT, UNIT/2.)
+        feet.offset = (-UNIT/2, -UNIT/2.)
+        feet.type = collision.PLAYER_FEET
+        feet.collides_with = collision.PLATFORM
+
+        self.collisions.append(feet)
+
     def reset(self):
         self.body.x = 0.
         self.body.y = 0.

@@ -13,9 +13,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.#Copyright (C) 2017  Oscar 'dotoscat' Triano <dotoscat (at) gmail (dot) com>
 
+from .collision import CollisionMixin
 from . import level
 
-class AbstractEngine:
+class AbstractEngine(CollisionMixin):
     def __init__(self, pools):
         types = ("player", "platform")
         for t in types:
@@ -24,6 +25,7 @@ class AbstractEngine:
         self.pools = pools
         self.entities = {}
         self.players = {}
+        self.register_collisions()
 
     def load_level(self):
         level.load_level(level.basic, self.pools["platform"])

@@ -17,9 +17,9 @@ from itertools import count
 import toyblock3
 from polytanks.engine import AbstractEngine
 from polytanks.entity import Player, Platform
-from polytanks.system import input, physics
+from polytanks.system import input, physics, collision
 
-Player.SYSTEMS = (input, physics)
+Player.SYSTEMS = (input, physics, collision)
 Platform.SYSTEMS = ()
 
 class Engine(AbstractEngine):
