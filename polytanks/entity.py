@@ -23,7 +23,7 @@ class Player:
         self.collisions = []
         self.body = Body()
 
-        feet = CollisionRect(UNIT, UNIT/2.)
+        feet = CollisionRect(UNIT, 2)
         feet.offset = (-UNIT/2, -UNIT/2.)
         feet.type = collision.PLAYER_FEET
         feet.collides_with = collision.PLATFORM
@@ -38,14 +38,14 @@ class Player:
 
 class Platform:
     def __init__(self):
-        self.collisions = [CollisionRect(UNIT, UNIT/2.)]
+        self.collisions = [CollisionRect(UNIT, UNIT/4.)]
 
         rect = self.collisions[0]
-        rect.offset = (-UNIT/2., UNIT/2.)
+        # rect.offset = (-UNIT/2., UNIT/2.)
         rect.type = collision.PLATFORM
     
     def set_geometry(self, x, y, tiles_width):
         collision = self.collisions[0]
         collision.x = x
-        collision.y = y
+        collision.y = y + UNIT - collision.height
         collision.width = tiles_width*UNIT
