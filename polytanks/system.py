@@ -15,7 +15,7 @@
 
 import toyblock3
 from ogf4py_toyblock3 import system
-from .constants import UNIT
+from .constants import UNIT, FPS
 
 class InputSystem(toyblock3.System):
     def _update(self, entity):
@@ -23,4 +23,4 @@ class InputSystem(toyblock3.System):
 
 input = InputSystem()
 collision = system.CollisionSystem()
-physics = system.PhysicsSystem(constants.FPS, (0., -UNIT))
+physics = system.PhysicsSystem(FPS, (0., -UNIT))
