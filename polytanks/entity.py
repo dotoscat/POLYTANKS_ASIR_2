@@ -14,8 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.#Copyright (C) 2017  Oscar 'dotoscat' Triano <dotoscat (at) gmail (dot) com>
 
 from ogf4py_toyblock3.component import Body, CollisionRect
-import collision
-from . import component
+from . import collision, component
 from .constants import UNIT
 
 class Player:
@@ -39,7 +38,11 @@ class Player:
 
 class Platform:
     def __init__(self):
-        self.collisions = [CollisionRect(0., UNIT)]
+        self.collisions = [CollisionRect(UNIT, UNIT/2.)]
+
+        rect = self.collisions[0]
+        rect.offset = (-UNIT/2., UNIT/2.)
+        rect.type = collision.PLATFORM
     
     def set_geometry(self, x, y, tiles_width):
         collision = self.collisions[0]

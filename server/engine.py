@@ -20,7 +20,7 @@ from polytanks.entity import Player, Platform
 from polytanks.system import input, physics, collision
 
 Player.SYSTEMS = (input, physics, collision)
-Platform.SYSTEMS = ()
+Platform.SYSTEMS = (collision,)
 
 class Engine(AbstractEngine):
     def __init__(self, n_players, start_id):
@@ -36,6 +36,7 @@ class Engine(AbstractEngine):
     def update(self, dt):
         input()
         physics()
+        collision()
 
     def generate_id(self):
         return next(self.id_generator)
