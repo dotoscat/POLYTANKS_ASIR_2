@@ -11,7 +11,7 @@
 # GNU Affero General Public License for more details.
 
 # You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.#Copyright (C) 2017  Oscar 'dotoscat' Triano <dotoscat (at) gmail (dot) com>
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import toyblock3
 from ogf4py_toyblock3 import system
@@ -23,4 +23,4 @@ class InputSystem(toyblock3.System):
 
 input = InputSystem()
 collision = system.CollisionSystem()
-physics = system.PhysicsSystem(FPS, (0., -UNIT))
+physics = system.PhysicsSystem(FPS, (0., -UNIT*3.))
