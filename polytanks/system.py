@@ -15,9 +15,7 @@
 
 import toyblock3
 from ogf4py_toyblock3 import system
-from . import constants
-
-UNIT = constants.UNIT
+from .constants import UNIT
 
 class InputSystem(toyblock3.System):
     def _update(self, entity):
