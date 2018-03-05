@@ -21,7 +21,7 @@ PLAYER_FEET = 1 << 2
 
 class CollisionMixin:
     def register_collisions(self):
-        collision.register_callback((PLAYER_FOOT, PLATFORM))(self.player_platform)
+        collision.register_callback((PLAYER_FEET, PLATFORM))(self.player_platform)
 
     def player_platform(self, player, platform):
         print(player, platform)
