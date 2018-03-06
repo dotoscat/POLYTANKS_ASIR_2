@@ -23,7 +23,7 @@ class Engine(AbstractEngine):
     def __init__(self, batch, groups):
         pools = {
             "player": toyblock3.Manager(Player, 4, batch, groups),
-            "platform": toyblock3.Pool(Platform, 64, batch, groups[0])
+            "platform": toyblock3.Manager(Platform, 64, batch, groups[0])
         }
         super().__init__(pools)
 
@@ -38,3 +38,4 @@ class Engine(AbstractEngine):
 
     def generate_id(self):
         return 0
+    
