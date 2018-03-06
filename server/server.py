@@ -140,7 +140,7 @@ class Server:
             break
         self.clients[id] = Player(transport)
         eng_player = self.engine.add_player(id)[1]
-        eng_player.body.y = 320.
+        eng_player.body.y = 128.
         eng_player.body.x = 64.
         eng_player.body.has_gravity = True
         return id

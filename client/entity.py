@@ -20,7 +20,7 @@ from .component import TankGraphic, PlatformSprite
 from . import system
 
 class Platform(pentity.Platform):
-    SYSTEMS = ()
+    SYSTEMS = (system.polytanks_system.collision,)
     def __init__(self, batch, group):
         super().__init__()
         self.sprite = None
@@ -37,7 +37,7 @@ class Platform(pentity.Platform):
             x=x, y=y, batch=self.batch, group=self.group)
 
 class Player(pentity.Player):
-    SYSTEMS = (system.input, system.polytanks_system.physics, system.sprite)
+    SYSTEMS = (system.input, system.polytanks_system.physics, system.polytanks_system.collision, system.sprite)
     def __init__(self, batch, groups):
         super().__init__()
         self.sprite = TankGraphic(batch, groups, 1)
