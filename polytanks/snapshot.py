@@ -22,17 +22,22 @@ class Body_:
     def __init__(self):
         self.x = 0.
         self.y = 0.
+        self.vel_x = 0.
+        self.vel_y = 0.
 
     def reset(self):
         self.x = 0.
         self.y = 0.
+        self.vel_x = 0.
+        self.vel_y = 0.
 
     def diff(self, body):
-        return self.x != body.x or self.y != body.y
+        return (self.x != body.x or self.y != body.y
+        or self.vel_x != body.vel_x or self.vel_y != body.vel_y)
 
 Body = toyblock3.Pool(Body_, MAX_SNAPSHOTS*4)
 
-body_struct = struct.Struct("!Bff")
+body_struct = struct.Struct("!Bffff") # TODO: send velocity
 
 class MASTER_SNAPSHOT:
     players = {}
@@ -52,16 +57,20 @@ class SnapshotMixin:
             snapshot_body = Body()
             snapshot_body.x = body.x
             snapshot_body.y = body.y
+            snapshot_body.vel_x = body.vel_x
+            snapshot_body.vel_y = body.vel_y
             self.players[id] = snapshot_body
 
     def from_diff_data(self, data):
         n_players = int.from_bytes(data[:1], "big")
         if n_players:
             player_data = data[1:body_struct.size*n_players+1]
-            for id, x, y in body_struct.iter_unpack(player_data):
+            for id, x, y, vel_x, vel_y in body_struct.iter_unpack(player_data):
                 body = Body()
                 body.x = x
                 body.y = y
+                body.vel_x = vel_x
+                body.vel_y = vel_y
                 self.players[id] = body
     
     def apply_to_engine(self, engine):
@@ -73,6 +82,8 @@ class SnapshotMixin:
             player = players[id]
             engine_player.body.x = player.x
             engine_player.body.y = player.y
+            engine_player.body.vel_x = player.vel_x
+            engine_player.body.vel_y = player.vel_y
     
     def reset(self):
         for id in self.players:
@@ -95,7 +106,7 @@ class SnapshotMixin:
             player = self.players[id]
             other_player = other_snapshot.players.get(id)
             if not other_player or player.diff(other_player):
-                player_data += body_struct.pack(id, player.x, player.y)
+                player_data += body_struct.pack(id, player.x, player.y, player.vel_x, player.vel_y)
         data += int.to_bytes(len(self.players), 1, "big")
         data += player_data
         return data

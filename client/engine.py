@@ -30,7 +30,7 @@ class Engine(AbstractEngine):
     def update(self, dt):
         system.input()
         polytanks_system.physics()
-        # polytanks_system.collision()
+        polytanks_system.collision()
         system.sprite()
 
     def regenerate_id(self):
