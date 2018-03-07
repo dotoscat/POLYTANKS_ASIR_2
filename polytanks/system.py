@@ -17,6 +17,7 @@ import toyblock3
 from ogf4py_toyblock3 import system
 from .constants import UNIT, FPS
 from . import event
+from .event import event_manager
 
 class InputSystem(toyblock3.System):
     def _update(self, entity):
@@ -26,10 +27,12 @@ class InputSystem(toyblock3.System):
             entity.body.vel_y = UNIT*3.
             entity.body.has_gravity = True
             entity.input.touch_floor = False
-        # if entity.info.touched_floor and not entity.input.touch_floor:
-        #     entity.info.touched_floor = False
-        # entity.body.has_gravity = True
-        # entity.input.touch_floor = False
+        elif entity.input.jumps and not entity.input.touch_floor:
+            if entity.body.vel_y < 0.:
+                entity.body.vel_y = UNIT
+            else:
+                entity.body.vel_y += UNIT
+
 
 input = InputSystem()
 collision = system.CollisionSystem()

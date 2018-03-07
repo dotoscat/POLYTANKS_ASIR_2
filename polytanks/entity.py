@@ -38,6 +38,8 @@ class Player:
         self.body.y = 0.
         self.body.vel_x = 0.
         self.body.vel_y = 0.
+        self.body.has_gravity = True
+        self.input.touch_floor = False
 
 class Platform:
     def __init__(self):

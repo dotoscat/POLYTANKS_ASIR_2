@@ -15,7 +15,7 @@
 
 import socket
 import selectors
-from polytanks import protocol
+from polytanks import protocol, event
 
 class Client:
     def __init__(self):
@@ -57,6 +57,7 @@ class Client:
         command = protocol.command(data)
         if data == b'OK':
             self._disconnected()
+            event.event_manager.clear()
         elif command == protocol.CONNECTED:
             self._connected(data)
         else:
