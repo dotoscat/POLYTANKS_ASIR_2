@@ -20,3 +20,7 @@ class Control:
         self.pointer_y = 0.
         self.touch_floor = False
         self.jumps = False
+
+class Info:
+    def __init__(self):
+        self.touched_floor = False

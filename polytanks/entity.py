@@ -22,6 +22,7 @@ class Player:
         self.input = component.Control() 
         self.collisions = []
         self.body = Body()
+        self.info = component.Info()
 
         feet = CollisionRect(UNIT, 2)
         feet.offset = (-UNIT/2, -UNIT/2.)
