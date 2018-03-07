@@ -65,7 +65,9 @@ class EventManager:
         n_events = int.to_bytes(len(self.events), 1, "big")
         data = bytearray()
         data += n_events
-        for event in self.events:
+        events = self.events
+        while events:
+            event = events.pop()
             data += bytes(event)
         return data
 
