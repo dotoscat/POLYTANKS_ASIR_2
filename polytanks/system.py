@@ -20,8 +20,14 @@ from .constants import UNIT, FPS
 class InputSystem(toyblock3.System):
     def _update(self, entity):
         entity.body.vel_x = entity.input.move*UNIT*2.
+        # print("input vel y", entity.body.vel_y)
         if entity.input.jumps and entity.input.touch_floor:
             entity.body.vel_y = UNIT*3.
+        if not entity.info.touched_floor and entity.input.touch_floor and entity.body.vel_y == 0.:
+            print("touch floor")
+            entity.info.touched_floor = True
+        if entity.info.touched_floor and not entity.input.touch_floor:
+            entity.info.touched_floor = False
         entity.body.has_gravity = True
         entity.input.touch_floor = False
 
