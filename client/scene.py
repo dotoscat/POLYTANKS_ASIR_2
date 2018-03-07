@@ -17,6 +17,7 @@ import toyblock3
 import pyglet
 from pyglet.window import key
 from polytanks import level, protocol, snapshot
+from polytanks.event import event_manager
 from ogf4py.scene import Scene
 from ogf4py.director import Director
 from . import assets
@@ -74,6 +75,12 @@ class Screen(Scene):
         if command == protocol.SNAPSHOT:
             snapshot_data = data[1:]
             self.apply_snapshot_data(snapshot_data)
+        elif command == protocol.EVENT:
+            self.manage_events(data[1:])
+
+    def manage_events(self, data):
+        event_manager.from_bytes(data)
+        print("event manager", len(event_manager.events))       
 
     def apply_snapshot_data(self, data):
         tsnapshot = snapshot.Snapshot()
