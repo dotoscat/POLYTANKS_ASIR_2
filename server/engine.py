@@ -18,6 +18,8 @@ import toyblock3
 from polytanks.engine import AbstractEngine
 from polytanks.entity import Player, Platform
 from polytanks.system import input, physics, collision
+from polytanks.event import event_manager
+from polytanks import event
 
 Player.SYSTEMS = (input, physics, collision)
 Platform.SYSTEMS = (collision,)
@@ -44,5 +46,7 @@ class Engine(AbstractEngine):
     def regenerate_id(self):
         self.id_generator = count(self.start_id)
 
-    def player_platform(self, player, platform, player_rect, platform_rect):
-        super().player_platform(player, platform, player_rect, platform_rect)
+    def player_platform_start(self, player, platform, player_rect, platform_rect):
+        super().player_platform_start(player, platform, player_rect, platform_rect)
+        event_manager.add_player_event(event.PLAYER_JUMPS, player.id)
+        print("events", len(event_manager.events))

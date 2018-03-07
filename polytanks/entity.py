@@ -19,6 +19,7 @@ from .constants import UNIT
 
 class Player:
     def __init__(self):
+        self.id = 0
         self.input = component.Control() 
         self.collisions = []
         self.body = Body()
@@ -32,6 +33,7 @@ class Player:
         self.collisions.append(feet)
 
     def reset(self):
+        self.id = 0
         self.body.x = 0.
         self.body.y = 0.
         self.body.vel_x = 0.
