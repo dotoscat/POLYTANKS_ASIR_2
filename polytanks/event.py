@@ -62,6 +62,8 @@ class EventManager:
             self.add_player_event(what, who)
 
     def to_network(self):
+        if not self.events:
+            return
         n_events = int.to_bytes(len(self.events), 1, "big")
         data = bytearray()
         data += n_events

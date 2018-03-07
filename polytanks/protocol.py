@@ -23,6 +23,7 @@ SNAPSHOT = 5
 SNAPSHOT_ACK = 6
 INPUT = 7
 REQUEST_SNAPSHOT = 9
+EVENT = 10
 
 # CONNECT is send as a single byte
 connected_struct = struct.Struct("!BB")

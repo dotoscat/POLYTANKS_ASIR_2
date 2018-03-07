@@ -77,3 +77,6 @@ class Player:
     @property
     def response_time(self):
         return self.send_time - self.ack_time
+
+    def secure_send(self, data):
+        self.server_transport.write(data)

@@ -17,6 +17,7 @@ import weakref
 import socket
 import asyncio
 from polytanks import protocol, snapshot
+from polytanks.event import event_manager
 from .player import Player
 from .engine import Engine
 from .protocol import ServerProtocol
@@ -70,9 +71,19 @@ class Server:
             self.clean_clients()
             self.engine.update(GAME_RATE)
             self.send_snapshot()
+            self.send_events()
             total = self.loop.time() - start
             # print("took ms:", total)
             await asyncio.sleep(GAME_RATE)
+
+    def send_events(self):
+        data = event_manager.to_network()
+        if not data:
+            return
+        data = int.to_bytes(protocol.EVENT, 1, "big") + data
+        for id in self.clients:
+            player = self.clients[id]
+            player.secure_send(data)
 
     def clean_clients(self):
         offline = [id for id in self.clients
