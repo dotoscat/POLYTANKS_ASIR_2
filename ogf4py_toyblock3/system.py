@@ -14,6 +14,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from collections import namedtuple
 from itertools import product
 import toyblock3
 
@@ -58,9 +59,11 @@ class CollisionSystem(toyblock3.System):
     of :class:`CollisionRect`.
 
     """
+    Callbacks = namedtuple("Callbacks", "start during end")
     def __init__(self):
         super().__init__()
         self.callbacks = {}
+        self._collisions = {}
 
     def _update(self, entity):
         for rect, other_entity in product(entity.collisions, self.entities):
@@ -71,12 +74,19 @@ class CollisionSystem(toyblock3.System):
             for other_rect in other_entity.collisions:
                 if rect.collides_with & other_rect.type != other_rect.type:
                     continue
+                pair = (rect, other_rect)
+                callbacks = self.callbacks[(rect.type, other_rect.type)]
                 if not rect.intersects(other_rect):
+                    if pair in self._collisions and callable(callbacks.end):
+                        callbacks.end(entity, other_entity, rect, other_rect)
+                        del self._collisions[pair]
                     continue
-                callback = self.callbacks.get((rect.type, other_rect.type), None)
-                if not callable(callback):
-                    continue
-                callback(entity, other_entity, rect, other_rect)
+                if pair not in self._collisions:
+                    self._collisions[pair] = callbacks
+                    if callable(callbacks.start):
+                        callbacks.start(entity, other_entity, rect, other_rect)
+                if callable(callbacks.during):
+                    callbacks.during(entity, other_entity, rect, other_rect)
 
     def register_callback(self, pair):
         """This is a decorator where you define a callback.
@@ -92,8 +102,8 @@ class CollisionSystem(toyblock3.System):
             my_collision = CollisionSystem()
             # ... set up
             player.collisions[0].type = PLAYER
+            player.collisions[0].collides_with = BULLET
             bullet.collisions[0].type = BULLET
-            bullet.collisions[0].collides_with = PLAYER
             @my_collision.register_callback((PLAYER, BULLET))
             def player_bullet(player, bullet):
                 player.hit()
@@ -107,3 +117,6 @@ class CollisionSystem(toyblock3.System):
             return f
         return _register_callback
     
+    def register_callbacks(self, pair, start=None, during=None, end=None):
+        callbacks = CollisionSystem.Callbacks(start, during, end)
+        self.callbacks[pair] = callbacks 
