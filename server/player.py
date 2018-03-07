@@ -31,6 +31,7 @@ class Player:
             snapshot = self.snapshots.pop()
             snapshot.free()
         print("close transport")
+        self.server_transport.write_eof()
         self.server_transport.close()
 
     def ack(self, time):
