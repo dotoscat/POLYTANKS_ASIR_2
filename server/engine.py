@@ -17,7 +17,8 @@ from itertools import count
 import toyblock3
 from polytanks.engine import AbstractEngine
 from polytanks.entity import Player, Platform
-from polytanks.system import input, physics, collision
+from polytanks.system import physics, collision
+from .system import input
 from polytanks.event import event_manager
 from polytanks import event
 
