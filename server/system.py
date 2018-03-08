@@ -14,13 +14,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from polytanks import system
+from polytanks import event
+from polytanks.event import event_manager
 
 class InputSystem(system.InputSystem):
     def _update(self, entity):
         super()._update(entity)
         if self.jump_event:
+            event_manager.add_player_event(event.PLAYER_JUMPS, entity.id)
             print(entity, "jumps")
         if self.float_event:
+            event_manager.add_player_event(event.PLAYER_FLOATS, entity.id)
             print(entity, "floats") 
 
 input = InputSystem()
