@@ -18,6 +18,7 @@ import pyglet
 from pyglet.window import key
 from polytanks import level, protocol, snapshot
 from polytanks.event import event_manager
+from polytanks import event
 from ogf4py.scene import Scene
 from ogf4py.director import Director
 from . import assets
@@ -80,7 +81,13 @@ class Screen(Scene):
 
     def manage_events(self, data):
         event_manager.from_bytes(data)
-        print("event manager", len(event_manager.events))       
+        for eve in event_manager:
+           if eve.id == event.PLAYER_TOUCHES_FLOOR:
+               print("player {} touches the floor".format(eve.player_id))
+           elif eve.id == event.PLAYER_JUMPS:
+               print("player {} jumps".format(eve.player_id))
+           elif eve.id == event.PLAYER_FLOATS:
+               print("player {} floats".format(eve.player_id))
 
     def apply_snapshot_data(self, data):
         tsnapshot = snapshot.Snapshot()

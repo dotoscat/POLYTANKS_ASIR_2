@@ -76,4 +76,12 @@ class EventManager:
     def clear(self):
         self.events.clear()
 
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if not self.events:
+            raise StopIteration
+        return self.events.pop()
+
 event_manager = EventManager()
