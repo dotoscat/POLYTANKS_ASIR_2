@@ -55,9 +55,11 @@ class Screen(Scene):
 
     def send_input_to_server(self, dt):
         input = self.player.input
-        data_input = protocol.input_struct.pack(protocol.INPUT, self.client.id,
-            input.move, input.jumps)
-        self.client.game_send(data_input)
+        input_data = (
+            protocol.command_id_struct.pack(protocol.INPUT, self.client.id)
+            + bytes(input)
+        )
+        self.client.game_send(input_data)
         # print("send input to server", dt) 
 
     def udp_from_server(self, socket):

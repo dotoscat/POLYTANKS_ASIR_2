@@ -34,8 +34,8 @@ class GameProtocol(asyncio.DatagramProtocol):
             command, id = protocol.snapshotack_struct.unpack(data)
             self.server.ack_client(id)
         elif command == protocol.INPUT:
-            command, id, move, jumps = protocol.input_struct.unpack(data)
-            self.server.apply_input(id, move, jumps)
+            command, id = protocol.command_id_struct.unpack_from(data)
+            self.server.apply_input(id, data)
 
     def connection_made(self, transport):
         print("GameProtocol connection_made")
@@ -114,12 +114,11 @@ class Server:
             player.send_time = self.loop.time()
             self.game_transport.sendto(data, player.game_address)
 
-    def apply_input(self, id, move, jumps):
+    def apply_input(self, id, data):
         player = self.engine.entities.get(id)
         if not player:
             return
-        player.input.move = move
-        player.input.jumps = jumps
+        player.input.from_bytes(data[protocol.command_id_struct.size:])
 
     def set_game_address(self, player_id, port):
         player = self.clients[player_id] 

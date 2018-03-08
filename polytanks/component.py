@@ -13,6 +13,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from struct import Struct
+
+_control_struct = Struct("!f??") # TODO: Add cannon angle later
+
 class Control:
     def __init__(self):
         self.move = 0.
@@ -23,6 +27,12 @@ class Control:
         self.jump_pressed = False
         self.shoots = False
 
+    def from_bytes(self, data):
+        self.move, self.jumps, self.shoots = _control_struct.unpack(data)
+
+    def __bytes__(self):
+        return _control_struct.pack(self.move, self.jumps, self.shoots)
+    
 class Info:
     def __init__(self):
         self.touched_floor = False
