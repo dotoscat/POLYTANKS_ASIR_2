@@ -48,5 +48,5 @@ class Engine(AbstractEngine):
 
     def player_platform_start(self, player, platform, player_rect, platform_rect):
         super().player_platform_start(player, platform, player_rect, platform_rect)
-        event_manager.add_player_event(event.PLAYER_JUMPS, player.id)
-        print("events", len(event_manager.events))
+        # event_manager.add_player_event(event.PLAYER_JUMPS, player.id)
+        # print("events", len(event_manager.events))
