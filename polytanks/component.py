@@ -21,6 +21,7 @@ class Control:
         self.touch_floor = False
         self.jumps = False
         self.jump_pressed = False
+        self.shoots = False
 
 class Info:
     def __init__(self):

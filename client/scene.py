@@ -117,9 +117,23 @@ class Screen(Scene):
         if symbol in self.player.input.jump_keys:
             self.player.input.jumps = False
 
-    def on_mouse_motion(self, x, y, dx, dy):
+    def _update_pointer(self, x, y):
         self.player.input.pointer_x = x
         self.player.input.pointer_y = y
+
+    def on_mouse_motion(self, x, y, dx, dy):
+        self._update_pointer(x, y)
+
+    def on_mouse_drag(self, x, y, dx, dy, button, modifiers):
+        self._update_pointer(x, y)
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        print("charge shot")
+        self.player.input.shoots = True
+
+    def on_mouse_release(self, x, y, button, modifiers):
+        print("unrelease shot")
+        self.player.input.shoots = False
 
 class Main(Scene):
     def __init__(self, client, address):
