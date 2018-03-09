@@ -26,6 +26,7 @@ class Control:
         self.jumps = False
         self.jump_pressed = False
         self.shoots = False
+        self.shoot_time = 0.
 
     def from_bytes(self, data):
         self.move, self.jumps, self.shoots = _control_struct.unpack(data)

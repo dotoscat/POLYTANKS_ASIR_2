@@ -21,6 +21,7 @@ from polytanks.event import event_manager
 from .player import Player
 from .engine import Engine
 from .protocol import ServerProtocol
+from .system import input
 
 class GameProtocol(asyncio.DatagramProtocol):
     def __init__(self, server):
@@ -65,6 +66,7 @@ class Server:
     async def step(self):
         self.last_snapshot_time = self.loop.time()
         GAME_RATE = 1./60.
+        input.dt = GAME_RATE
         while True:
             # print(self, len(self.connecting_clients), self.connecting_clients.get(1))
             start = self.loop.time()

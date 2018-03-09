@@ -22,11 +22,15 @@ from .event import event_manager
 class InputSystem(toyblock3.System):
     def __init__(self):
         super().__init__()
+        self.shot_event = False
         self.jump_event = False
         self.float_event = False
+        self.dt = 0.
+
     def _update(self, entity):
         entity.body.vel_x = entity.input.move*UNIT*2.
         # print("input vel y", entity.body.vel_y)
+        self.shot_event = False
         self.float_event = False
         self.jump_event = False
         if entity.input.jumps and entity.input.touch_floor and not entity.input.jump_pressed:
@@ -43,6 +47,16 @@ class InputSystem(toyblock3.System):
             self.float_event = True
         if not entity.input.jumps and entity.input.jump_pressed:
             entity.input.jump_pressed = False
+        self.entity_shoots(entity)
+    
+    def entity_shoots(self, entity):
+        self.shot_event = False
+        if entity.input.shoots:
+            entity.input.shoot_time += self.dt
+        elif not entity.input.shoots and entity.input.shoot_time:
+            print(entity.id, "shoots!", entity.input.shoot_time)
+            entity.input.shoot_time = 0.
+            self.shot_event = True
 
 # input = InputSystem()
 collision = system.CollisionSystem()
