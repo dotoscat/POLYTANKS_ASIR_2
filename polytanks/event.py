@@ -87,12 +87,13 @@ class EventManager:
                 self.add_player_make_event(what, who, what_object)
                 offset += player_make_struct.size
             else:
+                # FIX: Quit the exception later
                 try:
                     what, who = player_event_struct.unpack_from(data, offset)
+                    self.add_player_event(what, who)
+                    offset += player_event_struct.size
                 except struct.error as err:
                     print(err, data, len(data))
-                self.add_player_event(what, who)
-                offset += player_event_struct.size
         #for what, who in player_event_struct.iter_unpack(player_events):
         #    self.add_player_event(what, who)
 
