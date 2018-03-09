@@ -34,11 +34,7 @@ class Player:
 
     def reset(self):
         self.id = 0
-        self.body.x = 0.
-        self.body.y = 0.
-        self.body.vel_x = 0.
-        self.body.vel_y = 0.
-        self.body.has_gravity = True
+        self.body.reset()
         self.input.touch_floor = False
 
 class Platform:

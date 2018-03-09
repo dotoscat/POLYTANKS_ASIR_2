@@ -41,6 +41,14 @@ class Body:
     def apply_force(self, dt, x=0., y=0.):
         self.vel_x += x*dt
         self.vel_y += y*dt
+    
+    def reset(self):
+        self.x = 0.
+        self.y = 0.
+        self.vel_x = 0.
+        self.vel_y = 0.
+        self.has_gravity = True
+
 
 class CollisionRect:
     def __init__(self, width, height, x=0., y=0.):
