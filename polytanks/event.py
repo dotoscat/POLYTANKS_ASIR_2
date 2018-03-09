@@ -18,6 +18,7 @@ import struct
 # from toyblock3 import Pool
 
 player_event_struct = struct.Struct("!BB")
+player_make_struct = struct.Struct("!BBH")
 
 PLAYER_JUMPS = 1
 PLAYER_FLOATS = 2
@@ -46,6 +47,17 @@ class PlayerEvent(Event):
     def __bytes__(self):
         return player_event_struct.pack(self.id, self.player_id)
 
+class PlayerMakeEvent(PlayerEvent):
+    def __init__(self):
+        super().__init__()
+        self.what_id = 0
+
+    def from_bytes(self, bytes):
+        self.id, self.player_id, self.what_id = player_make_struct.unpack(bytes)
+
+    def __bytes__(self):
+        return player_make_struct.pack(self.id, self.player_id, self.what_id)
+
 class EventManager:
     def __init__(self):
         self.events = deque()
@@ -56,18 +68,37 @@ class EventManager:
         event.player_id = who
         self.events.append(event)
 
+    def add_player_make_event(self, what, who, what_object):
+       event = PlayerMakeEvent()
+       event.id = what
+       event.player_id = who
+       event.what_id = what_object 
+       self.events.append(event)
+
     def from_bytes(self, data):
-        n_events = int.from_bytes(data[:1], "big")
-        player_events = data[1:n_events*player_event_struct.size+1]
-        for what, who in player_event_struct.iter_unpack(player_events):
-            self.add_player_event(what, who)
+        # n_events = int.from_bytes(data[:1], "big")
+        # player_events = data[1:n_events*player_event_struct.size+1]
+        total = len(data)
+        offset = 0
+        while offset < total:
+            what = int.from_bytes(data[offset:offset+1], "big")
+            if what == PLAYER_SHOOTS:
+                what, who, what_object = player_make_struct.unpack_from(data, offset)
+                self.add_player_make_event(what, who, what_object)
+                offset += player_make_struct.size
+            else:
+                what, who = player_event_struct.unpack_from(offset)
+                self.add_player_event(what, who)
+                offset += player_event_struct.size
+        #for what, who in player_event_struct.iter_unpack(player_events):
+        #    self.add_player_event(what, who)
 
     def to_network(self):
         if not self.events:
             return
-        n_events = int.to_bytes(len(self.events), 1, "big")
+        # n_events = int.to_bytes(len(self.events), 1, "big")
         data = bytearray()
-        data += n_events
+        # data += n_events
         events = self.events
         while events:
             event = events.pop()
