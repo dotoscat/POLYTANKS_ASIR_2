@@ -24,7 +24,7 @@ class Engine(AbstractEngine):
         pools = {
             "player": toyblock3.Manager(Player, 4, batch, groups),
             "platform": toyblock3.Manager(Platform, 64, batch, groups[0]),
-            "bullet": toyblock3.Manager(Bullet, 128)
+            "bullet": toyblock3.Manager(Bullet, 128, batch, groups[2])
         }
         super().__init__(pools)
 

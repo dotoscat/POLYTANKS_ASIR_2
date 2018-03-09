@@ -45,4 +45,7 @@ class Player(pentity.Player):
         pass
 
 class Bullet(pentity.Bullet):
-    SYSTEMS = (system.polytanks_system.physics, system.polytanks_system.collision)
+    SYSTEMS = (system.polytanks_system.physics, system.polytanks_system.collision, system.sprite)
+    def __init__(self, batch, group):
+        super().__init__()
+        self.sprite = pyglet.sprite.Sprite(assets.images["bullet"], batch=batch, group=group)

@@ -15,6 +15,7 @@
 
 import os
 import pyglet
+from polytanks.constants import UNIT
 pyglet.resource.path = __path__
 pyglet.resource.reindex()
 
@@ -30,5 +31,7 @@ images["tank-base"].anchor_x = 8.
 images["tank-base"].anchor_y = 8.
 images["tank-cannon"].anchor_x = 0.
 images["tank-cannon"].anchor_y = 4.
+images["bullet"].anchor_x = UNIT/2.
+images["bullet"].anchor_y = UNIT/2.
 
 cursor = pyglet.window.ImageMouseCursor(images["eyehole"], 0., 0.)

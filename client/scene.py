@@ -27,7 +27,7 @@ from .engine import Engine
 class Screen(Scene):
     INPUT_PER_SEC = 1./20.
     def __init__(self, client):
-        super().__init__(3)
+        super().__init__(4)
         self.client = client
         self.engine = Engine(self.batch, self.groups)
         self.player = None
@@ -92,7 +92,10 @@ class Screen(Scene):
                 print("player {} floats".format(eve.player_id))
             elif eve.id == event.PLAYER_SHOOTS:
                 print("player {} shoots {}".format(eve.player_id, eve.what_id))
-            
+                id, bullet = self.engine.add_bullet(eve.what_id)
+                player_body = self.engine.players[eve.player_id].body
+                bullet.body.x = player_body.x
+                bullet.body.y = player_body.y
 
     def apply_snapshot_data(self, data):
         tsnapshot = snapshot.Snapshot()
