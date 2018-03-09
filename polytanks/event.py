@@ -15,7 +15,7 @@
 
 from collections import deque
 import struct
-# from toyblock3 import Pool
+from toyblock3 import Pool
 
 player_event_struct = struct.Struct("!BB")
 player_make_struct = struct.Struct("!BBH")
@@ -36,7 +36,10 @@ class Event:
     def __bytes__(self):
         raise NotImplementedError
 
-class PlayerEvent(Event):
+    def reset(self):
+        self.id = 0
+
+class _PlayerEvent(Event):
     def __init__(self):
         super().__init__()
         self.player_id = 0
@@ -47,7 +50,13 @@ class PlayerEvent(Event):
     def __bytes__(self):
         return player_event_struct.pack(self.id, self.player_id)
 
-class PlayerMakeEvent(PlayerEvent):
+    def reset(self):
+        super().reset()
+        self.player_id = 0
+
+PlayerEvent = Pool(_PlayerEvent, 64)
+
+class _PlayerMakeEvent(_PlayerEvent):
     def __init__(self):
         super().__init__()
         self.what_id = 0
@@ -58,9 +67,15 @@ class PlayerMakeEvent(PlayerEvent):
     def __bytes__(self):
         return player_make_struct.pack(self.id, self.player_id, self.what_id)
 
+    def reset(self):
+        super().reset()
+
+PlayerMakeEvent = Pool(_PlayerMakeEvent, 64)
+
 class EventManager:
     def __init__(self):
         self.events = deque()
+        self._consumed = deque()
 
     def add_player_event(self, what, who):
         event = PlayerEvent()
@@ -93,7 +108,7 @@ class EventManager:
                     self.add_player_event(what, who)
                     offset += player_event_struct.size
                 except struct.error as err:
-                    print(err, data, len(data))
+                    print(err, data, len(data), offset)
         #for what, who in player_event_struct.iter_unpack(player_events):
         #    self.add_player_event(what, who)
 
@@ -107,17 +122,23 @@ class EventManager:
         while events:
             event = events.pop()
             data += bytes(event)
+            event.free()
         return data
 
     def clear(self):
-        self.events.clear()
+        while self.events:
+            self.events.pop().free()
 
     def __iter__(self):
         return self
 
     def __next__(self):
         if not self.events:
+            while self._consumed:
+                self._consumed.pop().free()
             raise StopIteration
-        return self.events.pop()
+        event = self.events.pop()
+        self._consumed.append(event)
+        return event
 
 event_manager = EventManager()
