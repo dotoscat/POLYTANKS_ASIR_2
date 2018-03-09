@@ -31,12 +31,13 @@ class InputSystem(system.InputSystem):
             event_manager.add_player_event(event.PLAYER_FLOATS, entity.id)
             print(entity, "floats") 
         if self.shot_event:
-            event_manager.add_player_event(event.PLAYER_SHOOTS, entity.id)
             if not self.engine:
                 warnings.warn("'engine' attribute for the system is None.")
             id, bullet = self.engine.add_bullet()
+            event_manager.add_player_make_event(event.PLAYER_SHOOTS, entity.id, id)
             bullet.body.x = entity.body.x
             bullet.body.y = entity.body.y
+            print("bullet", bullet.body.x, bullet.body.y)
             # engine.create_bullet and so
 
 input = InputSystem()
