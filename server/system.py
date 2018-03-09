@@ -34,6 +34,9 @@ class InputSystem(system.InputSystem):
             event_manager.add_player_event(event.PLAYER_SHOOTS, entity.id)
             if not self.engine:
                 warnings.warn("'engine' attribute for the system is None.")
+            id, bullet = self.engine.add_bullet()
+            bullet.body.x = entity.body.x
+            bullet.body.y = entity.body.y
             # engine.create_bullet and so
 
 input = InputSystem()

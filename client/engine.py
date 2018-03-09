@@ -15,7 +15,7 @@
 
 import toyblock3
 from polytanks.engine import AbstractEngine
-from .entity import Platform, Player
+from .entity import Platform, Player, Bullet
 from . import system
 from .system import polytanks_system
 
@@ -23,7 +23,8 @@ class Engine(AbstractEngine):
     def __init__(self, batch, groups):
         pools = {
             "player": toyblock3.Manager(Player, 4, batch, groups),
-            "platform": toyblock3.Manager(Platform, 64, batch, groups[0])
+            "platform": toyblock3.Manager(Platform, 64, batch, groups[0]),
+            "bullet": toyblock3.Manager(Bullet, 128)
         }
         super().__init__(pools)
 

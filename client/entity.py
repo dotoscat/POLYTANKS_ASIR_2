@@ -43,3 +43,6 @@ class Player(pentity.Player):
         self.sprite = TankGraphic(batch, groups, 1)
     def reset(self):
         pass
+
+class Bullet(pentity.Bullet):
+    SYSTEMS = (system.polytanks_system.physics, system.polytanks_system.collision)
