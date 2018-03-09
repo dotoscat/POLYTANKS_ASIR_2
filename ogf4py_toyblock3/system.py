@@ -75,7 +75,9 @@ class CollisionSystem(toyblock3.System):
                 if rect.collides_with & other_rect.type != other_rect.type:
                     continue
                 pair = (rect, other_rect)
-                callbacks = self.callbacks[(rect.type, other_rect.type)]
+                callbacks = self.callbacks.get((rect.type, other_rect.type))
+                if not callbacks:
+                    continue
                 if not rect.intersects(other_rect):
                     if pair in self._collisions and callable(callbacks.end):
                         callbacks.end(entity, other_entity, rect, other_rect)
