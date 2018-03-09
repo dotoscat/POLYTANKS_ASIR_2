@@ -13,11 +13,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import warnings
 from polytanks import system
 from polytanks import event
 from polytanks.event import event_manager
 
 class InputSystem(system.InputSystem):
+    def __init__(self):
+        super().__init__()
+        self.engine = None
     def _update(self, entity):
         super()._update(entity)
         if self.jump_event:
@@ -26,5 +30,10 @@ class InputSystem(system.InputSystem):
         if self.float_event:
             event_manager.add_player_event(event.PLAYER_FLOATS, entity.id)
             print(entity, "floats") 
+        if self.shot_event:
+            event_manager.add_player_event(event.PLAYER_SHOOTS, entity.id)
+            if not self.engine:
+                warnings.warn("'engine' attribute for the system is None.")
+            # engine.create_bullet and so
 
 input = InputSystem()

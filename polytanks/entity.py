@@ -50,3 +50,21 @@ class Platform:
         collision.x = x
         collision.y = y + UNIT - collision.height
         collision.width = tiles_width*UNIT
+
+class Bullet:
+    def __init__(self):
+        self.body = Body()
+        self.collisions = []
+
+        width = UNIT/2.
+        height = UNIT/2.
+
+        rect = CollisionRect(width, height)
+        rect.offset(-width/2., -height/2.)
+        rect.type = collision.BULLET
+        rect.collides_with = collision.PLATFORM | collision.PLAYER
+
+        self.collisions.append(rect)
+
+    def reset(self):
+        self.body.reset()

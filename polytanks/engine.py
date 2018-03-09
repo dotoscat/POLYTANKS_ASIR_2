@@ -18,7 +18,7 @@ from . import level
 
 class AbstractEngine(CollisionMixin):
     def __init__(self, pools):
-        types = ("player", "platform")
+        types = ("player", "platform", "bullet")
         for t in types:
             if t not in pools:
                 raise Exception("{} not found in pools".format(t))

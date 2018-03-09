@@ -23,6 +23,7 @@ PLAYER_JUMPS = 1
 PLAYER_FLOATS = 2
 PLAYER_TOUCHES_FLOOR = 3
 PLAYER_NOCKED_OUT = 4
+PLAYER_SHOOTS = 5
 
 class Event:
     def __init__(self):

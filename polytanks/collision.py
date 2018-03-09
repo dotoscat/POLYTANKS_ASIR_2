@@ -18,6 +18,7 @@ from .system import collision
 PLAYER = 1
 PLATFORM = 1 << 1
 PLAYER_FEET = 1 << 2
+BULLET = 1 << 3
 
 class CollisionMixin:
     def register_collisions(self):
