@@ -43,6 +43,14 @@ class AbstractEngine(CollisionMixin):
         self.players[id] = player
         return (id, player)
 
+    def add_bullet(self, id=None):
+        bullet = self.pools["bullet"]()
+        if not bullet:
+            return
+        id = id if isinstance(id, int) else self.generate_id()
+        self.entities[id] = bullet
+        return (id, bullet)
+
     def remove(self, id):
         entity = self.entities.get(id)
         if not entity:

@@ -16,7 +16,7 @@
 from itertools import count
 import toyblock3
 from polytanks.engine import AbstractEngine
-from polytanks.entity import Player, Platform
+from polytanks.entity import Player, Platform, Bullet
 from polytanks.system import physics, collision
 from .system import input
 from polytanks.event import event_manager
@@ -24,12 +24,14 @@ from polytanks import event
 
 Player.SYSTEMS = (input, physics, collision)
 Platform.SYSTEMS = (collision,)
+Bullet.SYSTEMS = (physics, collision)
 
 class Engine(AbstractEngine):
     def __init__(self, n_players, start_id):
         pools = {
             "player": toyblock3.Manager(Player, n_players),
-            "platform": toyblock3.Manager(Platform, 64)
+            "platform": toyblock3.Manager(Platform, 64),
+            "bullet": toyblock3.Manager(Bullet, 128)
         }
         super().__init__(pools)
         self.start_id = start_id

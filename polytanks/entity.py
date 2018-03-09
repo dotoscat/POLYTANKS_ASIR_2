@@ -55,12 +55,13 @@ class Bullet:
     def __init__(self):
         self.body = Body()
         self.collisions = []
+        self.owner = 0
 
         width = UNIT/2.
         height = UNIT/2.
 
         rect = CollisionRect(width, height)
-        rect.offset(-width/2., -height/2.)
+        rect.offset = (-width/2., -height/2.)
         rect.type = collision.BULLET
         rect.collides_with = collision.PLATFORM | collision.PLAYER
 
@@ -68,3 +69,4 @@ class Bullet:
 
     def reset(self):
         self.body.reset()
+        self.owner = 0
