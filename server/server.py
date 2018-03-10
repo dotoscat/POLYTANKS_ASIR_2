@@ -51,13 +51,10 @@ class Server:
         self.max_n_players = max_n_players
         self.last_snapshot_time = 0.
         self.loop = asyncio.get_event_loop()
-        server_socket = socket.socket()
-        server_socket.bind(host)
-        server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, True)
         self.server_coro = self.loop.create_server(
-            lambda: ServerProtocol(weakref.proxy(self)), sock=server_socket)
+            lambda: ServerProtocol(weakref.proxy(self)), *host)
         self.server = self.loop.run_until_complete(self.server_coro)
-        print("tcp no delay", server_socket.getsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY))
+        # print("tcp no delay", server_socket.getsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY))
         game_socket = socket.socket(type=socket.SOCK_DGRAM)
         game_socket.setblocking(False)
         game_socket.bind(host)
@@ -156,6 +153,8 @@ class Server:
                 continue
             id = i
             break
+        player_socket = transport.get_extra_info("socket")
+        player_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, True)
         self.clients[id] = Player(transport)
         eng_player = self.engine.add_player(id)[1]
         eng_player.id = id

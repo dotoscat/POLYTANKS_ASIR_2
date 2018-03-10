@@ -31,7 +31,6 @@ class Player:
             snapshot = self.snapshots.pop()
             snapshot.free()
         print("close transport")
-        self.server_transport.write_eof()
         self.server_transport.close()
 
     def ack(self, time):
@@ -80,4 +79,7 @@ class Player:
         return self.send_time - self.ack_time
 
     def secure_send(self, data):
+        import socket
+        player_socket = self.server_transport.get_extra_info("socket")
+        print("player delay", player_socket.getsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY))
         self.server_transport.write(data)

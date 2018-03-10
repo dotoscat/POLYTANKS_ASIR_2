@@ -99,6 +99,7 @@ class Client:
         self.server_connection = socket.socket()
         self.server_connection.connect(address)
         self.server_connection.setblocking(False)
+        self.server_connection.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, True)
         self.server_connection.send(protocol.CONNECT.to_bytes(1, "big"))
         self.control_register = self.selectors.register(self.server_connection,
             selectors.EVENT_READ, self.manage_server_connection)
