@@ -109,6 +109,7 @@ class EventManager:
                     offset += player_event_struct.size
                 except struct.error as err:
                     print(err, data, len(data), offset)
+                    offset += player_event_struct.size
         #for what, who in player_event_struct.iter_unpack(player_events):
         #    self.add_player_event(what, who)
 

@@ -83,6 +83,7 @@ class Server:
         data = event_manager.to_network()
         if not data:
             return
+        print("send events", data)
         data = int.to_bytes(protocol.EVENT, 1, "big") + data
         for id in self.clients:
             player = self.clients[id]
