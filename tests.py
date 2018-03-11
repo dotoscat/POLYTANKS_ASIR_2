@@ -15,7 +15,7 @@
 
 import unittest
 import toyblock3
-from polytanks.ogf4py_toyblock3 import system, component
+from ogf4py_toyblock3 import system, component
 
 class Entity:
     Body = component.Body
@@ -60,18 +60,18 @@ class SystemTest(unittest.TestCase):
         entity.collisions = []
         entity.collisions.append(component.CollisionRect(32., 32.))
         entity.collisions[0].type = ONE
+        entity.collisions[0].collides_with = TWO        
 
         other_entity = Entity()
         other_entity.collisions = [component.CollisionRect(32., 32.)]
         other_entity.collisions[0].type = TWO        
-        other_entity.collisions[0].collides_with = ONE        
         other_entity.done = False
         collisions = system.CollisionSystem()
         collisions.add_entity(entity)
         collisions.add_entity(other_entity)
-        @collisions.register_callback((ONE, TWO))
-        def test_collision(entity, other_entity):
+        def test_collision(entity, other_entity, entity_rect, other_entity_rect):
             other_entity.done = True 
+        collisions.register_callbacks((ONE, TWO), start=test_collision)
 
         self.physics()
         collisions()
