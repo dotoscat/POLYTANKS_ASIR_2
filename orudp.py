@@ -5,7 +5,7 @@ import selectors
 DATA = 1
 ACK = 2
 
-header = struct.Struct("!LLs")
+header = struct.Struct("!LL")
 
 class Message:
     def __init__(self, id, data, tries):
@@ -29,13 +29,13 @@ class Office:
         self._select.close()
 
     def send_message(self, data, time_for_response, tries=None, address=None):
-        buffer = header.pack(self._id, DATA, data)
+        buffer = header.pack(self._id, DATA) + data
         message = Message(self._id, buffer, tries) 
         message.address = address
         message.event = self._mysched.enter(time_for_response, 1, self._resend, argument=(message, time_for_response))
         self._messages[self._id] = message
         self._id += 1
-        return self._send(data, address)
+        return self._send(buffer, address)
 
     def _send(self, data, address=None):
         if address:
@@ -64,9 +64,10 @@ class Office:
             data = socket.recv(1024)
             if not len(data) >= header.size:
                 continue
-            print(data, len(data))
-            id, type, payload = header.unpack_from(data)
-            print("read", id, type, payload)
+            print("len", len(data))
+            id, type = header.unpack_from(data)
+            payload = data[header.size:]
+            print("payload", payload)
 
         self._mysched.run(False)
 

@@ -24,7 +24,7 @@ print("sent {} bytes".format(sent))
 
 def read(socket):
     data, host = socket.recvfrom(1024)
-    print("read", data)
+    print("read from read", data)
     socket.sendto(b"Ok", host)
 
 selector = selectors.DefaultSelector()
