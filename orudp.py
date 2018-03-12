@@ -44,15 +44,14 @@ class Office:
             return self._socket.send(data)
 
     def _resend(self, message, time_for_response):
-        #if message.ack:
-        #    return
-        if not message.tries:
+        if message.tries == 0:
             return
         print("resend after {} seconds".format(time_for_response))
         self._send(message.data, message.address)
         print("resend", message.data)
         self._mysched.enter(time_for_response, 1, self._resend, argument=(message, time_for_response))
-        message.tries -= 1
+        if message.tries:
+            message.tries -= 1
 
     def _recv(self, socket):
         pass
