@@ -43,7 +43,7 @@ class Mailbox:
                 #Do something with the payload
                 socket.sendto(header.pack(id, ACK), address)
                 if callable(self._protocol):
-                    self._protocol(payload, self)
+                    self._protocol(payload, address, self)
                 message = Message(id, payload)
                 self._received[id] = message
                 self._mysched.enter(1, 1, self._remove_message, argument=(id,))
@@ -85,5 +85,5 @@ class Mailbox:
             message.tries -= 1
 
     def _remove_message(self, id):
-        print("Remove {} from receptor".format(id))
+        print("Remove {} from receptor".format(id), self)
         del self._received[id] 
