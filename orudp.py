@@ -22,6 +22,7 @@ class Mailbox:
         self._socket = socket
         self._mysched = sched.scheduler()
         self._select = selectors.DefaultSelector()
+        self._select.register(socket, selectors.EVENT_READ)
 
     def __del__(self):
         self._select.close()
@@ -33,13 +34,15 @@ class Mailbox:
             data, address = socket.recvfrom(1024)
             if not len(data) >= header.size:
                 continue
-            print("len", len(data))
             id, type = header.unpack_from(data)
             if type == DATA:
                 payload = data[header.size:]
                 print("You received message with payload:", payload)
                 #Do something with the payload
                 socket.sendto(header.pack(id, ACK), address)
+                message = Message(id, payload)
+                self._messages[id] = message
+                self._mysched.enter(1, 1, self._remove_message, argument=(id,))
             elif type == ACK:
                 if id not in self._messages:
                     continue
@@ -51,7 +54,6 @@ class Mailbox:
     def empty(self):
         return self._mysched.empty()
 
-class Postbox(Mailbox):
     def send_message(self, data, time_for_response, tries=None, address=None):
         buffer = header.pack(self._id, DATA) + data
         message = Message(self._id, buffer) 
@@ -77,3 +79,7 @@ class Postbox(Mailbox):
         self._mysched.enter(time_for_response, 1, self._resend, argument=(message, time_for_response))
         if message.tries:
             message.tries -= 1
+
+    def _remove_message(self, id):
+        print("Remove {} from receptor".format(id))
+        del self._messages[id] 
