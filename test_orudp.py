@@ -14,6 +14,7 @@ message = b'Hola mundo'
 def read_message(message, address, mailbox):
     print("read from read", message, address)
     mailbox.send_message(b'Ok', 1, address=address)
+    mailbox.send_message(b'Un besillo', 0.5, address=address)
 
 server = socket.socket(type=socket.SOCK_DGRAM)
 server.bind(ADDRESS)
@@ -32,5 +33,6 @@ while True:
     if conn_office.empty():
         #break
         pass
+    time.sleep(0.01)
 
 print("bye")

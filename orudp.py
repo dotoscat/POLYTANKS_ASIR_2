@@ -1,6 +1,7 @@
 import sched
 import struct
 import selectors
+from collections import deque
 
 DATA = 1
 ACK = 2
@@ -8,14 +9,23 @@ ACK = 2
 header = struct.Struct("!LL")
 
 class Message:
-    def __init__(self, id, data):
-        self.id = id
-        self.data = data
+    __slots__ = ("id", "data", "tries", "event", "address")
+    def __init__(self):
+        self.id = None
+        self.data = None
+        self.tries = None
+        self.event = None
+        self.address = None
+
+    def reset(self):
+        self.id = None
+        self.data = None
         self.tries = None
         self.event = None
         self.address = None
 
 class Mailbox:
+    DEFAULT_MESSAGES = 256
     def __init__(self, socket, protocol=None):
         self._sent = {}
         self._received = {}
@@ -25,6 +35,7 @@ class Mailbox:
         self._select = selectors.DefaultSelector()
         self._select.register(socket, selectors.EVENT_READ)
         self._protocol = protocol
+        self._messages = deque([Message() for i in range(self.DEFAULT_MESSAGES)])
 
     def __del__(self):
         self._select.close()
@@ -44,7 +55,9 @@ class Mailbox:
                 socket.sendto(header.pack(id, ACK), address)
                 if callable(self._protocol):
                     self._protocol(payload, address, self)
-                message = Message(id, payload)
+                message = self._messages.pop()
+                message.id = id
+                message.data = payload
                 self._received[id] = message
                 self._mysched.enter(1, 1, self._remove_message, argument=(id,))
             elif type == ACK:
@@ -52,7 +65,9 @@ class Mailbox:
                     continue
                 print("{} acknowleged".format(id))
                 self._mysched.cancel(self._sent[id].event)
-                del self._sent[id]
+                message = self._sent.pop(id)
+                message.reset()
+                self._messages.append(message)
         self._mysched.run(False)
 
     def empty(self):
@@ -60,7 +75,9 @@ class Mailbox:
 
     def send_message(self, data, time_for_response, tries=None, address=None):
         buffer = header.pack(self._id, DATA) + data
-        message = Message(self._id, buffer) 
+        message = self._messages.pop()
+        message.id = self._id
+        message.data = buffer
         message.tries = tries
         message.address = address
         message.event = self._mysched.enter(time_for_response, 1, self._resend, argument=(message, time_for_response))
@@ -86,4 +103,6 @@ class Mailbox:
 
     def _remove_message(self, id):
         print("Remove {} from receptor".format(id), self)
-        del self._received[id] 
+        message = self._received.pop(id)
+        message.reset()
+        self._messages.append(message)
