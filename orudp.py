@@ -44,8 +44,8 @@ class Office:
             return self._socket.send(data)
 
     def _resend(self, message, time_for_response):
-        if message.ack:
-            return
+        #if message.ack:
+        #    return
         if not message.tries:
             return
         print("resend after {} seconds".format(time_for_response))
@@ -61,14 +61,21 @@ class Office:
         events = self._select.select(0)
         for key, mask in events:
             socket = key.fileobj
-            data = socket.recv(1024)
+            data, address = socket.recvfrom(1024)
             if not len(data) >= header.size:
                 continue
             print("len", len(data))
             id, type = header.unpack_from(data)
-            payload = data[header.size:]
-            print("payload", payload)
-
+            if type == DATA:
+                payload = data[header.size:]
+                print("recibido mensaje con payload:", payload)
+                #Do something with the payload
+                socket.sendto(header.pack(id, ACK), address)
+            elif type == ACK:
+                if id not in self._messages:
+                    continue
+                print("{} acknowleged".format(id))
+                self._mysched.cancel(self._messages[id].event)
         self._mysched.run(False)
 
     def empty(self):
