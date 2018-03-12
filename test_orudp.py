@@ -3,7 +3,6 @@ import unittest
 import time
 import signal
 import orudp
-import socket
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
@@ -16,14 +15,9 @@ def read_message(message, address, mailbox):
     mailbox.send_message(b'Ok', 1, address=address)
     mailbox.send_message(b'Un besillo', 0.5, address=address)
 
-server = socket.socket(type=socket.SOCK_DGRAM)
-server.bind(ADDRESS)
-server.setblocking(False)
-server_office = orudp.Mailbox(server, read_message)
+server_office = orudp.Mailbox(address=ADDRESS, protocol=read_message)
 
-conn = socket.socket(type=socket.SOCK_DGRAM)
-conn.setblocking(False)
-conn_office = orudp.Mailbox(conn)
+conn_office = orudp.Mailbox()
 sent = conn_office.send_message(message, 1, tries=1, address=ADDRESS)
 print("sent {} bytes".format(sent)) 
 

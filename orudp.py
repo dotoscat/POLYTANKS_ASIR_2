@@ -1,6 +1,7 @@
 import sched
 import struct
 import selectors
+import socket
 from collections import deque
 
 DATA = 1
@@ -41,16 +42,22 @@ class Message:
 
 class Mailbox:
     DEFAULT_MESSAGES = 256
-    def __init__(self, socket, protocol=None):
+    def __init__(self, address=None, blocking=False, protocol=None):
         self._sent = {}
         self._received = {}
         self._id = 0
-        self._socket = socket
+        self._socket = None
         self._mysched = sched.scheduler()
         self._select = selectors.DefaultSelector()
-        self._select.register(socket, selectors.EVENT_READ)
         self._protocol = protocol
         self._messages = deque([Message() for i in range(self.DEFAULT_MESSAGES)])
+
+        sock = socket.socket(type=socket.SOCK_DGRAM)
+        if address:
+            sock.bind(address)
+        sock.setblocking(blocking)
+        self._socket = sock
+        self._select.register(sock, selectors.EVENT_READ)
 
     def __del__(self):
         self._select.close()
