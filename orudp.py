@@ -78,6 +78,9 @@ class Mailbox:
         self._select.close()
 
     def run(self):
+        """
+        Run the mailbox to attend petitions and manage the status of sent messages.
+        """
         events = self._select.select(0)
         for key, mask in events:
             socket = key.fileobj
@@ -108,9 +111,17 @@ class Mailbox:
         self._mysched.run(False)
 
     def empty(self):
+        """Check if there is not pending messages."""
         return self._mysched.empty()
 
     def send_message(self, data, time_for_response, tries=None, address=None):
+        """
+            Arguments:
+                data (buffer): Data to send
+                time_for_response (float): Time to wait before resend the data
+                tries (int): Number of tries. None is no limit.
+                address (tuple): The address to send the message.
+        """
         buffer = header.pack(self._id, DATA) + data
         message = self._messages.pop()
         message.id = self._id
