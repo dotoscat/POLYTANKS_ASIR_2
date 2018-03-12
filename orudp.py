@@ -76,6 +76,7 @@ class Office:
                     continue
                 print("{} acknowleged".format(id))
                 self._mysched.cancel(self._messages[id].event)
+                del self._messages[id]
         self._mysched.run(False)
 
     def empty(self):
