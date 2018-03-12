@@ -8,11 +8,10 @@ ACK = 2
 header = struct.Struct("!LL")
 
 class Message:
-    def __init__(self, id, data, tries):
+    def __init__(self, id, data):
         self.id = id
         self.data = data
-        self.ack = False
-        self.tries = tries
+        self.tries = None
         self.event = None
         self.address = None
 
@@ -30,7 +29,8 @@ class Office:
 
     def send_message(self, data, time_for_response, tries=None, address=None):
         buffer = header.pack(self._id, DATA) + data
-        message = Message(self._id, buffer, tries) 
+        message = Message(self._id, buffer) 
+        message.tries = tries
         message.address = address
         message.event = self._mysched.enter(time_for_response, 1, self._resend, argument=(message, time_for_response))
         self._messages[self._id] = message
@@ -67,7 +67,7 @@ class Office:
             id, type = header.unpack_from(data)
             if type == DATA:
                 payload = data[header.size:]
-                print("recibido mensaje con payload:", payload)
+                print("You received message with payload:", payload)
                 #Do something with the payload
                 socket.sendto(header.pack(id, ACK), address)
             elif type == ACK:

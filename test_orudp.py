@@ -22,7 +22,7 @@ server_office = orudp.Office(server)
 conn = socket.socket(type=socket.SOCK_DGRAM)
 conn.setblocking(False)
 conn_office = orudp.Office(conn)
-sent = conn_office.send_message(message, 1, address=ADDRESS)
+sent = conn_office.send_message(message, 1, tries=1, address=ADDRESS)
 print("sent {} bytes".format(sent)) 
 
 def read(socket):
@@ -35,7 +35,7 @@ selector.register(server, selectors.EVENT_READ, read)
 
 while True:
     conn_office.run()
-    # server_office.run()
+    server_office.run()
     if conn_office.empty():
         break
     events = selector.select(0)
