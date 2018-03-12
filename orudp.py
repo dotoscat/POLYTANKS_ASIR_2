@@ -16,13 +16,15 @@ class Message:
         self.address = None
 
 class Mailbox:
-    def __init__(self, socket):
-        self._messages = {}
+    def __init__(self, socket, protocol=None):
+        self._sent = {}
+        self._received = {}
         self._id = 0
         self._socket = socket
         self._mysched = sched.scheduler()
         self._select = selectors.DefaultSelector()
         self._select.register(socket, selectors.EVENT_READ)
+        self._protocol = protocol
 
     def __del__(self):
         self._select.close()
@@ -40,15 +42,17 @@ class Mailbox:
                 print("You received message with payload:", payload)
                 #Do something with the payload
                 socket.sendto(header.pack(id, ACK), address)
+                if callable(self._protocol):
+                    self._protocol(payload, self)
                 message = Message(id, payload)
-                self._messages[id] = message
+                self._received[id] = message
                 self._mysched.enter(1, 1, self._remove_message, argument=(id,))
             elif type == ACK:
-                if id not in self._messages:
+                if id not in self._sent:
                     continue
                 print("{} acknowleged".format(id))
-                self._mysched.cancel(self._messages[id].event)
-                del self._messages[id]
+                self._mysched.cancel(self._sent[id].event)
+                del self._sent[id]
         self._mysched.run(False)
 
     def empty(self):
@@ -60,7 +64,7 @@ class Mailbox:
         message.tries = tries
         message.address = address
         message.event = self._mysched.enter(time_for_response, 1, self._resend, argument=(message, time_for_response))
-        self._messages[self._id] = message
+        self._sent[self._id] = message
         self._id += 1
         return self._send(buffer, address)
 
@@ -82,4 +86,4 @@ class Mailbox:
 
     def _remove_message(self, id):
         print("Remove {} from receptor".format(id))
-        del self._messages[id] 
+        del self._received[id] 

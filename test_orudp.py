@@ -1,6 +1,5 @@
 import unittest
 
-import selectors
 import time
 import signal
 import orudp
@@ -23,13 +22,9 @@ conn_office = orudp.Mailbox(conn)
 sent = conn_office.send_message(message, 1, tries=1, address=ADDRESS)
 print("sent {} bytes".format(sent)) 
 
-def read(socket):
-    data, host = socket.recvfrom(1024)
-    print("read from read", data, host)
-    socket.sendto(b"Ok", host)
-
-selector = selectors.DefaultSelector()
-selector.register(server, selectors.EVENT_READ, read)
+def read_message(message, address, mailbox):
+    print("read from read", message, address)
+    mailbox.send_message(b'Ok', 1, address=address)
 
 while True:
     conn_office.run()
@@ -37,9 +32,5 @@ while True:
     if conn_office.empty():
         #break
         pass
-    events = selector.select(0)
-    for key, mask in events: 
-        callback = key.data
-        callback(key.fileobj)
 
 print("bye")
