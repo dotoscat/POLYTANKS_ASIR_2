@@ -12,11 +12,11 @@ header = struct.Struct("!LL")
     UDP is used frequently in networked games by its speed.
     Its only problem is that is not 'reliable', UDP is not oriented
     to connection. It is like send (real world) mails, you do not know if they
-    arrived to its destiny or not.
+    have arrived to its destiny or not.
 
     This module uses the same analogy from the real world mails to provide mechanism
     to assure that the datagrams (mails) arrive to its destiny and deal with those messages.
-    This module do not pretend be a replace for TCP. So better use TCP if it does a
+    This module do not pretend be a replace for TCP. So better use TCP if does a
     better job.
 """
 
