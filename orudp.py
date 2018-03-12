@@ -8,7 +8,22 @@ ACK = 2
 
 header = struct.Struct("!LL")
 
+"""
+    UDP is used frequently in networked games by its speed.
+    Its only problem is that is not 'reliable', UDP is not oriented
+    to connection. It is like send (real world) mails, you do not know if they
+    arrived to its destiny or not.
+
+    This module uses the same analogy from the real world mails to provide mechanism
+    to assure that the datagrams (mails) arrive to its destiny and deal with those messages.
+    This module do not pretend be a replace for TCP. So better use TCP if it does a
+    better job.
+"""
+
 class Message:
+    """
+    This class is used internally by :class:`Mailbox`.
+    """
     __slots__ = ("id", "data", "tries", "event", "address")
     def __init__(self):
         self.id = None
@@ -94,9 +109,8 @@ class Mailbox:
     def _resend(self, message, time_for_response):
         if message.tries == 0:
             return
-        print("resend after {} seconds".format(time_for_response))
+        print("resend after {} seconds:".format(time_for_response), message.data)
         self._send(message.data, message.address)
-        print("resend", message.data)
         self._mysched.enter(time_for_response, 1, self._resend, argument=(message, time_for_response))
         if message.tries:
             message.tries -= 1
