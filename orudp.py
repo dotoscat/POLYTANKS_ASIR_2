@@ -119,16 +119,13 @@ class Mailbox:
         for key, mask in events:
             socket = key.fileobj
             if socket.fileno() == -1:
-                print("closed!")
                 continue
             data, address = socket.recvfrom(1024)
-            print("received in run", data, len(data), address)
             if not len(data) >= header.size:
                 continue
             id, type = header.unpack_from(data)
             if type == DATA:
                 payload = data[header.size:]
-                print("You received message with payload:", payload)
                 #Do something with the payload
                 socket.sendto(header.pack(id, ACK), address)
                 if not id in self._received:
@@ -142,7 +139,6 @@ class Mailbox:
             elif type == ACK:
                 if id not in self._sent:
                     continue
-                print("{} acknowleged".format(id))
                 self._mysched.cancel(self._sent[id].event)
                 message = self._sent.pop(id)
                 message.reset()
@@ -181,14 +177,12 @@ class Mailbox:
     def _resend(self, message, time_for_response):
         if message.tries == 0:
             return
-        print("resend after {} seconds:".format(time_for_response), message.data)
         self._send(message.data, message.address)
         self._mysched.enter(time_for_response, 1, self._resend, argument=(message, time_for_response))
         if message.tries:
             message.tries -= 1
 
     def _remove_message(self, id):
-        print("Remove {} from receptor".format(id), self)
         message = self._received.pop(id)
         message.reset()
         self._messages.append(message)
