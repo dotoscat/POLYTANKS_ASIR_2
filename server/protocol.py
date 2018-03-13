@@ -60,3 +60,22 @@ class ServerProtocol(asyncio.Protocol):
             print("Connection closed normally")
         else:
             print("error", exc)
+
+class GameProtocol(asyncio.DatagramProtocol):
+    def __init__(self, server):
+        self.server = server
+        self.transport = None
+
+    def datagram_received(self, data, addr):
+        command = protocol.command(data)
+        # print("{} bytes received from {}".format(len(data), addr))
+        if command == protocol.SNAPSHOT_ACK:
+            command, id = protocol.snapshotack_struct.unpack(data)
+            self.server.ack_client(id)
+        elif command == protocol.INPUT:
+            command, id = protocol.command_id_struct.unpack_from(data)
+            self.server.apply_input(id, data)
+
+    def connection_made(self, transport):
+        print("GameProtocol connection_made")
+        self.transport = transport
