@@ -109,12 +109,12 @@ class Mailbox:
                 print("You received message with payload:", payload)
                 #Do something with the payload
                 socket.sendto(header.pack(id, ACK), address)
-                if not id in self._received and callable(self._protocol):
-                    self._protocol(payload, address, self)
-                message = self._messages.pop()
-                message.id = id
-                message.data = payload
                 if not id in self._received:
+                    if callable(self._protocol):
+                        self._protocol(payload, address, self)
+                    message = self._messages.pop()
+                    message.id = id
+                    message.data = payload
                     self._received[id] = message
                     self._mysched.enter(1, 1, self._remove_message, argument=(id,))
             elif type == ACK:
