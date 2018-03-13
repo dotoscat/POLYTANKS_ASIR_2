@@ -19,12 +19,21 @@ from toyblock3 import Pool
 
 player_event_struct = struct.Struct("!BB")
 player_make_struct = struct.Struct("!BBH")
+player_make_value_struct = struct.Struct("!BBf")
 
 PLAYER_JUMPS = 1
 PLAYER_FLOATS = 2
 PLAYER_TOUCHES_FLOOR = 3
 PLAYER_NOCKED_OUT = 4
 PLAYER_SHOOTS = 5
+PLAYER_CANNON_MOVES = 6
+
+PLAYER_MAKE_GROUP = (
+    PLAYER_JUMPS,
+    PLAYER_FLOATS,
+    PLAYER_TOUCHES_FLOOR,
+    PLAYER_NOCKED_OUT,
+)
 
 class Event:
     def __init__(self):
@@ -72,6 +81,22 @@ class _PlayerMakeEvent(_PlayerEvent):
 
 PlayerMakeEvent = Pool(_PlayerMakeEvent, 64)
 
+class _PlayerMakeValueEvent(_PlayerEvent):
+    def __init__(self):
+        super().__init__()
+        self.value = 0.
+
+    def from_bytes(self, bytes):
+        self.id, self.player_id, self.value = player_make_value_struct.unpack(bytes)
+
+    def __bytes__(self):
+        return player_make_value_struct.pack(self.id, self.player_id, self.value)
+
+    def reset(self):
+        super().reset()
+
+PlayerMakeValueEvent = Pool(_PlayerMakeValueEvent, 64)
+
 class EventManager:
     def __init__(self):
         self.events = deque()
@@ -91,8 +116,6 @@ class EventManager:
        self.events.append(event)
 
     def from_bytes(self, data):
-        # n_events = int.from_bytes(data[:1], "big")
-        # player_events = data[1:n_events*player_event_struct.size+1]
         total = len(data)
         offset = 0
         while offset < total:
@@ -101,17 +124,15 @@ class EventManager:
                 what, who, what_object = player_make_struct.unpack_from(data, offset)
                 self.add_player_make_event(what, who, what_object)
                 offset += player_make_struct.size
-            else:
-                # FIX: Quit the exception later
-                # try:
+            elif what in PLAYER_MAKE_GROUP:
                 what, who = player_event_struct.unpack_from(data, offset)
                 self.add_player_event(what, who)
                 offset += player_event_struct.size
-                #except struct.error as err:
-                #    print(err, data, len(data), offset)
-                #    offset += player_event_struct.size
-        #for what, who in player_event_struct.iter_unpack(player_events):
-        #    self.add_player_event(what, who)
+            elif what == PLAYER_CANNON_MOVES:
+                what, who, value = player_make_value_struct.unpack_from(data, offset)
+                offset += player_make_value_struct.size
+            else:
+                raise RuntimeError("Check event from bytes")
 
     def to_network(self):
         if not self.events:
