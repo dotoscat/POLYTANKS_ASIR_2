@@ -76,14 +76,12 @@ class Server:
         data = event_manager.to_network()
         if not data:
             return
-        print("send events", data)
         data = int.to_bytes(protocol.EVENT, 1, "big") + data
         for id in self.clients:
             player = self.clients[id]
             if not player.rudp_address:
-                print("rudp_address None")
                 continue
-            self.rudp.send_message(data, 0.5, address=player.rudp_address)
+            sent = self.rudp.send_message(data, 0.5, address=player.rudp_address)
 
     def clean_clients(self):
         offline = [id for id in self.clients

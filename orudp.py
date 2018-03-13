@@ -119,6 +119,7 @@ class Mailbox:
         for key, mask in events:
             socket = key.fileobj
             if socket.fileno() == -1:
+                print("closed!")
                 continue
             data, address = socket.recvfrom(1024)
             print("received in run", data, len(data), address)

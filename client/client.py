@@ -42,6 +42,7 @@ class Client:
         if not self.control_register:
             return
         if self.rudp_connection:
+            print("rudp connection", self.rudp_connection.socket.getsockname())
             self.rudp_connection.run()
         events = self.selectors.select(0)
         for key, mask in events:
@@ -79,7 +80,8 @@ class Client:
         game_address = self.game_connection.getsockname()
         print("game_connection port", game_address)
         self.rudp_connection = orudp.Mailbox()
-        self.rudp_connection.connect(self.server_address)
+        server_rudp_address = (self.server_address[0], self.server_address[1] + 1)
+        self.rudp_connection.connect(server_rudp_address)
         print("rudp callback", self.rudp_callback)
         self.rudp_connection.set_protocol(self.rudp_callback)
         rudp_address = self.rudp_connection.socket.getsockname()
