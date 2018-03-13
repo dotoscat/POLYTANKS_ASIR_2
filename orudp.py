@@ -83,6 +83,10 @@ class Mailbox:
     def __del__(self):
         self._select.close()
 
+    @property
+    def socket(self):
+        return self._socket
+
     def set_protocol(self, protocol):
         """
             The protocol callback has the following signature:

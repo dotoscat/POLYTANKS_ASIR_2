@@ -30,7 +30,7 @@ connected_struct = struct.Struct("!BB")
 disconnect_struct = struct.Struct("!BB")
 snapshot_struct = struct.Struct("!BB")
 snapshotack_struct = struct.Struct("!BB")
-sendgameport_struct = struct.Struct("!BBH")
+sendgameport_struct = struct.Struct("!BBHH")
 request_snapshot_struct = struct.Struct("!BB")
 
 command_id_struct = struct.Struct("!BB")

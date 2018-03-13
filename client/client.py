@@ -78,12 +78,18 @@ class Client:
         self.rudp_connection = orudp.Mailbox()
         game_address = self.game_connection.getsockname()
         print("game_connection port", game_address)
+        self.rudp_connection = orudp.Mailbox()
+        self.rudp_connection.connect(self.server_address)
+        self.rudp_connection.set_protocol(self.rudp_callback)
+        rudp_address = self.rudp_connection.socket.getsockname()
+        print("rudp_adress", rudp_address)
         self.server_connection.send(
-            protocol.sendgameport_struct.pack(protocol.SEND_GAME_PORT, self.id, game_address[1]))
+            protocol.sendgameport_struct.pack(
+                protocol.SEND_GAME_PORT, self.id, game_address[1], rudp_address[1]
+            ))
         self.selectors.register(self.game_connection, selectors.EVENT_READ, self.game_callback)
         self.success_callback()
         self.success_callback = None
-        self.rudp_connection = orudp.Mailbox(protocol=self.rudp_callback)
     
     def _disconnected(self):
         self.success_callback()
