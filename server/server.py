@@ -52,6 +52,7 @@ class Server:
         rudp_host = (host[0], host[1] + 1)
         logging.info("Game server rudp port {}".format(rudp_host))
         self.rudp = orudp.Mailbox()
+        self.rudp.bind(rudp_host)
         self.loop.run_until_complete(self.step())
 
     async def step(self):
@@ -79,7 +80,7 @@ class Server:
         data = int.to_bytes(protocol.EVENT, 1, "big") + data
         for id in self.clients:
             player = self.clients[id]
-            player.secure_send(data)
+            self.rudp.send_message(data, 0.5, address=player.rudp_address)
 
     def clean_clients(self):
         offline = [id for id in self.clients
@@ -116,9 +117,9 @@ class Server:
             return
         player.input.from_bytes(data[protocol.command_id_struct.size:])
 
-    def set_game_address(self, player_id, port):
+    def set_game_address(self, player_id, port, rudp_port):
         player = self.clients[player_id] 
-        player.set_game_address(port)
+        player.set_game_address(port, rudp_port)
         current_time = self.loop.time()
         player.ack_time = current_time
         player.send_time = current_time

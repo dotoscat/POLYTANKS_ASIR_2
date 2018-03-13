@@ -22,6 +22,7 @@ class Player:
     def __init__(self, transport):
         self.server_transport = transport
         self.game_address = None
+        self.rudp_address = None
         self.send_time = 0.
         self.ack_time = 0.
         self.snapshots = deque()
@@ -62,13 +63,15 @@ class Player:
         # print("do with master snapshot")
         return first_snapshot.diff(MASTER_SNAPSHOT)
 
-    def set_game_address(self, port):
+    def set_game_address(self, port, rudp_port):
         """
         Parameters:
-            port (int): Port of the udp connection
+            port (int): Port of the game udp connection
+            rudp_port (int): Port of the game rudp connection
         """
         client_address = self.server_transport.get_extra_info("peername")
         self.game_address = (client_address[0], port)
+        self.rudp_address = (client_address[0] + 1, rudp_port)
 
     @property
     def ping(self):
@@ -79,7 +82,9 @@ class Player:
         return self.send_time - self.ack_time
 
     def secure_send(self, data):
-        import socket
+        """
+        Deprecated
+        """
         player_socket = self.server_transport.get_extra_info("socket")
         print("player delay", player_socket.getsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY))
         self.server_transport.write(data)

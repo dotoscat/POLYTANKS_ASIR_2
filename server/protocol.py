@@ -47,9 +47,9 @@ class ServerProtocol(asyncio.Protocol):
             else:
                 self.transport.write(b"NO")
         elif command == protocol.SEND_GAME_PORT:
-            command, player_id, port = protocol.sendgameport_struct.unpack(data) 
-            self.server.set_game_address(player_id, port)
-            print("game port", player_id, port)
+            command, player_id, port, rudp_port = protocol.sendgameport_struct.unpack(data) 
+            print("game - rudp port", player_id, port, rudp_port)
+            self.server.set_game_address(player_id, port, rudp_port)
         elif command == protocol.REQUEST_SNAPSHOT:
             command, player_id = protocol.request_snapshot_struct.unpack(data)
             self.server.send_requested_snapshot(player_id)
