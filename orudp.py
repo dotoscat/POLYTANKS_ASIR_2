@@ -58,21 +58,13 @@ class Message:
 
 class Mailbox:
     DEFAULT_MESSAGES = 256
-    def __init__(self, bind=None, blocking=False, protocol=None):
+    def __init__(self, blocking=False):
         """
             A mailbox instance will be listening to incoming messages if
             you bind it to an address and set a protocol.
 
             Arguments:
-                bind (tuple): A direction with the ip and the port for serving (listening).
                 blocking (bool): This is a blocking connection or not (asyncronous).
-                protocol (callable): A callable to attend arriving messages.
-
-            The protocol callback has the following signature:
-                protocol(message, address, mailbox)
-
-            Where *message* is the payload, *address* is where the message comes from;
-            and *mailbox* is the instance associated to the protocol.
         """
         self._sent = {}
         self._received = {}
@@ -80,18 +72,36 @@ class Mailbox:
         self._socket = None
         self._mysched = sched.scheduler()
         self._select = selectors.DefaultSelector()
-        self._protocol = protocol
+        self._protocol = None
         self._messages = deque([Message() for i in range(self.DEFAULT_MESSAGES)])
 
         sock = socket.socket(type=socket.SOCK_DGRAM)
-        if bind:
-            sock.bind(bind)
         sock.setblocking(blocking)
         self._socket = sock
         self._select.register(sock, selectors.EVENT_READ)
 
     def __del__(self):
         self._select.close()
+
+    def set_protocol(self, protocol):
+        """
+            The protocol callback has the following signature:
+                protocol(message, address, mailbox)
+
+            Where *message* is the payload, *address* is where the message comes from;
+            and *mailbox* is the instance associated to the protocol.
+
+            Arguments:
+                protocol (callable): The callback to manage the incoming messages
+
+        """
+        self._protocol = protocol
+
+    def bind(self, address):
+        self._socket.bind(address)
+
+    def connect(self, address):
+        self._socket.connect(address)
 
     def run(self):
         """
