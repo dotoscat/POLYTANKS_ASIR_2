@@ -51,7 +51,7 @@ class Server:
         logging.info("Game server port {}".format(host[1]))
         rudp_host = (host[0], host[1] + 1)
         logging.info("Game server rudp port {}".format(rudp_host))
-        self.rudp = orudp.Mailbox()
+        self.rudp = orudp.Mailbox(bind=rudp_host)
         self.loop.run_until_complete(self.step())
 
     async def step(self):
@@ -62,6 +62,7 @@ class Server:
         while True:
             # print(self, len(self.connecting_clients), self.connecting_clients.get(1))
             start = self.loop.time()
+            self.rudp.run()
             self.clean_clients()
             self.engine.update(GAME_RATE)
             self.send_snapshot()

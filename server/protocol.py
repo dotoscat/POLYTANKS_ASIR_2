@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.import asyncio
 
+import logging
 import asyncio
 from polytanks import protocol
 
@@ -77,5 +78,5 @@ class GameProtocol(asyncio.DatagramProtocol):
             self.server.apply_input(id, data)
 
     def connection_made(self, transport):
-        print("GameProtocol connection_made")
+        logging.info("GameProtocol connection_made")
         self.transport = transport

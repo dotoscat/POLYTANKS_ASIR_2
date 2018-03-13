@@ -16,6 +16,7 @@
 import socket
 import selectors
 from polytanks import protocol, event
+import orudp
 
 class Client:
     def __init__(self):
@@ -24,9 +25,11 @@ class Client:
         self.id = 0
         self.server_connection = None
         self.game_connection = None
+        self.rudp_connection = None
         self.server_callback = None
         self.control_register = None
         self.success_callback = None
+        self.rudp_callback = None
 
     def __del__(self):
         self.selectors.close()
@@ -38,6 +41,8 @@ class Client:
     def step(self):
         if not self.control_register:
             return
+        if self.rudp_connection:
+            self.rudp_connection.run()
         events = self.selectors.select(0)
         for key, mask in events:
             fileobj = key.fileobj
@@ -70,6 +75,7 @@ class Client:
         print("server_address", self.server_address)
         self.game_connection.setblocking(False)
         self.game_connection.connect(self.server_address)
+        self.rudp_connection = orudp.Mailbox()
         game_address = self.game_connection.getsockname()
         print("game_connection port", game_address)
         self.server_connection.send(
@@ -77,6 +83,7 @@ class Client:
         self.selectors.register(self.game_connection, selectors.EVENT_READ, self.game_callback)
         self.success_callback()
         self.success_callback = None
+        self.rudp_connection = orudp.Mailbox(protocol=self.rudp_callback)
     
     def _disconnected(self):
         self.success_callback()
@@ -84,12 +91,14 @@ class Client:
         self.id = 0
         self.control_register = None
         self.server_address = None
+        self.rudp_callback = None
+        self.rudp_connection = None
         self.selectors.unregister(self.game_connection)
         self.selectors.unregister(self.server_connection)
         self.game_connection.close()
         self.server_connection.close()
 
-    def connect_to_server(self, address, callback, server_callback, success_callback):
+    def connect_to_server(self, address, callback, server_callback, success_callback, rudp_callback):
         if not callable(callback):
             raise TypeError("callback is not callable. Passed {} instead.".format(type(callback)))
         if not callable(success_callback):
