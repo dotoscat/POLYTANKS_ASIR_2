@@ -109,7 +109,7 @@ class Mailbox:
                 print("You received message with payload:", payload)
                 #Do something with the payload
                 socket.sendto(header.pack(id, ACK), address)
-                if callable(self._protocol):
+                if not id in self._received and callable(self._protocol):
                     self._protocol(payload, address, self)
                 message = self._messages.pop()
                 message.id = id
