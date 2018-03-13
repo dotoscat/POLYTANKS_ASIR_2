@@ -40,3 +40,12 @@ class TestOrudpAsync(unittest.TestCase):
         self.client.send_message(self.message, 0.5, 1, address=ADDRESS)
         self.run_mailboxes()
         self.assertTrue(self.managed, "Test2 not passed")
+
+    def test3_server_bind_and_send_to_client(self):
+        self.server.bind(ADDRESS)
+        self.client.set_protocol(self.manage_message)
+        self.client.connect(ADDRESS)
+        client_address = self.client.socket.getsockname()
+        self.server.send_message(self.message, 0.5, 1, address=client_address)
+        self.run_mailboxes()
+        self.assertTrue(self.managed, "Test3 not passed")
