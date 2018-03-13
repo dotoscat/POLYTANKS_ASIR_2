@@ -15,13 +15,14 @@
 
 from struct import Struct
 
-_control_struct = Struct("!f??") # TODO: Add cannon angle later
+_control_struct = Struct("!f??f") 
 
 class Control:
     def __init__(self):
         self.move = 0.
         self.pointer_x = 0.
         self.pointer_y = 0.
+        self.cannon_angle = 0.
         self.touch_floor = False
         self.jumps = False
         self.jump_pressed = False
@@ -29,10 +30,10 @@ class Control:
         self.shoot_time = 0.
 
     def from_bytes(self, data):
-        self.move, self.jumps, self.shoots = _control_struct.unpack(data)
+        self.move, self.jumps, self.shoots, self.cannon_angle = _control_struct.unpack(data)
 
     def __bytes__(self):
-        return _control_struct.pack(self.move, self.jumps, self.shoots)
+        return _control_struct.pack(self.move, self.jumps, self.shoots, self.cannon_angle)
     
 class Info:
     def __init__(self):

@@ -65,6 +65,5 @@ class TankGraphic:
         self.cannon.x = self.base.x + self.cannon_offset[0]
         self.cannon.y = self.base.y + self.cannon_offset[1]
 
-    def update_cannon_angle(self, x, y):
-        angle = atan2(y - self.cannon.y, x - self.cannon.x)
-        self.cannon.rotation = degrees(-angle)
+    def get_cannon_angle(self, x, y):
+        return degrees(-atan2(y - self.cannon.y, x - self.cannon.x))
