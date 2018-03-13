@@ -128,7 +128,7 @@ class Mailbox:
         self._mysched.run(False)
 
     def empty(self):
-        """Check if there is not pending messages."""
+        """Check if there are not pending messages."""
         return self._mysched.empty()
 
     def send_message(self, data, time_for_response, tries=None, address=None):
