@@ -96,8 +96,7 @@ class Screen(Scene):
             elif eve.id == event.PLAYER_JUMPS:
                 print("player {} jumps".format(eve.player_id))
             elif eve.id == event.PLAYER_FLOATS:
-                pass
-                # print("player {} floats".format(eve.player_id))
+                print("player {} floats".format(eve.player_id))
             elif eve.id == event.PLAYER_SHOOTS:
                 print("player {} shoots {}".format(eve.player_id, eve.what_id))
                 id, bullet = self.engine.add_bullet(eve.what_id)

@@ -29,7 +29,7 @@ class InputSystem(system.InputSystem):
             print(entity, "jumps")
         if self.float_event:
             event_manager.add_player_event(event.PLAYER_FLOATS, entity.id)
-            # print(entity, "floats") 
+            print(entity, "floats") 
         if self.shot_event:
             if not self.engine:
                 warnings.warn("'engine' attribute for the system is None.")
