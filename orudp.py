@@ -108,6 +108,9 @@ class Mailbox:
     def connect(self, address):
         self._socket.connect(address)
 
+    def close(self):
+        self._socket.close()
+
     def run(self):
         """
         Run the mailbox to attend petitions and manage the status of sent messages.
