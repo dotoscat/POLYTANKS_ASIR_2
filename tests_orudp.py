@@ -13,19 +13,30 @@ class TestOrudpAsync(unittest.TestCase):
         self.server = orudp.Mailbox()
         self.client = orudp.Mailbox()
         self.managed = False
+        self.message = b'Hello world!'
     
     def run_mailboxes(self):
         while not (self.client.empty() and self.server.empty()):
             self.server.run()
             self.client.run()
+        self.server.close()
+        self.client.close()
 
     def manage_message(self, message, address, mailbox):
         self.managed = True
+        self.assertEqual(message, self.message, "Message is not equal!")
 
     def test1_server_bind_client_connect_and_send(self):
         self.server.bind(ADDRESS)
         self.server.set_protocol(self.manage_message)
         self.client.connect(ADDRESS)
-        self.client.send_message(b'Hello', 0.5, 1)
+        self.client.send_message(self.message, 0.5, 1)
         self.run_mailboxes()
         self.assertTrue(self.managed, "Test1 not passed")
+
+    def test2_server_bind_client_and_send(self):
+        self.server.bind(ADDRESS)
+        self.server.set_protocol(self.manage_message)
+        self.client.send_message(self.message, 0.5, 1, address=ADDRESS)
+        self.run_mailboxes()
+        self.assertTrue(self.managed, "Test2 not passed")
