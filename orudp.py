@@ -118,6 +118,7 @@ class Mailbox:
             if socket.fileno() == -1:
                 continue
             data, address = socket.recvfrom(1024)
+            print("received in run", data, len(data), address)
             if not len(data) >= header.size:
                 continue
             id, type = header.unpack_from(data)
