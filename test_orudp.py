@@ -24,9 +24,8 @@ print("sent {} bytes".format(sent))
 while True:
     conn_office.run()
     server_office.run()
-    if conn_office.empty():
-        #break
-        pass
-    time.sleep(0.01)
+    if conn_office.empty() and server_office.empty():
+        break
+    # time.sleep(0.01)
 
 print("bye")
