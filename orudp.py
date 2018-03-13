@@ -114,8 +114,9 @@ class Mailbox:
                 message = self._messages.pop()
                 message.id = id
                 message.data = payload
-                self._received[id] = message
-                self._mysched.enter(1, 1, self._remove_message, argument=(id,))
+                if not id in self._received:
+                    self._received[id] = message
+                    self._mysched.enter(1, 1, self._remove_message, argument=(id,))
             elif type == ACK:
                 if id not in self._sent:
                     continue
