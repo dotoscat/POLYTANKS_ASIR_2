@@ -13,15 +13,20 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.import asyncio
 
+import sys
+import logging
 import weakref
 import socket
 import asyncio
 from polytanks import protocol, snapshot
 from polytanks.event import event_manager
+import orudp
 from .player import Player
 from .engine import Engine
 from .protocol import ServerProtocol, GameProtocol
 from .system import input
+
+logging.basicConfig(format="%(pathname)s:%(module)s:%(levelname)s:%(message)s", level=logging.DEBUG)
 
 class Server:
     SNAPSHOT_RATE = 1./15.
@@ -35,7 +40,7 @@ class Server:
         self.server_coro = self.loop.create_server(
             lambda: ServerProtocol(weakref.proxy(self)), *host)
         self.server = self.loop.run_until_complete(self.server_coro)
-        # print("tcp no delay", server_socket.getsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY))
+        # print("tcp o delay", server_socket.getsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY))
         game_socket = socket.socket(type=socket.SOCK_DGRAM)
         game_socket.setblocking(False)
         game_socket.bind(host)
@@ -43,6 +48,10 @@ class Server:
             lambda: GameProtocol(weakref.proxy(self)), sock=game_socket
         )
         self.game_transport, self.game = self.loop.run_until_complete(self.game_coro)
+        logging.info("Game server port {}".format(host[1]))
+        rudp_host = (host[0], host[1] + 1)
+        logging.info("Game server rudp port {}".format(rudp_host))
+        self.rudp = orudp.Mailbox()
         self.loop.run_until_complete(self.step())
 
     async def step(self):
