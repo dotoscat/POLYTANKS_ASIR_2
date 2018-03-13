@@ -80,6 +80,7 @@ class Client:
         print("game_connection port", game_address)
         self.rudp_connection = orudp.Mailbox()
         self.rudp_connection.connect(self.server_address)
+        print("rudp callback", self.rudp_callback)
         self.rudp_connection.set_protocol(self.rudp_callback)
         rudp_address = self.rudp_connection.socket.getsockname()
         print("rudp_adress", rudp_address)
@@ -123,6 +124,7 @@ class Client:
         self.game_callback = callback
         self.server_callback = server_callback
         self.success_callback = success_callback
+        self.rudp_callback = rudp_callback
         # self.server_connection.close()
 
     def disconnect_from_server(self, success_callback):

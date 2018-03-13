@@ -99,6 +99,7 @@ class Mailbox:
                 protocol (callable): The callback to manage the incoming messages
 
         """
+        print("set protocol", protocol)
         self._protocol = protocol
 
     def bind(self, address):
@@ -114,6 +115,8 @@ class Mailbox:
         events = self._select.select(0)
         for key, mask in events:
             socket = key.fileobj
+            if socket.fileno() == -1:
+                continue
             data, address = socket.recvfrom(1024)
             if not len(data) >= header.size:
                 continue

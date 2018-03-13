@@ -80,6 +80,9 @@ class Server:
         data = int.to_bytes(protocol.EVENT, 1, "big") + data
         for id in self.clients:
             player = self.clients[id]
+            if not player.rudp_address:
+                print("rudp_address None")
+                continue
             self.rudp.send_message(data, 0.5, address=player.rudp_address)
 
     def clean_clients(self):

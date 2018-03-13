@@ -71,7 +71,7 @@ class Player:
         """
         client_address = self.server_transport.get_extra_info("peername")
         self.game_address = (client_address[0], port)
-        self.rudp_address = (client_address[0] + 1, rudp_port)
+        self.rudp_address = (client_address[0], rudp_port)
 
     @property
     def ping(self):
@@ -85,6 +85,7 @@ class Player:
         """
         Deprecated
         """
+        import socket
         player_socket = self.server_transport.get_extra_info("socket")
         print("player delay", player_socket.getsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY))
         self.server_transport.write(data)
