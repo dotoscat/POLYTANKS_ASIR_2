@@ -18,7 +18,7 @@ def read_message(message, address, mailbox):
 server_office = orudp.Mailbox(bind=ADDRESS, protocol=read_message)
 
 conn_office = orudp.Mailbox()
-sent = conn_office.send_message(message, 1, tries=1, address=ADDRESS)
+sent = conn_office.send_message(message, 1, address=ADDRESS)
 print("sent {} bytes".format(sent)) 
 
 while True:
