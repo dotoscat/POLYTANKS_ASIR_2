@@ -74,7 +74,11 @@ class Screen(Scene):
             # print("udp message from server", data)
     
     def rudp_from_server(self, message, address, mailbox):
-        print("received '{}' from {}".format(message, address))
+        command = protocol.command(message)
+        if command == protocol.EVENT:
+            event_data = message[1:]
+            self.manage_events(event_data)
+        # print("received '{}' from {}".format(message, address))
 
     def tcp_from_server(self, data):
         command = protocol.command(data)

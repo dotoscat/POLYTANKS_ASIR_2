@@ -42,7 +42,6 @@ class Client:
         if not self.control_register:
             return
         if self.rudp_connection:
-            print("rudp connection", self.rudp_connection.socket.getsockname())
             self.rudp_connection.run()
         events = self.selectors.select(0)
         for key, mask in events:
