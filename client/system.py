@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from math import degrees
 import toyblock3
 from polytanks.constants import UNIT
 import polytanks.system as polytanks_system
@@ -28,7 +29,7 @@ class InputSystem(polytanks_system.InputSystem):
     def _update(self, entity):
         super()._update(entity)
         cannon_angle = entity.sprite.get_cannon_angle(entity.input.pointer_x, entity.input.pointer_y)
-        entity.sprite.cannon.rotation = cannon_angle
+        entity.sprite.cannon.rotation = degrees(cannon_angle)
         entity.input.cannon_angle = cannon_angle
 
 sprite = SpritesSystem()

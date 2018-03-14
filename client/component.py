@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from math import atan2, degrees
+from math import atan2
 import pyglet
 from pyglet.window import key
 from . import assets
@@ -66,4 +66,4 @@ class TankGraphic:
         self.cannon.y = self.base.y + self.cannon_offset[1]
 
     def get_cannon_angle(self, x, y):
-        return degrees(-atan2(y - self.cannon.y, x - self.cannon.x))
+        return -atan2(y - self.cannon.y, x - self.cannon.x)
