@@ -38,6 +38,7 @@ class InputSystem(system.InputSystem):
             event_manager.add_player_make_event(event.PLAYER_SHOOTS, entity.id, id)
             bullet.body.x = entity.body.x + CANNON_JOINT[0]
             bullet.body.y = entity.body.y + CANNON_JOINT[1]
+            bullet.owner = entity.id
             print("bullet", bullet.body.x, bullet.body.y)
             # engine.create_bullet and so
 
