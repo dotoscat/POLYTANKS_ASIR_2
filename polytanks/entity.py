@@ -54,6 +54,7 @@ class Platform:
 class Bullet:
     def __init__(self):
         self.body = Body()
+        self.body.has_gravity = False
         self.collisions = []
         self.owner = 0
 
