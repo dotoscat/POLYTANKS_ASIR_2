@@ -27,6 +27,11 @@ class CollisionMixin:
             start=self.player_platform_start,
             end=self.player_platform_end
         )
+        collision.register_callbacks(
+            (BULLET, PLATFORM),
+            start=self.bullet_platform_start
+        )
+
 
     def player_platform_start(self, player, platform, player_rect, platform_rect):
         player.body.y = platform_rect.top + -player_rect.offset[1]-1.
@@ -37,3 +42,7 @@ class CollisionMixin:
     def player_platform_end(self, player, platform, player_rect, platform_rect):
         player.body.has_gravity = True
         player.input.touch_floor = False
+
+    def bullet_platform_start(self, bullet, platform, bullet_rect, platform_rect):
+        bullet.free()
+        print("Kaboom and so")
