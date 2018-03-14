@@ -18,7 +18,7 @@ import warnings
 from polytanks import system
 from polytanks import event
 from polytanks.event import event_manager
-from polytanks.constants import CANNON_JOINT, CANNON_LENGTH
+from polytanks.constants import CANNON_JOINT, CANNON_LENGTH, BULLET_SPEED
 
 class InputSystem(system.InputSystem):
     def __init__(self):
@@ -40,6 +40,8 @@ class InputSystem(system.InputSystem):
             cannon_angle = entity.input.cannon_angle
             bullet.body.x = entity.body.x + CANNON_JOINT[0] + cos(-cannon_angle)*CANNON_LENGTH
             bullet.body.y = entity.body.y + CANNON_JOINT[1] + sin(-cannon_angle)*CANNON_LENGTH
+            bullet.body.vel_x = cos(-cannon_angle)*BULLET_SPEED
+            bullet.body.vel_y = sin(-cannon_angle)*BULLET_SPEED
             bullet.owner = entity.id
             print("bullet", bullet.body.x, bullet.body.y)
             # engine.create_bullet and so

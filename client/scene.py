@@ -19,7 +19,7 @@ import pyglet
 from pyglet.window import key
 from polytanks import level, protocol, snapshot, event
 from polytanks.event import event_manager
-from polytanks.constants import CANNON_JOINT, CANNON_LENGTH
+from polytanks.constants import CANNON_JOINT, CANNON_LENGTH, BULLET_SPEED
 from ogf4py.scene import Scene
 from ogf4py.director import Director
 from . import assets
@@ -106,6 +106,8 @@ class Screen(Scene):
                 cannon_angle = player.input.cannon_angle
                 bullet.body.x = player_body.x + CANNON_JOINT[0] + cos(-cannon_angle)*CANNON_LENGTH
                 bullet.body.y = player_body.y + CANNON_JOINT[1] + sin(-cannon_angle)*CANNON_LENGTH
+                bullet.body.vel_x = cos(-cannon_angle)*BULLET_SPEED
+                bullet.body.vel_y = sin(-cannon_angle)*BULLET_SPEED
                 bullet.owner = eve.player_id
 
     def apply_snapshot_data(self, data):
