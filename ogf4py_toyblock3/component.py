@@ -47,8 +47,6 @@ class Body:
         self.y = 0.
         self.vel_x = 0.
         self.vel_y = 0.
-        self.has_gravity = True
-
 
 class CollisionRect:
     def __init__(self, width, height, x=0., y=0.):
