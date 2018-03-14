@@ -25,7 +25,7 @@ class InputSystem(toyblock3.System):
         self.shot_event = False
         self.jump_event = False
         self.float_event = False
-        self.dt = 0.
+        self.dt = FPS
 
     def _update(self, entity):
         entity.body.vel_x = entity.input.move*UNIT*2.
