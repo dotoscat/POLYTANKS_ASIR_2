@@ -13,11 +13,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from math import cos, sin, degrees
 import warnings
 from polytanks import system
 from polytanks import event
 from polytanks.event import event_manager
-from polytanks.constants import CANNON_JOINT
+from polytanks.constants import CANNON_JOINT, CANNON_LENGTH
 
 class InputSystem(system.InputSystem):
     def __init__(self):
@@ -36,8 +37,9 @@ class InputSystem(system.InputSystem):
                 warnings.warn("'engine' attribute for the system is None.")
             id, bullet = self.engine.add_bullet()
             event_manager.add_player_make_event(event.PLAYER_SHOOTS, entity.id, id)
-            bullet.body.x = entity.body.x + CANNON_JOINT[0]
-            bullet.body.y = entity.body.y + CANNON_JOINT[1]
+            cannon_angle = entity.input.cannon_angle
+            bullet.body.x = entity.body.x + CANNON_JOINT[0] + cos(-cannon_angle)*CANNON_LENGTH
+            bullet.body.y = entity.body.y + CANNON_JOINT[1] + sin(-cannon_angle)*CANNON_LENGTH
             bullet.owner = entity.id
             print("bullet", bullet.body.x, bullet.body.y)
             # engine.create_bullet and so

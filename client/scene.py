@@ -19,7 +19,7 @@ import pyglet
 from pyglet.window import key
 from polytanks import level, protocol, snapshot, event
 from polytanks.event import event_manager
-from polytanks.constants import CANNON_JOINT
+from polytanks.constants import CANNON_JOINT, CANNON_LENGTH
 from ogf4py.scene import Scene
 from ogf4py.director import Director
 from . import assets
@@ -101,9 +101,11 @@ class Screen(Scene):
             elif eve.id == event.PLAYER_SHOOTS:
                 print("player {} shoots {}".format(eve.player_id, eve.what_id))
                 id, bullet = self.engine.add_bullet(eve.what_id)
-                player_body = self.engine.players[eve.player_id].body
-                bullet.body.x = player_body.x + CANNON_JOINT[0]
-                bullet.body.y = player_body.y + CANNON_JOINT[1]
+                player = self.engine.players[eve.player_id]
+                player_body = player.body
+                cannon_angle = player.input.cannon_angle
+                bullet.body.x = player_body.x + CANNON_JOINT[0] + cos(-cannon_angle)*CANNON_LENGTH
+                bullet.body.y = player_body.y + CANNON_JOINT[1] + sin(-cannon_angle)*CANNON_LENGTH
                 bullet.owner = eve.player_id
 
     def apply_snapshot_data(self, data):
