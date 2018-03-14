@@ -103,6 +103,8 @@ class Screen(Scene):
                 player_body = self.engine.players[eve.player_id].body
                 bullet.body.x = player_body.x + CANNON_JOINT[0]
                 bullet.body.y = player_body.y + CANNON_JOINT[1]
+                #bullet.body.x = 8
+                #bullet.body.y = 8
 
     def apply_snapshot_data(self, data):
         tsnapshot = snapshot.Snapshot()

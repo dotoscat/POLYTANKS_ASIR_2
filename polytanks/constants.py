@@ -11,10 +11,11 @@
 # GNU Affero General Public License for more details.
 
 # You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.#Copyright (C) 2017  Oscar 'dotoscat' Triano <dotoscat (at) gmail (dot) com>
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 WIDTH = 640
 HEIGHT = 360
 UNIT = 16.
+HALF_UNIT = UNIT/2.
 FPS = 1./60.
-CANNON_JOINT = (UNIT/2., UNIT-UNIT/4.)
+CANNON_JOINT = (0. , UNIT/4.)
