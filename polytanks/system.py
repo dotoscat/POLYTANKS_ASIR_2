@@ -43,7 +43,7 @@ class InputSystem(toyblock3.System):
             if entity.body.vel_y < 0.:
                 entity.body.vel_y = UNIT
             else:
-                entity.body.vel_y += UNIT
+                entity.body.apply_force(self.dt, y=UNIT*7)
             self.float_event = True
         if not entity.input.jumps and entity.input.jump_pressed:
             entity.input.jump_pressed = False
