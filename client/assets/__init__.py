@@ -16,12 +16,12 @@
 import os
 import pyglet
 from polytanks.constants import UNIT, HALF_UNIT
-pyglet.resource.path = __path__
+pyglet.resource.path = __path__ # type: ignore  # mypy issue #1422
 pyglet.resource.reindex()
 
 images = {
     entry.name.split('.')[0] : pyglet.resource.image(entry.name)
-    for entry in os.scandir(__path__[0])
+    for entry in os.scandir(__path__[0])    # type: ignore  # mypy issue #1422
     if entry.name.endswith(".png")
 }
 

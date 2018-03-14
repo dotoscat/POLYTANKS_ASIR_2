@@ -14,14 +14,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
 import os
-import signal
-import server.server as server
-Server = server.Server
-signal.signal(signal.SIGINT, signal.SIG_DFL)
-
+import sys
 sys.path.insert(0, os.path.abspath(__package__))
+import signal
+from server.server import Server
+
+signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 if __name__ == "__main__":
     HOST = ("127.0.0.1", 1337)

@@ -14,11 +14,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
 import os
+import sys
+sys.path.insert(0, os.path.abspath(__package__))
 import pyglet
 from ogf4py.director import Director
-sys.path.insert(0, os.path.abspath(__package__))
 from polytanks.constants import WIDTH, HEIGHT
 from client.client import Client
 from client.scene import Screen, Main
