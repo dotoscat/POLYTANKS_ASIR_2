@@ -17,6 +17,7 @@ import warnings
 from polytanks import system
 from polytanks import event
 from polytanks.event import event_manager
+from polytanks.constants import CANNON_JOINT
 
 class InputSystem(system.InputSystem):
     def __init__(self):
@@ -35,8 +36,8 @@ class InputSystem(system.InputSystem):
                 warnings.warn("'engine' attribute for the system is None.")
             id, bullet = self.engine.add_bullet()
             event_manager.add_player_make_event(event.PLAYER_SHOOTS, entity.id, id)
-            bullet.body.x = entity.body.x
-            bullet.body.y = entity.body.y
+            bullet.body.x = entity.body.x + CANNON_JOINT[0]
+            bullet.body.y = entity.body.y + CANNON_JOINT[1]
             print("bullet", bullet.body.x, bullet.body.y)
             # engine.create_bullet and so
 

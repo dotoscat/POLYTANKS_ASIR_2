@@ -16,9 +16,9 @@
 import toyblock3
 import pyglet
 from pyglet.window import key
-from polytanks import level, protocol, snapshot
+from polytanks import level, protocol, snapshot, event
 from polytanks.event import event_manager
-from polytanks import event
+from polytanks.constants import CANNON_JOINT
 from ogf4py.scene import Scene
 from ogf4py.director import Director
 from . import assets
@@ -101,8 +101,8 @@ class Screen(Scene):
                 print("player {} shoots {}".format(eve.player_id, eve.what_id))
                 id, bullet = self.engine.add_bullet(eve.what_id)
                 player_body = self.engine.players[eve.player_id].body
-                bullet.body.x = player_body.x
-                bullet.body.y = player_body.y
+                bullet.body.x = player_body.x + CANNON_JOINT[0]
+                bullet.body.y = player_body.y + CANNON_JOINT[1]
 
     def apply_snapshot_data(self, data):
         tsnapshot = snapshot.Snapshot()
