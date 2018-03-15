@@ -37,10 +37,10 @@ class Body_:
 
 Body = toyblock3.Pool(Body_, MAX_SNAPSHOTS*4)
 
-body_struct = struct.Struct("!Bffff") # TODO: send velocity
+body_struct = struct.Struct("!Bffff") 
 
 class MASTER_SNAPSHOT:
-    players = {}
+    players = {} # type: ignore
 
 class SnapshotMixin:
     def __init__(self):

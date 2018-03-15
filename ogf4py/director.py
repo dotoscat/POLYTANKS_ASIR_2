@@ -32,7 +32,8 @@ class Director(pyglet.window.Window):
         An instance of Director.
     """
     _director = None
-    _scenes = {}
+    _scenes = {} # type: ignore
+    # TODO: Review scenes type for mypy extension
 
     @staticmethod
     def add_scene(key, scene):
