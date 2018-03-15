@@ -11,7 +11,7 @@
 # GNU Affero General Public License for more details.
 
 # You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.#Copyright (C) 2017  Oscar 'dotoscat' Triano <dotoscat (at) gmail (dot) com>
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from ogf4py_toyblock3.component import Body, CollisionRect
 from . import collision, component
