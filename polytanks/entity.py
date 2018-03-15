@@ -18,9 +18,9 @@ from . import collision, component
 from .constants import UNIT
 
 class Player:
-    def __init__(self):
+    def __init__(self, input_component=component.Control):
         self.id = 0
-        self.input = component.Control() 
+        self.input = input_component()
         self.collisions = []
         self.body = Body()
         self.info = component.Info()

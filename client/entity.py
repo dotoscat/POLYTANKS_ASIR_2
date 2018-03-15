@@ -16,7 +16,7 @@
 import pyglet
 import polytanks.entity as pentity
 from . import assets
-from .component import TankGraphic, PlatformSprite
+from .component import TankGraphic, PlatformSprite, Control
 from . import system
 
 class Platform(pentity.Platform):
@@ -39,7 +39,7 @@ class Platform(pentity.Platform):
 class Player(pentity.Player):
     SYSTEMS = (system.input, system.polytanks_system.physics, system.polytanks_system.collision, system.sprite)
     def __init__(self, batch, groups):
-        super().__init__()
+        super().__init__(input_component=Control)
         self.sprite = TankGraphic(batch, groups, 1)
     def reset(self):
         pass
