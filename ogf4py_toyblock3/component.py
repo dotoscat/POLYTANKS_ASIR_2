@@ -81,3 +81,12 @@ class CollisionRect:
     def update(self, x, y):
         self.x = x + self.offset[0]
         self.y = y + self.offset[1]
+
+class Collisions(list):
+    """
+    Attributes:
+        active (bool): False to be processed only agains other entities.
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(self, *args, **kwargs)
+        self.active = True
