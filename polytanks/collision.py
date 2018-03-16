@@ -21,6 +21,11 @@ PLAYER_FEET = 1 << 2
 BULLET = 1 << 3
 
 class CollisionMixin:
+    """
+    This class is mixed with the abstract :class:`AbstractEngine`.
+    Then you can override the following callbacks from the class derivated
+    from AbstractEngine. Do not forget call super().
+    """
     def register_collisions(self):
         collision.register_callbacks(
             (PLAYER_FEET, PLATFORM),
@@ -31,7 +36,6 @@ class CollisionMixin:
             (BULLET, PLATFORM),
             start=self.bullet_platform_start
         )
-
 
     def player_platform_start(self, player, platform, player_rect, platform_rect):
         player.body.y = platform_rect.top + -player_rect.offset[1]-1.
