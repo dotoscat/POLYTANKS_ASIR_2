@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from ogf4py_toyblock3.component import Body, CollisionRect
+from ogf4py_toyblock3.component import Body, CollisionRect, Collisions
 from . import collision, component
 from .constants import UNIT
 
@@ -21,7 +21,7 @@ class Player:
     def __init__(self, input_component=component.Control):
         self.id = 0
         self.input = input_component()
-        self.collisions = []
+        self.collisions = Collisions()
         self.body = Body()
         self.info = component.Info()
 
@@ -39,7 +39,7 @@ class Player:
 
 class Platform:
     def __init__(self):
-        self.collisions = [CollisionRect(UNIT, UNIT/4.)]
+        self.collisions = Collisions( (CollisionRect(UNIT, UNIT/4.),) )
 
         rect = self.collisions[0]
         # rect.offset = (-UNIT/2., UNIT/2.)
@@ -55,7 +55,7 @@ class Bullet:
     def __init__(self):
         self.body = Body()
         self.body.has_gravity = True
-        self.collisions = []
+        self.collisions = Collisions()
         self.owner = 0
 
         width = UNIT/2.

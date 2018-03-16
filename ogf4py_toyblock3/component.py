@@ -88,5 +88,5 @@ class Collisions(list):
         active (bool): False to be processed only against other entities.
     """
     def __init__(self, *args, **kwargs):
-        super().__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.active = True
