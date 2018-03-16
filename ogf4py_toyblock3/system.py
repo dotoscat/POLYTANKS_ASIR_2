@@ -120,5 +120,37 @@ class CollisionSystem(toyblock3.System):
         return _register_callback
     
     def register_callbacks(self, pair, start=None, during=None, end=None):
+        """
+        Register up to 3 collision events for a pair.
+
+        When a collisions starts the *during* event will be triggered too.
+
+        All the callbacks have the following signature:
+            callback(first_entity, second_entity, first_entity_rect, second_entity_rect)
+
+        Parameters:
+            pair (tuple): A tuple with two integers inside it.
+            start (callable): A callable when the collision starts.
+            during (callable): This will be called during the collision.
+            end (callable): This will be triggered when the collision ends.
+
+        Example:
+            PLAYER = 1
+            BULLET = 2
+            my_collision = CollisionSystem()
+            # ... set up
+            player.collisions[0].type = PLAYER
+            player.collisions[0].collides_with = BULLET
+            bullet.collisions[0].type = BULLET
+
+            def player_bullet(player, bullet, player_rect, bullet_rect):
+                player.hit()
+                bullet.free()
+
+            @my_collision.register_callbacks(
+                (PLAYER, BULLET),
+                start=player_bullet
+            )
+        """
         callbacks = CollisionSystem.Callbacks(start, during, end)
         self.callbacks[pair] = callbacks 
