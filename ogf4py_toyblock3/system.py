@@ -66,6 +66,7 @@ class CollisionSystem(toyblock3.System):
         self._collisions = {}
 
     def _update(self, entity):
+        # TODO: Verify that entity has a flag to avoid be processed activaly
         for rect, other_entity in product(entity.collisions, self.entities):
             if not rect.collides_with:
                 continue
