@@ -85,7 +85,7 @@ class CollisionRect:
 class Collisions(list):
     """
     Attributes:
-        active (bool): False to be processed only agains other entities.
+        active (bool): False to be processed only against other entities.
     """
     def __init__(self, *args, **kwargs):
         super().__init__(self, *args, **kwargs)
