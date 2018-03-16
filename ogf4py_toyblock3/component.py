@@ -74,6 +74,8 @@ class CollisionRect:
         return True
 
     def __contains__(self, pair):
+        if isinstance(pair, tuple):
+            raise TypeError("Pair is not a tuple. {} passed".format(pair))
         return self.x <= pair[0] <= self.right and self.y <= pair[1] <= self.top
 
     def update(self, x, y):
