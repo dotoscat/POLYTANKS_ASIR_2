@@ -84,9 +84,8 @@ class CollisionSystem(toyblock3.System):
                 callbacks = self.callbacks.get((rect.type, other_rect.type))
                 if not callbacks:
                     continue
-                # TODO: pass the whole entity to method
-                if not self.check_collision_body_body(entity, other_entity, rect, other_rect):
-                # if not rect.intersects(other_rect):
+                if (self.check_collision_body_body(entity, other_entity, rect, other_rect)
+                    or self.check_collision_body_static(entity, rect, other_rect)):
                     if pair in self._collisions and callable(callbacks.end):
                         callbacks.end(entity, other_entity, rect, other_rect)
                         del self._collisions[pair]
@@ -110,12 +109,27 @@ class CollisionSystem(toyblock3.System):
             x += step_x
             y += step_y
 
+    def check_collision_body_static(self, entity1, entity1_rect, other_rect):
+        """
+        A static is an entity without body, but it has the collision component.
+        """
+        body1 = getattr(entity1, "body", None)
+        if not body1:
+            return False
+        for x, y in self.body_steps(body1):
+            print("x y", x, y)
+            entity1_rect.update(x, y)
+            if entity1_rect.intersects(other_rect):
+                return True
+        return False
+
     def check_collision_body_body(self, entity1, entity2, body1_rect, body2_rect):
-        body1 = getattr(entity1, "body")
-        body2 = getattr(entity2, "body")
+        body1 = getattr(entity1, "body", None)
+        body2 = getattr(entity2, "body", None)
         if not body1 or not body2:
             return False
-        for pair1, pair2 in zip(body1, body2):
+        print("Noooo please")
+        for pair1, pair2 in zip(self.body_steps(body1), self.body_steps(body2)):
             body1_rect.update(pair1[0], pair1[1])
             body2_rect.update(pair2[0], pair2[1])
             if body1_rect.intersects(body2_rect):
