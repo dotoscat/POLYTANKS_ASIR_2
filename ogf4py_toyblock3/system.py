@@ -60,14 +60,17 @@ class CollisionSystem(toyblock3.System):
 
     """
     Callbacks = namedtuple("Callbacks", "start during end")
-    def __init__(self):
+    def __init__(self, iterations=10):
         super().__init__()
         self.callbacks = {}
         self._collisions = {}
+        self.iterations = iterations
 
     def _update(self, entity):
         collisions = getattr(entity, "collisions")
-        if collisions and not collisions.active:
+        if not collisions:
+            return
+        if not collisions.active:
             return
         for rect, other_entity in product(collisions, self.entities):
             if not rect.collides_with:
@@ -92,6 +95,12 @@ class CollisionSystem(toyblock3.System):
                         callbacks.start(entity, other_entity, rect, other_rect)
                 if callable(callbacks.during):
                     callbacks.during(entity, other_entity, rect, other_rect)
+
+    def check_collision(self, body1, body2, body1_rect, body2_rect):
+        body1_x_step = (body1.x - body1._last_x) / self.iterations 
+        body1_y_step = (body1.y - body1._last_y) / self.iterations 
+        body2_x_step = (body2.x - body2._last_x) / self.iterations 
+        body2_y_step = (body2.y - body2._last_y) / self.iterations 
 
     def register_callbacks(self, pair, start=None, during=None, end=None):
         """
