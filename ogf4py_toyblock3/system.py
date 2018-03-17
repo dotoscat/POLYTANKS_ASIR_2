@@ -116,8 +116,8 @@ class CollisionSystem(toyblock3.System):
         if not body1 or not body2:
             return False
         for pair1, pair2 in zip(body1, body2):
-            body1_rect.update(pair1[0], pair2[0])
-            body2_rect.update(pair1[0], pair2[0])
+            body1_rect.update(pair1[0], pair1[1])
+            body2_rect.update(pair2[0], pair2[1])
             if body1_rect.intersects(body2_rect):
                 return True
         return False
