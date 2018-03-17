@@ -85,7 +85,7 @@ class CollisionSystem(toyblock3.System):
                 if not callbacks:
                     continue
                 # TODO: pass the whole entity to method
-                if not self.check_collision(entity, other_entity, rect, other_rect):
+                if not self.check_collision_body_body(entity, other_entity, rect, other_rect):
                 # if not rect.intersects(other_rect):
                     if pair in self._collisions and callable(callbacks.end):
                         callbacks.end(entity, other_entity, rect, other_rect)
@@ -97,6 +97,18 @@ class CollisionSystem(toyblock3.System):
                         callbacks.start(entity, other_entity, rect, other_rect)
                 if callable(callbacks.during):
                     callbacks.during(entity, other_entity, rect, other_rect)
+
+    def body_steps(self, body):
+        step_x = (body.x - body._last_x)/self.iterations
+        step_y = (body.y - body._last_y)/self.iterations
+        
+        x = body._last_x
+        y = body._last_y
+
+        for _ in range(self.iterations):
+            yield (x, y)
+            x += step_x
+            y += step_y
 
     def check_collision_body_body(self, entity1, entity2, body1_rect, body2_rect):
         body1 = getattr(entity1, "body")
