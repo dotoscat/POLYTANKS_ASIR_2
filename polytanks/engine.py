@@ -13,8 +13,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.#Copyright (C) 2017  Oscar 'dotoscat' Triano <dotoscat (at) gmail (dot) com>
 
+from toyblock3 import Manager
 from .collision import CollisionMixin
 from . import level
+from .entity import Blastzone
 
 class AbstractEngine(CollisionMixin):
     def __init__(self, pools):
@@ -26,6 +28,8 @@ class AbstractEngine(CollisionMixin):
         self.entities = {}
         self.players = {}
         self.register_collisions()
+        self.blast_zone = Manager(Blastzone, 1)
+        self.blast_zone()
 
     def load_level(self):
         level.load_level(level.basic, self.pools["platform"])

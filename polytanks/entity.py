@@ -25,6 +25,8 @@ class Blastzone:
 
         bottom = CollisionRect(WIDTH+UNIT*4, UNIT*2, x=-UNIT*2, y=-UNIT*2)
         bottom.type = collision.BLAST_ZONE
+        
+        self.collisions.append(bottom)
 
 class Player:
     def __init__(self, input_component=component.Control):
@@ -52,7 +54,8 @@ class Platform:
 
         rect = self.collisions[0]
         rect.type = collision.PLATFORM
-    
+        rect.active = False
+
     def set_geometry(self, x, y, tiles_width):
         collision = self.collisions[0]
         collision.x = x

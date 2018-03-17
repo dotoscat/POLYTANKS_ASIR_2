@@ -37,6 +37,10 @@ class CollisionMixin:
             (BULLET, PLATFORM),
             start=self.bullet_platform_start
         )
+        collision.register_callbacks(
+            (PLAYER, BLAST_ZONE),
+            start=self.player_blastzone_start
+        )
 
     def player_platform_start(self, player, platform, player_rect, platform_rect):
         player.body.y = platform_rect.top + -player_rect.offset[1]-1.
@@ -47,6 +51,10 @@ class CollisionMixin:
     def player_platform_end(self, player, platform, player_rect, platform_rect):
         player.body.has_gravity = True
         player.input.touch_floor = False
+
+    def player_blastzone_start(self, player, blastzone, player_rect, blastzone_rect):
+        # TODO: Make this abstract
+        print("Player goes kabooooo")
 
     def bullet_platform_start(self, bullet, platform, bullet_rect, platform_rect):
         bullet.free()
