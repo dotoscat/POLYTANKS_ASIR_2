@@ -47,6 +47,8 @@ class Body:
         self.vel_y += y*dt
     
     def reset(self):
+        self._last_x = 0.
+        self._last_y = 0.
         self.x = 0.
         self.y = 0.
         self.vel_x = 0.
