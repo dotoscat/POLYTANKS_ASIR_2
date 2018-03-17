@@ -23,7 +23,8 @@ class Blastzone:
         self.collisions = Collisions()
         self.collisions.active = False
 
-        bottom = CollisionRect(WIDTH+UNIT*4, UNIT*2, x=-UNIT*2, y=-UNIT*2)
+        #bottom = CollisionRect(WIDTH+UNIT*4, UNIT*2, x=-UNIT*2, y=-UNIT*2)
+        bottom = CollisionRect(WIDTH, UNIT*2)
         bottom.type = collision.BLAST_ZONE
         
         self.collisions.append(bottom)
@@ -39,9 +40,16 @@ class Player:
         feet = CollisionRect(UNIT, 2)
         feet.offset = (-UNIT/2, -UNIT/2.)
         feet.type = collision.PLAYER_FEET
-        feet.collides_with = collision.PLATFORM | collision.BLAST_ZONE
+        feet.collides_with = collision.PLATFORM
 
         self.collisions.append(feet)
+
+        body_rect = CollisionRect(UNIT, UNIT)
+        body_rect.offset = (-UNIT/2., -UNIT/2.)
+        body_rect.type = collision.PLAYER
+        body_rect.collides_with = collision.BLAST_ZONE
+
+        self.collisions.append(body_rect)
 
     def reset(self):
         self.id = 0
@@ -51,10 +59,10 @@ class Player:
 class Platform:
     def __init__(self):
         self.collisions = Collisions( (CollisionRect(UNIT, UNIT/4.),) )
+        self.collisions.active = False
 
         rect = self.collisions[0]
         rect.type = collision.PLATFORM
-        rect.active = False
 
     def set_geometry(self, x, y, tiles_width):
         collision = self.collisions[0]
