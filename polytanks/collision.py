@@ -41,6 +41,10 @@ class CollisionMixin:
             (PLAYER, BLAST_ZONE),
             start=self.player_blastzone_start
         )
+        collision.register_callbacks(
+            (BULLET, BLAST_ZONE),
+            start=self.bullet_blastzone_start
+        )
 
     def player_platform_start(self, player, platform, player_rect, platform_rect):
         player.body.y = platform_rect.top + -player_rect.offset[1]-1.
@@ -59,3 +63,9 @@ class CollisionMixin:
     def bullet_platform_start(self, bullet, platform, bullet_rect, platform_rect):
         bullet.free()
         print("Kaboom and so")
+
+    def bullet_blastzone_start(self, bullet, blastzone, bullect_rect, blastzone_rect):
+        if not bullet._used:
+            return
+        print("Bullet freed")
+        bullet.free()
