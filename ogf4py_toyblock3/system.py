@@ -115,23 +115,11 @@ class CollisionSystem(toyblock3.System):
         body2 = getattr(entity2, "body")
         if not body1 or not body2:
             return False
-        body1_x_step = (body1.x - body1._last_x) / self.iterations 
-        body1_y_step = (body1.y - body1._last_y) / self.iterations
-        body2_x_step = (body2.x - body2._last_x) / self.iterations 
-        body2_y_step = (body2.y - body2._last_y) / self.iterations 
-        body1_x = body1._last_x
-        body1_y = body1._last_y
-        body2_x = body2._last_x
-        body2_y = body2._last_y
-        for _ in range(self.iterations):
-            body1_rect.update(body1_x, body1_y)
-            body2_rect.update(body2_x, body2_y)
+        for pair1, pair2 in zip(body1, body2):
+            body1_rect.update(pair1[0], pair2[0])
+            body2_rect.update(pair1[0], pair2[0])
             if body1_rect.intersects(body2_rect):
                 return True
-            body1_x += body1_x_step
-            body1_y += body1_y_step
-            body2_x += body2_x_step
-            body2_y += body2_y_step
         return False
 
     def register_callbacks(self, pair, start=None, during=None, end=None):
