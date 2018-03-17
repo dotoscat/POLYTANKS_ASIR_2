@@ -14,8 +14,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from ogf4py_toyblock3.component import Body, CollisionRect, Collisions
-from . import collision, component
-from .constants import UNIT, HALF_UNIT
+from . import collision, component, system
+from .constants import UNIT, HALF_UNIT, WIDTH, HEIGHT
+
+class Blastzone:
+    SYSTEMS = (system.collision,)
+    def __init__(self):
+        self.collisions = Collisions()
+        self.collisions.active = False
+
+        bottom = CollisionRect(WIDTH+UNIT*4, UNIT*2, x=-UNIT*2, y=-UNIT*2)
+        bottom.type = collision.BLAST_ZONE
 
 class Player:
     def __init__(self, input_component=component.Control):
@@ -28,7 +37,7 @@ class Player:
         feet = CollisionRect(UNIT, 2)
         feet.offset = (-UNIT/2, -UNIT/2.)
         feet.type = collision.PLAYER_FEET
-        feet.collides_with = collision.PLATFORM
+        feet.collides_with = collision.PLATFORM | collision.BLAST_ZONE
 
         self.collisions.append(feet)
 
@@ -63,7 +72,7 @@ class Bullet:
         rect = CollisionRect(width, height)
         rect.offset = (-width/2., -height/2.)
         rect.type = collision.BULLET
-        rect.collides_with = collision.PLATFORM | collision.PLAYER
+        rect.collides_with = collision.PLATFORM | collision.PLAYER | collision.BLAST_ZONE
 
         self.collisions.append(rect)
 

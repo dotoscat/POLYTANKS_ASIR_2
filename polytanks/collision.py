@@ -19,6 +19,7 @@ PLAYER = 1
 PLATFORM = 1 << 1
 PLAYER_FEET = 1 << 2
 BULLET = 1 << 3
+BLAST_ZONE = 1 << 4
 
 class CollisionMixin:
     """
