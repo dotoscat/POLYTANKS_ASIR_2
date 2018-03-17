@@ -18,6 +18,8 @@ from math import fabs
 
 class Body:
     def __init__(self):
+        self._last_x = 0.
+        self._last_y = 0.
         self.x = 0.
         self.y = 0
         self.vel_x = 0.
@@ -35,6 +37,8 @@ class Body:
         #if self.max_vel_y > 0. and fabs(self.vel_y) > self.max_vel_y:
         #    self.vel_y = self.max_vel_y if self.vel_y > 0. else -self.max_vel_y
         # print("update", self.vel_x, self.vel_y, gravity, dt)
+        self._last_x = self.x
+        self._last_y = self.y
         self.x += self.vel_x*dt
         self.y += self.vel_y*dt
 
