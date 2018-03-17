@@ -103,7 +103,7 @@ class CollisionSystem(toyblock3.System):
         
         x = body._last_x
         y = body._last_y
-
+        # print("body", body, "iterations", self.iterations)
         for _ in range(self.iterations+1):
             yield (x, y)
             x += step_x
@@ -127,7 +127,6 @@ class CollisionSystem(toyblock3.System):
         body2 = getattr(entity2, "body", None)
         if not body1 or not body2:
             return False
-        print("Noooo please")
         for pair1, pair2 in zip(self.body_steps(body1), self.body_steps(body2)):
             body1_rect.update(pair1[0], pair1[1])
             body2_rect.update(pair2[0], pair2[1])

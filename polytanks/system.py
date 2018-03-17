@@ -59,5 +59,5 @@ class InputSystem(toyblock3.System):
             self.shot_event = True
 
 # input = InputSystem()
-collision = system.CollisionSystem()
+collision = system.CollisionSystem(iterations=10)
 physics = system.PhysicsSystem(FPS, (0., -UNIT*3.))
