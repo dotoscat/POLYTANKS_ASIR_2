@@ -84,7 +84,7 @@ class CollisionSystem(toyblock3.System):
                 callbacks = self.callbacks.get((rect.type, other_rect.type))
                 if not callbacks:
                     continue
-                if (self.check_collision_body_body(entity, other_entity, rect, other_rect)
+                if not (self.check_collision_body_body(entity, other_entity, rect, other_rect)
                     or self.check_collision_body_static(entity, rect, other_rect)):
                     if pair in self._collisions and callable(callbacks.end):
                         callbacks.end(entity, other_entity, rect, other_rect)
@@ -117,7 +117,6 @@ class CollisionSystem(toyblock3.System):
         if not body1:
             return False
         for x, y in self.body_steps(body1):
-            print("x y", x, y)
             entity1_rect.update(x, y)
             if entity1_rect.intersects(other_rect):
                 return True
