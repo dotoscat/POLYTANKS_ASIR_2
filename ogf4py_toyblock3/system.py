@@ -105,7 +105,7 @@ class CollisionSystem(toyblock3.System):
         x = body._last_x
         y = body._last_y
 
-        for _ in range(self.iterations):
+        for _ in range(self.iterations+1):
             yield (x, y)
             x += step_x
             y += step_y
