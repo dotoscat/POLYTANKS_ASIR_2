@@ -15,7 +15,7 @@
 
 from ogf4py_toyblock3.component import Body, CollisionRect, Collisions
 from . import collision, component
-from .constants import UNIT
+from .constants import UNIT, HALF_UNIT
 
 class Player:
     def __init__(self, input_component=component.Control):
@@ -42,7 +42,6 @@ class Platform:
         self.collisions = Collisions( (CollisionRect(UNIT, UNIT/4.),) )
 
         rect = self.collisions[0]
-        # rect.offset = (-UNIT/2., UNIT/2.)
         rect.type = collision.PLATFORM
     
     def set_geometry(self, x, y, tiles_width):
@@ -58,8 +57,8 @@ class Bullet:
         self.collisions = Collisions()
         self.owner = 0
 
-        width = UNIT/2.
-        height = UNIT/2.
+        width = HALF_UNIT
+        height = HALF_UNIT
 
         rect = CollisionRect(width, height)
         rect.offset = (-width/2., -height/2.)
