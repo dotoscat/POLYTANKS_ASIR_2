@@ -22,7 +22,7 @@ class TestBullets(unittest.TestCase):
             end=self._bullet_blastzone
         )
         self._run_once()
-        self.assertFalse(self.ManagedBullet.pool.used, "Bullet is freed!")
+        self.assertTrue(self.ManagedBullet.pool.used, "Bullet is freed!")
         bullet = self.ManagedBullet()
         bullet.body.y = -82
         self._run_once()
