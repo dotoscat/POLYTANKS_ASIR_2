@@ -76,6 +76,7 @@ class Bullet:
         self.body.has_gravity = True
         self.collisions = Collisions()
         self.owner = 0
+        self.info = component.BulletInfo()
 
         width = HALF_UNIT
         height = HALF_UNIT
@@ -89,4 +90,5 @@ class Bullet:
 
     def reset(self):
         self.body.reset()
+        self.info.reset()
         self.owner = 0

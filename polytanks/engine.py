@@ -59,7 +59,7 @@ class AbstractEngine(CollisionMixin):
         player.body.x = point[0] + HALF_UNIT
         player.body.y = point[1] + HALF_UNIT
 
-    def add_bullet(self, id=None):
+    def add_bullet(self, id=None, power, cannon_angle):
         bullet = self.pools["bullet"]()
         if not bullet:
             return

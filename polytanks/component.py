@@ -38,3 +38,12 @@ class Control:
 class Info:
     def __init__(self):
         self.touched_floor = False
+
+class BulletInfo:
+    def __init__(self):
+        self.owner = 0
+        self.power = 0
+
+    def reset(self):
+        self.owner = 0
+        self.power = 0
