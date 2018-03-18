@@ -47,12 +47,17 @@ class CollisionMixin:
         )
 
     def player_platform_start(self, player, platform, player_rect, platform_rect):
+        if player.body.vel_y > 0.:
+            return
         player.body.y = platform_rect.top + -player_rect.offset[1]-1.
         player.body.vel_y = 0.
         player.body.has_gravity = False
         player.input.touch_floor = True
+        print("touch floor")
 
     def player_platform_end(self, player, platform, player_rect, platform_rect):
+        if player.body.vel_y > 0.:
+            return
         player.body.has_gravity = True
         player.input.touch_floor = False
 
