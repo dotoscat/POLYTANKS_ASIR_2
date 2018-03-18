@@ -16,21 +16,21 @@ class TestBullets(unittest.TestCase):
     def test_bullets_freed_in_blastzone(self):
         self.collided = False
         self.ManagedBullet = toyblock3.Manager(server.entity.Bullet, 3)
-        last_bullet = self.ManagedBullet()
+        bullet = self.ManagedBullet()
         polytanks.system.collision.register_callbacks(
             (polytanks.collision.BULLET, polytanks.collision.BLAST_ZONE),
-            start=self._bullet_blastzone
+            end=self._bullet_blastzone
         )
         self._run_once()
+        self.assertFalse(self.ManagedBullet.pool.used, "Bullet is freed!")
         bullet = self.ManagedBullet()
+        bullet.body.y = -82
         self._run_once()
+        self.assertTrue(self.ManagedBullet.pool.used, "Bullet is not freed!")
 
     def _run_once(self):
         polytanks.system.collision()
-        self.assertTrue(self.collided and len(self.ManagedBullet.pool.used) == 0, "Bullet is not freed!")
-        self.collided = False
 
     def _bullet_blastzone(self, bullet, blastzone, bullet_rect, blastzone_rect):
         print("Bom!")
         bullet.free()
-        self.collided = True

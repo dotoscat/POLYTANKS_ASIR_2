@@ -23,11 +23,10 @@ class Blastzone:
         self.collisions = Collisions()
         self.collisions.active = False
 
-        #bottom = CollisionRect(WIDTH+UNIT*4, UNIT*2, x=-UNIT*2, y=-UNIT*2)
-        bottom = CollisionRect(WIDTH, UNIT*2)
-        bottom.type = collision.BLAST_ZONE
+        zone = CollisionRect(WIDTH+UNIT*4., HEIGHT+UNIT*4., x=-UNIT*2., y=-UNIT*2.)
+        zone.type = collision.BLAST_ZONE
         
-        self.collisions.append(bottom)
+        self.collisions.append(zone)
 
 class Player:
     def __init__(self, input_component=component.Control):

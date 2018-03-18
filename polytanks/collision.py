@@ -39,11 +39,11 @@ class CollisionMixin:
         )
         collision.register_callbacks(
             (PLAYER, BLAST_ZONE),
-            start=self.player_blastzone_start
+            end=self.player_blastzone_end
         )
         collision.register_callbacks(
             (BULLET, BLAST_ZONE),
-            start=self.bullet_blastzone_start
+            end=self.bullet_blastzone_end
         )
 
     def player_platform_start(self, player, platform, player_rect, platform_rect):
@@ -56,7 +56,7 @@ class CollisionMixin:
         player.body.has_gravity = True
         player.input.touch_floor = False
 
-    def player_blastzone_start(self, player, blastzone, player_rect, blastzone_rect):
+    def player_blastzone_end(self, player, blastzone, player_rect, blastzone_rect):
         # TODO: Make this abstract
         print("Player goes kabooooo")
 
@@ -64,7 +64,7 @@ class CollisionMixin:
         bullet.free()
         print("Kaboom and so")
 
-    def bullet_blastzone_start(self, bullet, blastzone, bullect_rect, blastzone_rect):
+    def bullet_blastzone_end(self, bullet, blastzone, bullect_rect, blastzone_rect):
         if not bullet._used:
             return
         print("Bullet freed")
