@@ -90,8 +90,8 @@ class CollisionSystem(toyblock3.System):
                         callbacks.end(entity, other_entity, rect, other_rect)
                         self.remove_pair_from_collisions(entity, pair)
                     continue
-                if self.pair_in_collisions(entity, pair):
-                    self.add_to_collisions(entity, pair, callbacks)
+                if not self.pair_in_collisions(entity, pair):
+                    self.add_pair_to_collisions(entity, pair, callbacks)
                     if callable(callbacks.start):
                         callbacks.start(entity, other_entity, rect, other_rect)
                 if callable(callbacks.during):
@@ -103,7 +103,7 @@ class CollisionSystem(toyblock3.System):
             return False
         return pair in collision
 
-    def add_to_collisions(self, entity, pair, callbacks):
+    def add_pair_to_collisions(self, entity, pair, callbacks):
         collision = self._collisions.get(entity)
         if not collision:
             collision = {}
