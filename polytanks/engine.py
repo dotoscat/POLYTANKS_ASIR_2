@@ -16,6 +16,7 @@
 from toyblock3 import Manager
 from .collision import CollisionMixin
 from . import level
+from .constants import HALF_UNIT
 from .entity import Blastzone
 
 class AbstractEngine(CollisionMixin):
@@ -47,8 +48,8 @@ class AbstractEngine(CollisionMixin):
         self.entities[id] = player
         self.players[id] = player
         point = self.spawn_points[str(id)]
-        player.body.x = point[0]
-        player.body.y = point[1]
+        player.body.x = point[0] + HALF_UNIT
+        player.body.y = point[1] + HALF_UNIT
         player.id = id
         return (id, player)
 
