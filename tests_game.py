@@ -27,6 +27,7 @@ class TestBullets(unittest.TestCase):
 
     def _run_once(self):
         polytanks.system.collision()
+        print(polytanks.system.collision._collisions)
         self.assertTrue(self.collided and len(self.ManagedBullet.pool.used) == 0, "Bullet is not freed!")
         self.collided = False
 
