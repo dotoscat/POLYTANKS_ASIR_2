@@ -35,7 +35,7 @@ class InputSystem(system.InputSystem):
         if self.shot_event:
             if not self.engine:
                 warnings.warn("'engine' attribute for the system is None.")
-            id, bullet = self.engine.add_bullet()
+            id, bullet = self.engine.add_bullet(entity.id, entity.body, entity.input.cannon_angle, 30)
             event_manager.add_player_make_event(event.PLAYER_SHOOTS, entity.id, id)
             cannon_angle = entity.input.cannon_angle
             bullet.body.x = entity.body.x + CANNON_JOINT[0] + cos(-cannon_angle)*CANNON_LENGTH

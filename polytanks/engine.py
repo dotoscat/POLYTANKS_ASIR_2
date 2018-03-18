@@ -13,8 +13,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.#Copyright (C) 2017  Oscar 'dotoscat' Triano <dotoscat (at) gmail (dot) com>
 
+from typing import Optional
 from math import cos, sin, degrees
 from toyblock3 import Manager
+from ogf4py_toyblock3.component import Body
 from .collision import CollisionMixin
 from . import level
 from .constants import HALF_UNIT, CANNON_JOINT, CANNON_LENGTH, BULLET_SPEED
@@ -60,7 +62,8 @@ class AbstractEngine(CollisionMixin):
         player.body.x = point[0] + HALF_UNIT
         player.body.y = point[1] + HALF_UNIT
 
-    def add_bullet(self, owner, origin, power, cannon_angle, id=None):
+    def add_bullet(self, owner: int, origin: Body, cannon_angle: float, 
+        power: int, id: Optional[int] = None):
         bullet = self.pools["bullet"]()
         if not bullet:
             return
