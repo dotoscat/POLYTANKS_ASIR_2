@@ -53,6 +53,12 @@ class AbstractEngine(CollisionMixin):
         player.id = id
         return (id, player)
 
+    def respawn_player(self, id):
+        player = self.players[id]
+        point = self.spawn_points[str(id)]
+        player.body.x = point[0] + HALF_UNIT
+        player.body.y = point[1] + HALF_UNIT
+
     def add_bullet(self, id=None):
         bullet = self.pools["bullet"]()
         if not bullet:

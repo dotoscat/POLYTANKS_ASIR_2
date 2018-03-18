@@ -62,7 +62,7 @@ class CollisionMixin:
         player.input.touch_floor = False
 
     def player_blastzone_end(self, player, blastzone, player_rect, blastzone_rect):
-        # TODO: Make this abstract
+        self.respawn_player(player.id)
         print("Player goes kabooooo")
 
     def bullet_platform_start(self, bullet, platform, bullet_rect, platform_rect):
