@@ -30,9 +30,10 @@ class AbstractEngine(CollisionMixin):
         self.register_collisions()
         self.blast_zone = Manager(Blastzone, 1)
         self.blast_zone()
+        self.spawn_points = None
 
     def load_level(self):
-        level.load_level(level.basic, self.pools["platform"])
+        self.spawn_points = level.load_level(level.basic, self.pools["platform"])
     
     def regenerate_id(self):
         raise NotImplementedError
@@ -45,6 +46,10 @@ class AbstractEngine(CollisionMixin):
         id = id if isinstance(id, int) else self.generate_id()
         self.entities[id] = player
         self.players[id] = player
+        point = self.spawn_points[str(id)]
+        player.body.x = point[0]
+        player.body.y = point[1]
+        player.id = id
         return (id, player)
 
     def add_bullet(self, id=None):

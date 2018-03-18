@@ -21,8 +21,8 @@ basic = [
     "....................................",
     "....................................",
     "....................................",
-    "....................................",
-    "...-...--..---......................",
+    "............1............2..........",
+    "...-...--..---..........----........",
     "....................................",
     "...................................."
 ]
@@ -37,6 +37,7 @@ class Area:
 
 def load_level(level_info, platform_pool):
     area = None
+    spawn_points = {}
     for y, l in enumerate(reversed(level_info)):
         iter_l = iter(l)
         x = 0.
@@ -57,4 +58,7 @@ def load_level(level_info, platform_pool):
                     area.y = y
                 else:
                     area.tiles += 1
+            if c in "1234":
+                spawn_points[c] = (x*UNIT, y*UNIT)
             x += 1.
+    return spawn_points
