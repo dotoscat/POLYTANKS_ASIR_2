@@ -115,7 +115,9 @@ class CollisionSystem(toyblock3.System):
             del self._collisions[entity]
 
     def remove_pair_from_collisions(self, entity, pair):
-        del self._collisions[entity][pair]
+        collision = self._collisions.get(entity)
+        if collision:
+            del collision[pair]
 
     def remove_entity(self, entity):
         super().remove_entity(entity)
