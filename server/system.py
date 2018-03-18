@@ -43,7 +43,7 @@ class InputSystem(system.InputSystem):
             bullet.body.vel_x = cos(-cannon_angle)*BULLET_SPEED
             bullet.body.vel_y = sin(-cannon_angle)*BULLET_SPEED
             bullet.owner = entity.id
-            print("bullet", bullet.body.x, bullet.body.y)
+            print("bullet:", id, bullet.body.x, bullet.body.y)
             # engine.create_bullet and so
 
 input = InputSystem()
