@@ -90,22 +90,29 @@ class CollisionSystem(toyblock3.System):
                         callbacks.end(entity, other_entity, rect, other_rect)
                         del self._collisions[pair]
                     continue
-                if pair not in self._collisions:
-                    self._collisions[pair] = callbacks
+                if self.pair_in_collisions(entity, pair):
+                    self.add_to_collisions(entity, pair, callbacks)
                     if callable(callbacks.start):
                         callbacks.start(entity, other_entity, rect, other_rect)
                 if callable(callbacks.during):
                     callbacks.during(entity, other_entity, rect, other_rect)
 
-    def pair_in_collision(entity, pair):
-        
+    def pair_in_collisions(self, entity, pair):
+        collision = self._collisions.get(entity)
+        if not collision:
+            return False
+        return pair in collision
 
-    def add_to_collisions(entity, pair, callbacks)
+    def add_to_collisions(self, entity, pair, callbacks):
         collision = self._collisions.get(entity)
         if not collision:
             collision = {}
             self._collisions[entity] = collision
         collision[pair] = callbacks
+
+    def remove_from_collisions(self, entity):
+        if entity in self._collisions:
+            del self._collisions[entity]
 
     def body_steps(self, body):
         step_x = (body.x - body._last_x)/self.iterations
