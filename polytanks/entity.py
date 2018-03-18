@@ -34,6 +34,7 @@ class Player:
         self.input = input_component()
         self.collisions = Collisions()
         self.body = Body()
+        self.body.has_gravity = True
         self.info = component.Info()
 
         feet = CollisionRect(UNIT, 2)
