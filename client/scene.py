@@ -100,7 +100,8 @@ class Screen(Scene):
                 print("player {} floats".format(eve.player_id))
             elif eve.id == event.PLAYER_SHOOTS:
                 print("player {} shoots {}".format(eve.player_id, eve.what_id))
-                id, bullet = self.engine.add_bullet(eve.what_id)
+                # TODO: Tratar evento de player_shoots
+                id, bullet = self.engine.add_bullet(id=eve.what_id)
                 player = self.engine.players[eve.player_id]
                 player_body = player.body
                 cannon_angle = player.input.cannon_angle
