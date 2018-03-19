@@ -33,5 +33,7 @@ images["tank-cannon"].anchor_x = 0.
 images["tank-cannon"].anchor_y = 4.
 images["bullet"].anchor_x = HALF_UNIT/2.
 images["bullet"].anchor_y = HALF_UNIT/2.
+images["explosion"].anchor_x = HALF_UNIT
+images["explosion"].anchor_y = HALF_UNIT
 
 cursor = pyglet.window.ImageMouseCursor(images["eyehole"], 0., 0.)

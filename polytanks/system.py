@@ -61,3 +61,4 @@ class InputSystem(toyblock3.System):
 # input = InputSystem()
 collision = system.CollisionSystem(iterations=10)
 physics = system.PhysicsSystem(FPS, (0., -UNIT*3.))
+lifetime = system.LifetimeSystem()

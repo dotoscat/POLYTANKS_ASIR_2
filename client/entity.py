@@ -15,9 +15,16 @@
 
 import pyglet
 import polytanks.entity as pentity
+import polytanks.entity
 from . import assets
 from .component import TankGraphic, PlatformSprite, Control
 from . import system
+
+class Explosion(polytanks.entity.Explosion):
+    SYSTEMS = (system.polytanks_system.lifetime, system.sprite)
+    def __init__(self, batch, group):
+        super().__init__()
+        self.sprite = pyglet.sprite.Sprite(assets["explosion"]. batch=batch, group=group)
 
 class Platform(pentity.Platform):
     SYSTEMS = (system.polytanks_system.collision,)
