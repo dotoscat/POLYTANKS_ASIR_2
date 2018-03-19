@@ -14,6 +14,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from time import monotonic
 from collections import namedtuple
 from itertools import product
 import toyblock3
@@ -195,3 +196,28 @@ class CollisionSystem(toyblock3.System):
         """
         callbacks = CollisionSystem.Callbacks(start, during, end)
         self.callbacks[pair] = callbacks 
+
+class LifetimeSystem(toyblock3.System):
+    """
+    This system will look for a component called :obj:`lifetime`, 
+    which is a float, and substract from the system the delta.
+    If it reaches to 0 or less, then entity is freed.
+    """
+    def __init__(self):
+        super().__init__()
+        self.last_time = monotonic()
+        self.dt = monotonic()
+
+    def _before_update(self):
+        self.dt = monotonic() - self.last_time
+
+    def _update(self, entity):
+        if not hasattr(entity, "lifetime"):
+            return
+        entity.lifetime -= self.dt
+        if entity.lifetime <= 0.:
+            entity.free()
+
+    def _after_update(self):
+        self.last_time = monotonic()
+
