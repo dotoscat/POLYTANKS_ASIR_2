@@ -27,7 +27,8 @@ class Explosion(polytanks.entity.Explosion):
         self.sprite = pyglet.sprite.Sprite(assets.images["explosion"], batch=batch, group=group)
 
     def reset(self):
-        pass
+        self.sprite.x = -77
+        self.sprite.y = -77
 
 class Platform(pentity.Platform):
     SYSTEMS = (system.polytanks_system.collision,)
@@ -59,3 +60,8 @@ class Bullet(pentity.Bullet):
     def __init__(self, batch, group):
         super().__init__()
         self.sprite = pyglet.sprite.Sprite(assets.images["bullet"], batch=batch, group=group)
+
+    def reset(self):
+        super().reset()
+        self.sprite.x = -77
+        self.sprite.y = -77
