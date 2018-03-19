@@ -57,6 +57,7 @@ class _ShotEvent(Event):
         self.y = 0.
         self.angle = 0.
         self.power = 0.
+        self.bullet_id = 0.
 
     def __bytes__(self):
         return player_shoots_struct.pack(self.id, self.owner, self.x, self.y, self.angle, self.power)
@@ -156,9 +157,9 @@ class EventManager:
         while offset < total:
             what = int.from_bytes(data[offset:offset+1], "big")
             if what == PLAYER_SHOOTS:
-                what, who, what_object = player_make_struct.unpack_from(data, offset)
-                self.add_player_make_event(what, who, what_object)
-                offset += player_make_struct.size
+                what, owner, x, y, angle, power = player_shoots_struct.unpack_from(data, offset)
+                self.add_shot_event(owner, x, y, angle, power)
+                offset += player_shoots_struct.size
             elif what in PLAYER_MAKE_GROUP:
                 what, who = player_event_struct.unpack_from(data, offset)
                 self.add_player_event(what, who)
