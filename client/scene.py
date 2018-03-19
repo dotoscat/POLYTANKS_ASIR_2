@@ -99,17 +99,9 @@ class Screen(Scene):
             elif eve.id == event.PLAYER_FLOATS:
                 print("player {} floats".format(eve.player_id))
             elif eve.id == event.PLAYER_SHOOTS:
-                print("player {} shoots {}".format(eve.player_id, eve.what_id))
+                print("player {} shoots {}".format(eve.owner, eve.bullet_id))
                 # TODO: Tratar evento de player_shoots
-                id, bullet = self.engine.add_bullet(id=eve.what_id)
-                player = self.engine.players[eve.player_id]
-                player_body = player.body
-                cannon_angle = player.input.cannon_angle
-                bullet.body.x = player_body.x + CANNON_JOINT[0] + cos(-cannon_angle)*CANNON_LENGTH
-                bullet.body.y = player_body.y + CANNON_JOINT[1] + sin(-cannon_angle)*CANNON_LENGTH
-                bullet.body.vel_x = cos(-cannon_angle)*BULLET_SPEED
-                bullet.body.vel_y = sin(-cannon_angle)*BULLET_SPEED
-                bullet.owner = eve.player_id
+                # id, bullet = self.engine.add_bullet(id=eve.what_id)
 
     def apply_snapshot_data(self, data):
         tsnapshot = snapshot.Snapshot()

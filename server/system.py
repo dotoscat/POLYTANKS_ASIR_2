@@ -38,8 +38,7 @@ class InputSystem(system.InputSystem):
             # TODO: Reemplazar 30 por el poder acumulado de la entrada del jugador
             body = entity.body
             id, bullet = self.engine.add_bullet(entity.id, body.x, body.y, entity.input.cannon_angle, 30)
-            # TODO: Transmitir evento conto el propietario, origen, angulo, poder e id de bala
-            event_manager.add_player_make_event(event.PLAYER_SHOOTS, entity.id, id)
+            event_manager.add_shot_event(entity.id, body.x, body.y, entity.input.cannon_angle, 30, id)
             print("bullet:", id, bullet.body.x, bullet.body.y)
             # engine.create_bullet and so
 
