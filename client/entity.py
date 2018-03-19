@@ -24,7 +24,10 @@ class Explosion(polytanks.entity.Explosion):
     SYSTEMS = (system.polytanks_system.lifetime, system.sprite)
     def __init__(self, batch, group):
         super().__init__()
-        self.sprite = pyglet.sprite.Sprite(assets["explosion"]. batch=batch, group=group)
+        self.sprite = pyglet.sprite.Sprite(assets.images["explosion"], batch=batch, group=group)
+
+    def reset(self):
+        pass
 
 class Platform(pentity.Platform):
     SYSTEMS = (system.polytanks_system.collision,)

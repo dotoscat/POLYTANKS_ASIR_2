@@ -30,6 +30,7 @@ class Engine(AbstractEngine):
         super().__init__(pools)
 
     def update(self, dt):
+        polytanks_system.lifetime()
         system.input()
         polytanks_system.physics()
         polytanks_system.collision()

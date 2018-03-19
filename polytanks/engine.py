@@ -77,8 +77,12 @@ class AbstractEngine(CollisionMixin):
         self.entities[id] = bullet
         return (id, bullet)
 
-    def add_explosion(id=None):
+    def add_explosion(self, x, y, power, id=None):
         explosion = self.pools["explosion"]()
+        explosion.body.x = x
+        explosion.body.y = y
+        explosion.power = power
+        explosion.lifetime = 0.25
         id = id if isinstance(id, int) else self.generate_id()
         self.entities[id] = explosion
         return (id, explosion)

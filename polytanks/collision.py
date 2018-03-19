@@ -66,7 +66,10 @@ class CollisionMixin:
         print("Player goes kabooooo")
 
     def bullet_platform_start(self, bullet, platform, bullet_rect, platform_rect):
+        y = bullet.body.y
+        x = bullet.body.x
         bullet.free()
+        self.add_explosion(x, y, 30)
         print("Kaboom and so")
 
     def bullet_blastzone_end(self, bullet, blastzone, bullect_rect, blastzone_rect):
