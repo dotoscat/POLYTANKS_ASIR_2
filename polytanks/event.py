@@ -20,7 +20,7 @@ from toyblock3 import Pool
 player_event_struct = struct.Struct("!BB")
 player_make_struct = struct.Struct("!BBH")
 player_make_value_struct = struct.Struct("!BBf")
-player_shoots_struct = struct.Struct("!BBeeeH")
+player_shoots_struct = struct.Struct("!BBeeeHH")
 
 PLAYER_JUMPS = 1
 PLAYER_FLOATS = 2
@@ -60,10 +60,11 @@ class _ShotEvent(Event):
         self.bullet_id = 0.
 
     def __bytes__(self):
-        return player_shoots_struct.pack(self.id, self.owner, self.x, self.y, self.angle, self.power)
+        return player_shoots_struct.pack(self.id, self.owner, self.x, self.y
+        , self.angle, self.power, self.bullet_id)
 
     def from_bytes(self, buffer):
-        self.id, self.owner, self.x, self.y, self.angle, self.power = player_shoots_struct.unpack(buffer)
+        (self.id, self.owner, self.x, self.y, self.angle, self.power, self.bullet_id = player_shoots_struct.unpack(buffer))
 
     def reset(self):
         self.owner = 0
@@ -71,6 +72,7 @@ class _ShotEvent(Event):
         self.y = 0.
         self.angle = 0.
         self.power = 0.
+        self.bullet_id = 0.
 
 ShotEvent = Pool(_ShotEvent, 64)
 
