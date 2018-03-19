@@ -21,6 +21,7 @@ class Explosion:
     def __init__(self):
         self.lifetime = 0.
         self.body = Body()
+        self.power = 0.
         # TODO: add collision
 
 class Blastzone:

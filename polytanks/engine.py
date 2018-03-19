@@ -23,7 +23,7 @@ from .entity import Blastzone
 
 class AbstractEngine(CollisionMixin):
     def __init__(self, pools):
-        types = ("player", "platform", "bullet")
+        types = ("player", "platform", "bullet", "explosion")
         for t in types:
             if t not in pools:
                 raise Exception("{} not found in pools".format(t))
@@ -76,6 +76,12 @@ class AbstractEngine(CollisionMixin):
         id = id if isinstance(id, int) else self.generate_id()
         self.entities[id] = bullet
         return (id, bullet)
+
+    def add_explosion(id=None):
+        explosion = self.pools["explosion"]()
+        id = id if isinstance(id, int) else self.generate_id()
+        self.entities[id] = explosion
+        return (id, explosion)
 
     def remove(self, id):
         entity = self.entities.get(id)
