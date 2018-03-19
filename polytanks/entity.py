@@ -20,6 +20,7 @@ from .constants import UNIT, HALF_UNIT, WIDTH, HEIGHT
 class Explosion:
     def __init__(self):
         self.lifetime = 0.
+        self.body = Body()
         # TODO: add collision
 
 class Blastzone:
