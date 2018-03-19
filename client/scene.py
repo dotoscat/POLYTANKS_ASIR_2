@@ -101,7 +101,13 @@ class Screen(Scene):
             elif eve.id == event.PLAYER_SHOOTS:
                 print("player {} shoots {}".format(eve.owner, eve.bullet_id))
                 # TODO: Tratar evento de player_shoots
-                # id, bullet = self.engine.add_bullet(id=eve.what_id)
+                id, bullet = self.engine.add_bullet(
+                    eve.owner,
+                    eve.x,
+                    eve.y,
+                    eve.angle,
+                    eve.power,
+                    id=eve.bullet_id)
 
     def apply_snapshot_data(self, data):
         tsnapshot = snapshot.Snapshot()
