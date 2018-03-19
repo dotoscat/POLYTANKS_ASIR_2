@@ -16,7 +16,6 @@
 from typing import Optional
 from math import cos, sin, degrees
 from toyblock3 import Manager
-from ogf4py_toyblock3.component import Body
 from .collision import CollisionMixin
 from . import level
 from .constants import HALF_UNIT, CANNON_JOINT, CANNON_LENGTH, BULLET_SPEED
@@ -62,13 +61,13 @@ class AbstractEngine(CollisionMixin):
         player.body.x = point[0] + HALF_UNIT
         player.body.y = point[1] + HALF_UNIT
 
-    def add_bullet(self, owner: int, origin: Body, cannon_angle: float, 
+    def add_bullet(self, owner: int, x: float, y: float, cannon_angle: float, 
         power: int, id: Optional[int] = None):
         bullet = self.pools["bullet"]()
         if not bullet:
             return
-        bullet.body.x = origin.x + CANNON_JOINT[0] + cos(-cannon_angle)*CANNON_LENGTH
-        bullet.body.y = origin.y + CANNON_JOINT[1] + sin(-cannon_angle)*CANNON_LENGTH
+        bullet.body.x = x + CANNON_JOINT[0] + cos(-cannon_angle)*CANNON_LENGTH
+        bullet.body.y = y + CANNON_JOINT[1] + sin(-cannon_angle)*CANNON_LENGTH
         bullet.body.vel_x = cos(-cannon_angle)*BULLET_SPEED
         bullet.body.vel_y = sin(-cannon_angle)*BULLET_SPEED
         bullet.info.owner = owner
