@@ -98,4 +98,3 @@ class Bullet:
     def reset(self):
         self.body.reset()
         self.info.reset()
-        self.owner = 0
