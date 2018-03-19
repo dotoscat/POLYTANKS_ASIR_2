@@ -16,7 +16,7 @@
 from itertools import count
 import toyblock3
 from polytanks.engine import AbstractEngine
-from .entity import Player, Platform, Bullet
+from .entity import Player, Platform, Bullet, Explosion
 from polytanks.system import physics, collision
 from .system import input
 from polytanks.event import event_manager
@@ -27,7 +27,8 @@ class Engine(AbstractEngine):
         pools = {
             "player": toyblock3.Manager(Player, n_players),
             "platform": toyblock3.Manager(Platform, 64),
-            "bullet": toyblock3.Manager(Bullet, 128)
+            "bullet": toyblock3.Manager(Bullet, 128),
+            "explosion": toyblock3.Manager(Explosion, 128)
         }
         super().__init__(pools)
         self.start_id = start_id

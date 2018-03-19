@@ -14,8 +14,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from polytanks import entity
-from polytanks.system import physics, collision
+from polytanks.system import physics, collision, lifetime
 from .system import input
+
+class Explosion(entity.Explosion):
+    SYSTEMS = (physics, lifetime)
 
 class Player(entity.Player):
     SYSTEMS = (input, physics, collision)
