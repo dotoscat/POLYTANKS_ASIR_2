@@ -54,7 +54,6 @@ class InputSystem(toyblock3.System):
         if entity.input.shoots:
             entity.input.shoot_time += self.dt
         elif not entity.input.shoots and entity.input.shoot_time:
-            print(entity.id, "shoots!", entity.input.shoot_time)
             entity.input.shoot_time = 0.
             self.shot_event = True
 

@@ -4,6 +4,7 @@ import polytanks
 import polytanks.entity
 import server
 import server.entity
+import server.protocol
 import server.server
 import client.scene
 import client.client
@@ -40,6 +41,13 @@ class TestBullets(unittest.TestCase):
         print("Bom!")
         bullet.free()
 
+class GameProtocol(server.protocol.GameProtocol):
+    unittest = None
+    def datagram_received(self, data, addr):
+        super().datagram_received(data, addr)
+        print("unittest", data, len(data), addr)
+        print("from unittest", self.unittest)
+
 class InputTest(unittest.TestCase):
     def test1_shoot_input(self):
         """
@@ -48,7 +56,8 @@ class InputTest(unittest.TestCase):
         self.player = None
         self.game_client = client.client.Client()
         self.game_screen = client.scene.Screen(self.game_client)
-        self.game_server = server.server.Server(2, SERVER)
+        GameProtocol.unittest = self
+        self.game_server = server.server.Server(2, SERVER, game_protocol=GameProtocol)
         self.connect_client_with_server()
         self.press_shoot()
         self.assertTrue(
@@ -75,5 +84,8 @@ class InputTest(unittest.TestCase):
     def press_shoot(self):
         player = self.game_screen.engine.players[1]
         player.input.shoots = True
+        player.input.move = -1.
         self.game_screen.send_input_to_server(0.)
+        self.assertTrue(self.player.input.shoots)
         self.tick()
+        self.assertTrue(self.player.input.shoots)

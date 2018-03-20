@@ -59,10 +59,12 @@ class Screen(Scene):
 
     def send_input_to_server(self, dt):
         input = self.player.input
+        print("shoots", input.shoots)
         input_data = (
             protocol.command_id_struct.pack(protocol.INPUT, self.client.id)
             + bytes(input)
         )
+        print("send data", input_data)
         self.client.game_send(input_data)
         # print("send input to server", dt) 
 
@@ -151,11 +153,11 @@ class Screen(Scene):
         self._update_pointer(x, y)
 
     def on_mouse_press(self, x, y, button, modifiers):
-        print("charge shot")
+        print("charge shot", self.player.input.shoots)
         self.player.input.shoots = True
 
     def on_mouse_release(self, x, y, button, modifiers):
-        print("unrelease shot")
+        print("unrelease shot", self.player.input.shoots)
         self.player.input.shoots = False
 
 class Main(Scene):

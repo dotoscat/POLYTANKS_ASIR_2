@@ -56,6 +56,7 @@ class Server:
         logging.info("Game server rudp port {}".format(rudp_host))
         self.rudp = orudp.Mailbox()
         self.rudp.bind(rudp_host)
+        asyncio.ensure_future(self.step())
 
     async def step(self):
         self.last_snapshot_time = self.loop.time()
