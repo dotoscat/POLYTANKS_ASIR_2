@@ -36,10 +36,13 @@ class Screen(Scene):
 
     def init(self):
         self.director.set_mouse_cursor(assets.cursor)
-        self.engine.load_level()
-        self.player = self.engine.add_player(self.client.id)[1]
+        self.load()
         pyglet.clock.schedule_interval(self.send_input_to_server, self.INPUT_PER_SEC)
         # pyglet.clock.schedule_interval(self.request_full_snapshot, 1.)
+
+    def load(self):
+        self.engine.load_level()
+        self.player = self.engine.add_player(self.client.id)[1]
 
     def quit(self):
         self.director.set_mouse_cursor(None)
