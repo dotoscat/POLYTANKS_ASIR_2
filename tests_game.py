@@ -55,6 +55,7 @@ class InputTest(unittest.TestCase):
 
     def load(self):
         self.game_screen.engine.load_level()
+        self.game_screen.load()
         self.player = self.game_screen.engine.add_player(self.game_client.id)[1]
         self.assertNotEqual(self.player, None, "Player shall not be None!")
 
