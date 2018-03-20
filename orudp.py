@@ -81,6 +81,7 @@ class Mailbox:
         self._select.register(sock, selectors.EVENT_READ)
 
     def __del__(self):
+        self.close()
         self._select.close()
 
     @property
