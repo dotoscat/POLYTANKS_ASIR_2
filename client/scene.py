@@ -59,12 +59,10 @@ class Screen(Scene):
 
     def send_input_to_server(self, dt):
         input = self.player.input
-        print("shoots", input.shoots)
         input_data = (
             protocol.command_id_struct.pack(protocol.INPUT, self.client.id)
             + bytes(input)
         )
-        print("send data", input_data)
         self.client.game_send(input_data)
         # print("send input to server", dt) 
 

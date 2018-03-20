@@ -36,7 +36,6 @@ class Engine(AbstractEngine):
         self.regenerate_id()
 
     def update(self, dt):
-        print("vamos input")
         input()
         physics()
         collision()
