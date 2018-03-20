@@ -51,7 +51,8 @@ class InputTest(unittest.TestCase):
         self.game_server = server.server.Server(2, SERVER)
         self.connect_client_with_server()
         self.press_shoot()
-        self.tick()
+        self.assertTrue(
+            self.game_server.engine.players[1].input.shoots, "shoot on server should be true!")
 
     def load(self):
         self.game_screen.engine.load_level()
@@ -66,7 +67,6 @@ class InputTest(unittest.TestCase):
         )
         while not self.player:
             self.tick()
-        print("player", self.player)
             
     def tick(self):
         self.game_client.step()
@@ -74,5 +74,6 @@ class InputTest(unittest.TestCase):
 
     def press_shoot(self):
         player = self.game_screen.engine.players[1]
-        player.input.shoot = True
+        player.input.shoots = True
         self.game_screen.send_input_to_server(0.)
+        self.tick()
