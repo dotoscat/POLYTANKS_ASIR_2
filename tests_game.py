@@ -45,17 +45,33 @@ class InputTest(unittest.TestCase):
         """
         El servidor tiene que crear una bala si en el cliente se dispara.
         """
+        self.player = None
         self.game_client = client.client.Client()
         self.game_screen = client.scene.Screen(self.game_client)
         self.game_server = server.server.Server(2, SERVER)
         self.connect_client_with_server()
+        self.press_shoot()
+        self.tick()
+
+    def load(self):
+        self.game_screen.engine.load_level()
+        self.player = self.game_screen.engine.add_player(self.game_client.id)[1]
+        self.assertNotEqual(self.player, None, "Player shall not be None!")
 
     def connect_client_with_server(self):
         self.game_client.connect_to_server(
             SERVER, self.game_screen.udp_from_server,
-            self.game_screen.tcp_from_server, lambda: None, self.game_screen.rudp_from_server
+            self.game_screen.tcp_from_server, self.load, self.game_screen.rudp_from_server
         )
-        while not self.game_client.connected:
-            self.game_client.step()
-            self.game_server.loop._run_once()
+        while not self.player:
+            self.tick()
+        print("player", self.player)
             
+    def tick(self):
+        self.game_client.step()
+        self.game_server.loop._run_once()
+
+    def press_shoot(self):
+        player = self.game_screen.engine.players[1]
+        player.input.shoot = True
+        self.game_screen.send_input_to_server(0.)
