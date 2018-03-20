@@ -30,7 +30,7 @@ logging.basicConfig(format="%(pathname)s:%(module)s:%(levelname)s:%(message)s", 
 
 class Server:
     SNAPSHOT_RATE = 1./15.
-    def __init__(self, max_n_players, host):
+    def __init__(self, max_n_players, host, game_protocol=GameProtocol):
         self.engine = Engine(max_n_players, max_n_players + 1)
         self.engine.load_level()
         self.clients = {}
@@ -48,7 +48,7 @@ class Server:
         game_socket.setblocking(False)
         game_socket.bind(host)
         self.game_coro = self.loop.create_datagram_endpoint(
-            lambda: GameProtocol(weakref.proxy(self)), sock=game_socket
+            lambda: game_protocol(weakref.proxy(self)), sock=game_socket
         )
         self.game_transport, self.game = self.loop.run_until_complete(self.game_coro)
         logging.info("Game server port {}".format(host[1]))
