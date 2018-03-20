@@ -53,9 +53,9 @@ class InputTest(unittest.TestCase):
     def connect_client_with_server(self):
         self.game_client.connect_to_server(
             SERVER, self.game_screen.udp_from_server,
-            self.game_screen.tcp_from_server, None, self.game_screen.rudp_from_server
+            self.game_screen.tcp_from_server, lambda: None, self.game_screen.rudp_from_server
         )
         while not self.game_client.connected:
             self.game_client.step()
             self.game_server.loop._run_once()
-
+            
