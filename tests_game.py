@@ -4,6 +4,9 @@ import polytanks
 import polytanks.entity
 import server
 import server.entity
+import server.server
+import client.scene
+import client.client
 
 """
 Estos son test generales, tanto del servidor como del cliente, para el juego.
@@ -11,6 +14,8 @@ Estos son test generales, tanto del servidor como del cliente, para el juego.
 
 ManagedBlastzone = toyblock3.Manager(polytanks.entity.Blastzone, 1)
 ManagedBlastzone()
+
+SERVER = ("127.0.0.1", 1337)
 
 class TestBullets(unittest.TestCase):
     def test_bullets_freed_in_blastzone(self):
@@ -34,3 +39,23 @@ class TestBullets(unittest.TestCase):
     def _bullet_blastzone(self, bullet, blastzone, bullet_rect, blastzone_rect):
         print("Bom!")
         bullet.free()
+
+class InputTest(unittest.TestCase):
+    def test1_shoot_input(self):
+        """
+        El servidor tiene que crear una bala si en el cliente se dispara.
+        """
+        self.game_client = client.client.Client()
+        self.game_screen = client.scene.Screen(self.game_client)
+        self.game_server = server.server.Server(2, SERVER)
+        self.connect_client_with_server()
+
+    def connect_client_with_server(self):
+        self.game_client.connect_to_server(
+            SERVER, self.game_screen.udp_from_server,
+            self.game_screen.tcp_from_server, None, self.game_screen.rudp_from_server
+        )
+        while not self.game_client.connected:
+            self.game_client.step()
+            self.game_server.loop._run_once()
+
