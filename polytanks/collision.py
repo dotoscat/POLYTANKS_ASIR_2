@@ -20,6 +20,7 @@ PLATFORM = 1 << 1
 PLAYER_FEET = 1 << 2
 BULLET = 1 << 3
 BLAST_ZONE = 1 << 4
+EXPLOSION = 1 << 5
 
 class CollisionMixin:
     """
@@ -44,6 +45,10 @@ class CollisionMixin:
         collision.register_callbacks(
             (BULLET, BLAST_ZONE),
             end=self.bullet_blastzone_end
+        )
+        collision.register_callbacks(
+            (EXPLOSION, PLAYER),
+            start=self.explosion_player_start
         )
 
     def player_platform_start(self, player, platform, player_rect, platform_rect):
@@ -77,3 +82,7 @@ class CollisionMixin:
             return
         print("Bullet freed")
         bullet.free()
+
+    def explosion_player_start(self, explosion, player, explosion_rect, player_rect):
+        print("explosion power", explosion.power)
+        player.info.damage += explosion.power

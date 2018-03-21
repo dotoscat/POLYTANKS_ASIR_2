@@ -22,7 +22,12 @@ class Explosion:
         self.lifetime = 0.
         self.body = Body()
         self.power = 0.
-        # TODO: add collision
+        self.collisions = Collisions()
+        blast = CollisionRect(WIDTH, HEIGHT)
+        blast.offset = -WIDTH/2., -HEIGHT/2.
+        blast.type = collision.EXPLOSION
+        blast.collides_with = collision.PLAYER
+        self.collisions.append(blast)
 
 class Blastzone:
     SYSTEMS = (system.collision,)
