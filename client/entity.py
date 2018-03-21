@@ -21,7 +21,7 @@ from .component import TankGraphic, PlatformSprite, Control
 from . import system
 
 class Explosion(polytanks.entity.Explosion):
-    SYSTEMS = (system.polytanks_system.lifetime, system.sprite)
+    SYSTEMS = (system.polytanks_system.collision, system.polytanks_system.lifetime, system.sprite)
     def __init__(self, batch, group):
         super().__init__()
         self.sprite = pyglet.sprite.Sprite(assets.images["explosion"], batch=batch, group=group)
