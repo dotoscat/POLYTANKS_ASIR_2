@@ -42,7 +42,7 @@ class Player:
         self.collisions = Collisions()
         self.body = Body()
         self.body.has_gravity = True
-        self.info = component.Info()
+        self.info = component.PlayerInfo()
 
         feet = CollisionRect(UNIT, 2)
         feet.offset = (-UNIT/2, -UNIT/2.)

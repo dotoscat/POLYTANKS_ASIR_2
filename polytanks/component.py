@@ -35,8 +35,9 @@ class Control:
     def __bytes__(self):
         return _control_struct.pack(self.move, self.jumps, self.shoots, self.cannon_angle)
     
-class Info:
+class PlayerInfo:
     def __init__(self):
+        self.damage = 0
         self.touched_floor = False
 
 class BulletInfo:
