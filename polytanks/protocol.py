@@ -26,7 +26,7 @@ REQUEST_SNAPSHOT = 9
 EVENT = 10
 
 # CONNECT is send as a single byte
-connected_struct = struct.Struct("!BB")
+connected_struct = struct.Struct("!BBB")
 disconnect_struct = struct.Struct("!BB")
 snapshot_struct = struct.Struct("!BB")
 snapshotack_struct = struct.Struct("!BB")

@@ -23,6 +23,7 @@ class Client:
         self.selectors = selectors.DefaultSelector()
         self.server_address = None
         self.id = 0
+        self.server_max_n_players = 0
         self.server_connection = None
         self.game_connection = None
         self.rudp_connection = None
@@ -70,9 +71,12 @@ class Client:
     
     def _connected(self, response):
         print("connected", response)
-        self.id = int.from_bytes(response[1:2], "big")
+        command, id, n_players = protocol.connected_struct.unpack(response)
+        self.id = id
+        self.server_max_n_players = n_players
         self.game_connection = socket.socket(type=socket.SOCK_DGRAM)
         print("server_address", self.server_address)
+        print("server max n players", self.server_max_n_players)
         self.game_connection.setblocking(False)
         self.game_connection.connect(self.server_address)
         self.rudp_connection = orudp.Mailbox()

@@ -34,7 +34,8 @@ class ServerProtocol(asyncio.Protocol):
             if player_id:
                 print("yes", player_id)
                 self.transport.write(
-                    protocol.connected_struct.pack(protocol.CONNECTED, player_id))
+                    protocol.connected_struct.pack(
+                        protocol.CONNECTED, player_id, self.server.max_n_players))
             else:
                 self.transport.write(b"NO")
         elif command == protocol.DISCONNECT:
