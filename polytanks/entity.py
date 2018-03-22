@@ -23,8 +23,8 @@ class Explosion:
         self.body = Body()
         self.power = 0.
         self.collisions = Collisions()
-        blast = CollisionRect(WIDTH, HEIGHT)
-        blast.offset = -WIDTH/2., -HEIGHT/2.
+        blast = CollisionRect(UNIT, UNIT)
+        blast.offset = -UNIT/2., -UNIT/2.
         blast.type = collision.EXPLOSION
         blast.collides_with = collision.PLAYER
         self.collisions.append(blast)
