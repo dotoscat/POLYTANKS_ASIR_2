@@ -57,7 +57,6 @@ class Screen(Scene):
                 x = (i+1)*step
                 hud_damage = self.players_damage[player]
                 hud_damage.x += x/2.
-        system.damage_hud.players_damage = self.players_damage
             
     def quit(self):
         self.director.set_mouse_cursor(None)
@@ -128,6 +127,8 @@ class Screen(Scene):
                     id=eve.bullet_id)
             elif eve.id == event.PLAYER_HURT:
                 print("player {} is hurt, now it has {} damage".format(eve.player_id, eve.damage))
+                player = self.engine.players[eve.player_id]
+                player.info.damage = eve.damage
                 text = "{}. {} %".format(eve.player_id, eve.damage)
                 self.players_damage[eve.player_id].text = text
 

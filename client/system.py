@@ -32,16 +32,5 @@ class InputSystem(polytanks_system.InputSystem):
         entity.sprite.cannon.rotation = degrees(cannon_angle)
         entity.input.cannon_angle = cannon_angle
 
-class DamageHUDSystem(toyblock3.System):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.players_damage = {}
-
-    def _update(self, entity):
-        player_damage = self.players_damage[entity.id]
-        damage = entity.info.damage
-        player_damage.text = "{}. {} %".format(entity.id, damage)
-
 sprite = SpritesSystem()
 input = InputSystem()
-damage_hud = DamageHUDSystem()
