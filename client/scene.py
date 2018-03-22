@@ -22,7 +22,7 @@ from polytanks.event import event_manager
 from polytanks.constants import CANNON_JOINT, CANNON_LENGTH, BULLET_SPEED, WIDTH
 from ogf4py.scene import Scene
 from ogf4py.director import Director
-from . import assets
+from . import assets, system
 from .engine import Engine
 
 class Screen(Scene):
@@ -57,6 +57,7 @@ class Screen(Scene):
                 x = (i+1)*step
                 hud_damage = self.players_damage[player]
                 hud_damage.x += x/2.
+        system.damage_hud.players_damage = self.players_damage
             
     def quit(self):
         self.director.set_mouse_cursor(None)

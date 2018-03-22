@@ -35,6 +35,7 @@ class Engine(AbstractEngine):
         polytanks_system.physics()
         polytanks_system.collision()
         system.sprite()
+        system.damage_hud()
 
     def regenerate_id(self):
         pass

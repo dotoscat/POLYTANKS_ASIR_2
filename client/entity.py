@@ -48,7 +48,7 @@ class Platform(pentity.Platform):
             x=x, y=y, batch=self.batch, group=self.group)
 
 class Player(pentity.Player):
-    SYSTEMS = (system.input, system.polytanks_system.physics, system.polytanks_system.collision, system.sprite)
+    SYSTEMS = (system.input, system.polytanks_system.physics, system.polytanks_system.collision, system.sprite, system.damage_hud)
     def __init__(self, batch, groups):
         super().__init__(input_component=Control)
         self.sprite = TankGraphic(batch, groups, 1)
