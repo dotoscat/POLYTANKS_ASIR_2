@@ -51,9 +51,13 @@ class Screen(Scene):
         labels = {i: pyglet.text.Label("{} player".format(i), batch=self.batch, group=self.groups[3])
                 for i in range(1,n_players+1)}
         self.players_damage = labels
-        #if n_players == 2:
+        if n_players == 2:
+            step = WIDTH/2
+            for i, player in enumerate(self.players_damage):
+                x = (i+1)*step
+                hud_damage = self.players_damage[player]
+                hud_damage.x += x/2.
             
-
     def quit(self):
         self.director.set_mouse_cursor(None)
         pyglet.clock.unschedule(self.send_input_to_server)
