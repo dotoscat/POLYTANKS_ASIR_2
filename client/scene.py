@@ -19,7 +19,7 @@ import pyglet
 from pyglet.window import key
 from polytanks import level, protocol, snapshot, event
 from polytanks.event import event_manager
-from polytanks.constants import CANNON_JOINT, CANNON_LENGTH, BULLET_SPEED
+from polytanks.constants import CANNON_JOINT, CANNON_LENGTH, BULLET_SPEED, WIDTH
 from ogf4py.scene import Scene
 from ogf4py.director import Director
 from . import assets
@@ -32,6 +32,7 @@ class Screen(Scene):
         self.client = client
         self.engine = Engine(self.batch, self.groups)
         self.player = None
+        self.players_damage = {}
         # level.load_level(level.basic, self.pools["platform"])
 
     def init(self):
@@ -43,6 +44,15 @@ class Screen(Scene):
     def load(self):
         self.engine.load_level()
         self.player = self.engine.add_player(self.client.id)[1]
+        self.set_hud()
+
+    def set_hud(self):
+        n_players = self.client.n_players
+        labels = {i: pyglet.text.Label("{} player".format(i), batch=self.batch, group=self.groups[3])
+                for i in range(1,n_players+1)}
+        self.players_damage = labels
+        #if n_players == 2:
+            
 
     def quit(self):
         self.director.set_mouse_cursor(None)
