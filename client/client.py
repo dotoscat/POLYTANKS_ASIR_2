@@ -73,10 +73,10 @@ class Client:
         print("connected", response)
         command, id, n_players = protocol.connected_struct.unpack(response)
         self.id = id
-        self.server_max_n_players = n_players
+        self.n_players = n_players
         self.game_connection = socket.socket(type=socket.SOCK_DGRAM)
         print("server_address", self.server_address)
-        print("server max n players", self.server_max_n_players)
+        print("server max n players", self.n_players)
         self.game_connection.setblocking(False)
         self.game_connection.connect(self.server_address)
         self.rudp_connection = orudp.Mailbox()
