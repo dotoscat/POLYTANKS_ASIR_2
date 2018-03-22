@@ -21,7 +21,7 @@ player_event_struct = struct.Struct("!BB")
 player_make_struct = struct.Struct("!BBH")
 player_make_value_struct = struct.Struct("!BBf")
 player_shoots_struct = struct.Struct("!BBeeeHH")
-player_hurt_struct = struct.Struct("!BH")
+player_hurt_struct = struct.Struct("!BBH")
 
 PLAYER_JUMPS = 1
 PLAYER_FLOATS = 2
@@ -54,13 +54,18 @@ class Event:
 class _PlayerHurt(Event):
     def __init__(self):
         super().__init__()
+        self.player_id = 0
         self.damage = 0
 
     def __bytes__(self):
-        return player_hurt_struct.pack(self.id, self.damage) 
+        return player_hurt_struct.pack(self.id, self.player_id, self.damage) 
 
     def from_bytes(self, bytes):
-        self.id, self.damage = player_hurt_struct.unpack(bytes)
+        self.id, self.player_id, self.damage = player_hurt_struct.unpack(bytes)
+
+    def reset(self):
+        super().reset()
+        self.player_id = 0
 
 PlayerHurt = Pool(_PlayerHurt, 64)
 
@@ -150,6 +155,12 @@ class EventManager:
         event.id = what
         event.player_id = who
         self.events.append(event)
+
+    def add_player_hurt(self, who, damage):
+        event = PlayerHurt()
+        event.id = PLAYER_HURT
+        event.player_id = who
+        event.damage = damage
 
     def add_player_make_event(self, what, who, what_object):
        event = PlayerMakeEvent()
