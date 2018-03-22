@@ -21,6 +21,7 @@ player_event_struct = struct.Struct("!BB")
 player_make_struct = struct.Struct("!BBH")
 player_make_value_struct = struct.Struct("!BBf")
 player_shoots_struct = struct.Struct("!BBeeeHH")
+player_hurt_struct = struct.Struct("!BH")
 
 PLAYER_JUMPS = 1
 PLAYER_FLOATS = 2
@@ -28,6 +29,7 @@ PLAYER_TOUCHES_FLOOR = 3
 PLAYER_NOCKED_OUT = 4
 PLAYER_SHOOTS = 5
 PLAYER_CANNON_MOVES = 6
+PLAYER_HURT = 7
 
 PLAYER_MAKE_GROUP = (
     PLAYER_JUMPS,
@@ -48,6 +50,19 @@ class Event:
 
     def reset(self):
         self.id = 0
+
+class _PlayerHurt(Event):
+    def __init__(self):
+        super().__init__()
+        self.damage = 0
+
+    def __bytes__(self):
+        return player_hurt_struct.pack(self.id, self.damage) 
+
+    def from_bytes(self, bytes):
+        self.id, self.damage = player_hurt_struct.unpack(bytes)
+
+PlayerHurt = Pool(_PlayerHurt, 64)
 
 class _ShotEvent(Event):
     def __init__(self):
