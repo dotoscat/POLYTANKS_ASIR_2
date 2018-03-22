@@ -161,6 +161,7 @@ class EventManager:
         event.id = PLAYER_HURT
         event.player_id = who
         event.damage = damage
+        self.events.append(event)
 
     def add_player_make_event(self, what, who, what_object):
        event = PlayerMakeEvent()
@@ -190,7 +191,6 @@ class EventManager:
                 self.add_player_hurt(player_id, damage)
                 offset += player_hurt_struct.size
             elif what == PLAYER_SHOOTS:
-                print("data", data, total)
                 what, owner, x, y, angle, power, bullet_id = player_shoots_struct.unpack_from(data, offset)
                 self.add_shot_event(owner, x, y, angle, power, bullet_id)
                 offset += player_shoots_struct.size

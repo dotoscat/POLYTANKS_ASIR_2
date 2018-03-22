@@ -50,3 +50,7 @@ class Engine(AbstractEngine):
         super().player_platform_start(player, platform, player_rect, platform_rect)
         event_manager.add_player_event(event.PLAYER_TOUCHES_FLOOR, player.id)
         # print("events", len(event_manager.events))
+
+    def explosion_player_start(self, explosion, player, explosion_rect, player_rect):
+        super().explosion_player_start(explosion, player, explosion_rect, player_rect)
+        event_manager.add_player_hurt(player.id, player.info.damage)
