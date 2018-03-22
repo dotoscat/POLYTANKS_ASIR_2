@@ -21,6 +21,7 @@ player_event_struct = struct.Struct("!BB")
 player_make_struct = struct.Struct("!BBH")
 player_make_value_struct = struct.Struct("!BBf")
 player_shoots_struct = struct.Struct("!BBeeeHH")
+player_hurt_struct = struct.Struct("!BBH")
 
 PLAYER_JUMPS = 1
 PLAYER_FLOATS = 2
@@ -28,6 +29,7 @@ PLAYER_TOUCHES_FLOOR = 3
 PLAYER_NOCKED_OUT = 4
 PLAYER_SHOOTS = 5
 PLAYER_CANNON_MOVES = 6
+PLAYER_HURT = 7
 
 PLAYER_MAKE_GROUP = (
     PLAYER_JUMPS,
@@ -48,6 +50,24 @@ class Event:
 
     def reset(self):
         self.id = 0
+
+class _PlayerHurt(Event):
+    def __init__(self):
+        super().__init__()
+        self.player_id = 0
+        self.damage = 0
+
+    def __bytes__(self):
+        return player_hurt_struct.pack(self.id, self.player_id, self.damage) 
+
+    def from_bytes(self, bytes):
+        self.id, self.player_id, self.damage = player_hurt_struct.unpack(bytes)
+
+    def reset(self):
+        super().reset()
+        self.player_id = 0
+
+PlayerHurt = Pool(_PlayerHurt, 64)
 
 class _ShotEvent(Event):
     def __init__(self):
@@ -136,6 +156,13 @@ class EventManager:
         event.player_id = who
         self.events.append(event)
 
+    def add_player_hurt(self, who, damage):
+        event = PlayerHurt()
+        event.id = PLAYER_HURT
+        event.player_id = who
+        event.damage = damage
+        self.events.append(event)
+
     def add_player_make_event(self, what, who, what_object):
        event = PlayerMakeEvent()
        event.id = what
@@ -159,8 +186,11 @@ class EventManager:
         offset = 0
         while offset < total:
             what = int.from_bytes(data[offset:offset+1], "big")
-            if what == PLAYER_SHOOTS:
-                print("data", data, total)
+            if what == PLAYER_HURT:
+                what, player_id, damage = player_hurt_struct.unpack_from(data, offset)
+                self.add_player_hurt(player_id, damage)
+                offset += player_hurt_struct.size
+            elif what == PLAYER_SHOOTS:
                 what, owner, x, y, angle, power, bullet_id = player_shoots_struct.unpack_from(data, offset)
                 self.add_shot_event(owner, x, y, angle, power, bullet_id)
                 offset += player_shoots_struct.size
