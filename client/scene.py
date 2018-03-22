@@ -127,6 +127,8 @@ class Screen(Scene):
                     id=eve.bullet_id)
             elif eve.id == event.PLAYER_HURT:
                 print("player {} is hurt, now it has {} damage".format(eve.player_id, eve.damage))
+                text = "{}. {} %".format(eve.player_id, eve.damage)
+                self.players_damage[eve.player_id].text = text
 
     def apply_snapshot_data(self, data):
         tsnapshot = snapshot.Snapshot()
