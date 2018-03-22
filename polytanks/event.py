@@ -185,7 +185,11 @@ class EventManager:
         offset = 0
         while offset < total:
             what = int.from_bytes(data[offset:offset+1], "big")
-            if what == PLAYER_SHOOTS:
+            if what == PLAYER_HURT:
+                what, player_id, damage = player_hurt_struct.unpack_from(data, offset)
+                self.add_player_hurt(player_id, damage)
+                offset += player_hurt_struct.size
+            elif what == PLAYER_SHOOTS:
                 print("data", data, total)
                 what, owner, x, y, angle, power, bullet_id = player_shoots_struct.unpack_from(data, offset)
                 self.add_shot_event(owner, x, y, angle, power, bullet_id)
