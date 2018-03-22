@@ -48,7 +48,7 @@ class Screen(Scene):
 
     def set_hud(self):
         n_players = self.client.n_players
-        labels = {i: pyglet.text.Label("{} player".format(i), batch=self.batch, group=self.groups[3])
+        labels = {i: pyglet.text.Label("{}. {} %".format(i, 0), batch=self.batch, group=self.groups[3])
                 for i in range(1,n_players+1)}
         self.players_damage = labels
         if n_players == 2:
