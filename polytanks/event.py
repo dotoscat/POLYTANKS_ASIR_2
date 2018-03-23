@@ -20,7 +20,7 @@ from toyblock3 import Pool
 player_event_struct = struct.Struct("!BB")
 player_make_struct = struct.Struct("!BBH")
 player_make_value_struct = struct.Struct("!BBf")
-player_shoots_struct = struct.Struct("!BBeeeHHe?")
+player_shoots_struct = struct.Struct("!BBeeeHe?H")
 player_hurt_struct = struct.Struct("!BBH")
 
 PLAYER_JUMPS = 1
@@ -84,7 +84,7 @@ class _ShotEvent(Event):
     def __bytes__(self):
         print("bytes", self.power, self.bullet_id, self.speed, self.gravity)
         return player_shoots_struct.pack(self.id, self.owner, self.x, self.y
-        , self.angle, self.power, self.bullet_id, self.speed, self.gravity)
+        , self.angle, self.power, self.speed, self.gravity, self.bullet_id)
 
     def from_bytes(self, buffer):
         self.id, self.owner, self.x, self.y, self.angle, self.power, self.bullet_id, self.speed, self.gravity = player_shoots_struct.unpack(buffer)
@@ -182,8 +182,8 @@ class EventManager:
         event.angle = angle
         event.power = power
         event.bullet_id = bullet_id
-        self.speed = speed
-        self.gravity = gravity
+        event.speed = speed
+        event.gravity = gravity
         self.events.append(event)
 
     def from_bytes(self, data):
@@ -196,7 +196,7 @@ class EventManager:
                 self.add_player_hurt(player_id, damage)
                 offset += player_hurt_struct.size
             elif what == PLAYER_SHOOTS:
-                what, owner, x, y, angle, power, bullet_id, speed, gravity = player_shoots_struct.unpack_from(data, offset)
+                what, owner, x, y, angle, power, speed, gravity, bullet_id = player_shoots_struct.unpack_from(data, offset)
                 self.add_shot_event(owner, x, y, angle, power, speed, gravity, bullet_id)
                 offset += player_shoots_struct.size
             elif what in PLAYER_MAKE_GROUP:
