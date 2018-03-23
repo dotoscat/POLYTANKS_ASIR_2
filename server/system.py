@@ -41,17 +41,19 @@ class InputSystem(system.InputSystem):
                 gravity = True
                 power = 5
                 speed = BULLET_SPEED/4.
-            elif shoot_time > 1.
+            elif shoot_time > 1.:
                 gravity = True
                 power = 10
                 speed = BULLET_SPEED/2.
-            elif shoot_time > 2.
+            elif shoot_time > 2.:
                 gravity = False
                 power = 30
                 speed = BULLET_SPEED
 
-            id, bullet = self.engine.add_bullet(entity.id, body.x, body.y, entity.input.cannon_angle, 30)
-            event_manager.add_shot_event(entity.id, body.x, body.y, entity.input.cannon_angle, 30, id)
-            print("bullet:", id, bullet.body.x, bullet.body.y)
+            id, bullet = self.engine.add_bullet(
+                entity.id, body.x, body.y,
+                entity.input.cannon_angle, power, speed, gravity)
+            event_manager.add_shot_event(entity.id, body.x, body.y, entity.input.cannon_angle, power, id)
+            print("bullet:", id, bullet.body.x, bullet.body.y, "speed", speed, "power", power)
 
 input = InputSystem()
