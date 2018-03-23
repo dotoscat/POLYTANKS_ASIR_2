@@ -25,6 +25,7 @@ class InputSystem(system.InputSystem):
         super().__init__()
         self.engine = None
     def _update(self, entity):
+        shoot_time = entity.input.shoot_time
         super()._update(entity)
         if self.jump_event:
             event_manager.add_player_event(event.PLAYER_JUMPS, entity.id)
@@ -35,11 +36,22 @@ class InputSystem(system.InputSystem):
         if self.shot_event:
             if not self.engine:
                 warnings.warn("'engine' attribute for the system is None.")
-            # TODO: Reemplazar 30 por el poder acumulado de la entrada del jugador
             body = entity.body
+            if shoot_time > 0.:
+                gravity = True
+                power = 5
+                speed = BULLET_SPEED/4.
+            elif shoot_time > 1.
+                gravity = True
+                power = 10
+                speed = BULLET_SPEED/2.
+            elif shoot_time > 2.
+                gravity = False
+                power = 30
+                speed = BULLET_SPEED
+
             id, bullet = self.engine.add_bullet(entity.id, body.x, body.y, entity.input.cannon_angle, 30)
             event_manager.add_shot_event(entity.id, body.x, body.y, entity.input.cannon_angle, 30, id)
             print("bullet:", id, bullet.body.x, bullet.body.y)
-            # engine.create_bullet and so
 
 input = InputSystem()
