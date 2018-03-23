@@ -28,6 +28,9 @@ class InputSystem(toyblock3.System):
         self.dt = FPS
 
     def _update(self, entity):
+        if entity.info.hitstun > 0.:
+            entity.info.hitstun -= self.dt
+            return
         entity.body.vel_x = entity.input.move*UNIT*2.
         # print("input vel y", entity.body.vel_y)
         self.shot_event = False

@@ -55,9 +55,11 @@ class Engine(AbstractEngine):
     def explosion_player_start(self, explosion, player, explosion_rect, player_rect):
         super().explosion_player_start(explosion, player, explosion_rect, player_rect)
         player.info.damage += explosion.power
+        knockback = UNIT*(player.info.damage/10.)
+        player.body.vel_y = knockback if knockback >= UNIT else UNIT
+        hitstun = 0.25 if knockback <= UNIT else 1.
+        player.info.hitstun = hitstun
         if player.input.touch_floor:
-            knockback = UNIT*(player.info.damage/10.)
-            player.body.vel_y = knockback if knockback >= UNIT else UNIT
             player.body.has_gravity = True
         #player.input.touch_floor = False
         event_manager.add_player_hurt(player.id, player.info.damage)

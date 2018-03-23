@@ -39,6 +39,7 @@ class PlayerInfo:
     def __init__(self):
         self.damage = 0
         self.touched_floor = False
+        self.hitstun = 0.
 
 class BulletInfo:
     def __init__(self):
