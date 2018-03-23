@@ -124,7 +124,10 @@ class Screen(Scene):
                     eve.y,
                     eve.angle,
                     eve.power,
+                    eve.speed,
+                    eve.gravity,
                     id=eve.bullet_id)
+                print("Create bullet with speed", eve.speed)
             elif eve.id == event.PLAYER_HURT:
                 print("player {} is hurt, now it has {} damage".format(eve.player_id, eve.damage))
                 player = self.engine.players[eve.player_id]

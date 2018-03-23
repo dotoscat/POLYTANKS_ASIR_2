@@ -82,6 +82,7 @@ class _ShotEvent(Event):
         self.gravity = False
 
     def __bytes__(self):
+        print("bytes", self.power, self.bullet_id, self.speed, self.gravity)
         return player_shoots_struct.pack(self.id, self.owner, self.x, self.y
         , self.angle, self.power, self.bullet_id, self.speed, self.gravity)
 
@@ -172,7 +173,7 @@ class EventManager:
        event.what_id = what_object 
        self.events.append(event)
 
-    def add_shot_event(self, owner, x, y, angle, power, bullet_id, speed, gravity):
+    def add_shot_event(self, owner, x, y, angle, power, speed, gravity, bullet_id):
         event = ShotEvent()
         event.id = PLAYER_SHOOTS
         event.owner = owner
@@ -195,8 +196,8 @@ class EventManager:
                 self.add_player_hurt(player_id, damage)
                 offset += player_hurt_struct.size
             elif what == PLAYER_SHOOTS:
-                what, owner, x, y, angle, power, bullet_id = player_shoots_struct.unpack_from(data, offset)
-                self.add_shot_event(owner, x, y, angle, power, bullet_id)
+                what, owner, x, y, angle, power, bullet_id, speed, gravity = player_shoots_struct.unpack_from(data, offset)
+                self.add_shot_event(owner, x, y, angle, power, speed, gravity, bullet_id)
                 offset += player_shoots_struct.size
             elif what in PLAYER_MAKE_GROUP:
                 what, who = player_event_struct.unpack_from(data, offset)
