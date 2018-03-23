@@ -65,6 +65,7 @@ class CollisionMixin:
             return
         player.body.has_gravity = True
         player.input.touch_floor = False
+        print("player_platform_end")
 
     def player_blastzone_end(self, player, blastzone, player_rect, blastzone_rect):
         self.respawn_player(player.id)

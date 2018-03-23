@@ -21,6 +21,7 @@ from polytanks.system import physics, collision
 from .system import input
 from polytanks.event import event_manager
 from polytanks import event
+from polytanks.constants import UNIT
 
 class Engine(AbstractEngine):
     def __init__(self, n_players, start_id):
@@ -54,4 +55,9 @@ class Engine(AbstractEngine):
     def explosion_player_start(self, explosion, player, explosion_rect, player_rect):
         super().explosion_player_start(explosion, player, explosion_rect, player_rect)
         player.info.damage += explosion.power
+        if player.input.touch_floor:
+            knockback = UNIT*(player.info.damage/10.)
+            player.body.vel_y = knockback if knockback >= UNIT else UNIT
+            player.body.has_gravity = True
+        #player.input.touch_floor = False
         event_manager.add_player_hurt(player.id, player.info.damage)
