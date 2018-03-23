@@ -73,9 +73,8 @@ class CollisionMixin:
     def bullet_platform_start(self, bullet, platform, bullet_rect, platform_rect):
         y = bullet.body.y
         x = bullet.body.x
+        self.add_explosion(x, y, bullet.info.power)
         bullet.free()
-        self.add_explosion(x, y, 30)
-        print("Kaboom and so")
 
     def bullet_blastzone_end(self, bullet, blastzone, bullect_rect, blastzone_rect):
         if not bullet._used:
@@ -84,5 +83,4 @@ class CollisionMixin:
         bullet.free()
 
     def explosion_player_start(self, explosion, player, explosion_rect, player_rect):
-        print("explosion power", explosion.power)
-        player.info.damage += explosion.power
+        pass

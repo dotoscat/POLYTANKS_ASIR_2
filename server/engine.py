@@ -53,4 +53,5 @@ class Engine(AbstractEngine):
 
     def explosion_player_start(self, explosion, player, explosion_rect, player_rect):
         super().explosion_player_start(explosion, player, explosion_rect, player_rect)
+        player.info.damage += explosion.power
         event_manager.add_player_hurt(player.id, player.info.damage)

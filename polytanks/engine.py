@@ -72,6 +72,7 @@ class AbstractEngine(CollisionMixin):
         bullet.body.vel_y = sin(-cannon_angle)*speed
         bullet.body.has_gravity = gravity
         bullet.info.owner = owner
+        print("add bullet with power", power)
         bullet.info.power = power
 
         id = id if isinstance(id, int) else self.generate_id()
