@@ -20,7 +20,7 @@ from toyblock3 import Pool
 player_event_struct = struct.Struct("!BB")
 player_make_struct = struct.Struct("!BBH")
 player_make_value_struct = struct.Struct("!BBf")
-player_shoots_struct = struct.Struct("!BBeeeHH")
+player_shoots_struct = struct.Struct("!BBeeeHHe?")
 player_hurt_struct = struct.Struct("!BBH")
 
 PLAYER_JUMPS = 1
@@ -78,13 +78,15 @@ class _ShotEvent(Event):
         self.angle = 0.
         self.power = 0.
         self.bullet_id = 0.
+        self.speed = 0.
+        self.gravity = False
 
     def __bytes__(self):
         return player_shoots_struct.pack(self.id, self.owner, self.x, self.y
-        , self.angle, self.power, self.bullet_id)
+        , self.angle, self.power, self.bullet_id, self.speed, self.gravity)
 
     def from_bytes(self, buffer):
-        self.id, self.owner, self.x, self.y, self.angle, self.power, self.bullet_id = player_shoots_struct.unpack(buffer)
+        self.id, self.owner, self.x, self.y, self.angle, self.power, self.bullet_id, self.speed, self.gravity = player_shoots_struct.unpack(buffer)
 
     def reset(self):
         self.owner = 0
@@ -170,7 +172,7 @@ class EventManager:
        event.what_id = what_object 
        self.events.append(event)
 
-    def add_shot_event(self, owner, x, y, angle, power, bullet_id):
+    def add_shot_event(self, owner, x, y, angle, power, bullet_id, speed, gravity):
         event = ShotEvent()
         event.id = PLAYER_SHOOTS
         event.owner = owner
@@ -179,6 +181,8 @@ class EventManager:
         event.angle = angle
         event.power = power
         event.bullet_id = bullet_id
+        self.speed = speed
+        self.gravity = gravity
         self.events.append(event)
 
     def from_bytes(self, data):

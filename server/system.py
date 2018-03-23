@@ -53,7 +53,7 @@ class InputSystem(system.InputSystem):
             id, bullet = self.engine.add_bullet(
                 entity.id, body.x, body.y,
                 entity.input.cannon_angle, power, speed, gravity)
-            event_manager.add_shot_event(entity.id, body.x, body.y, entity.input.cannon_angle, power, id)
+            event_manager.add_shot_event(entity.id, body.x, body.y, entity.input.cannon_angle, power, id, speed, gravity)
             print("bullet:", id, bullet.body.x, bullet.body.y, "speed", speed, "power", power)
 
 input = InputSystem()
