@@ -37,18 +37,18 @@ class InputSystem(system.InputSystem):
             if not self.engine:
                 warnings.warn("'engine' attribute for the system is None.")
             body = entity.body
-            if shoot_time > 0.:
-                gravity = True
-                power = 5
-                speed = BULLET_SPEED/4.
-            elif shoot_time > 1.:
-                gravity = True
-                power = 10
-                speed = BULLET_SPEED/2.
-            elif shoot_time > 2.:
+            if shoot_time > 2.:
                 gravity = False
                 power = 30
                 speed = BULLET_SPEED
+            elif shoot_time > 1.:
+                gravity = True
+                power = 15
+                speed = BULLET_SPEED/2.
+            elif shoot_time >= 0.:
+                gravity = True
+                power = 5
+                speed = BULLET_SPEED/4.
 
             id, bullet = self.engine.add_bullet(
                 entity.id, body.x, body.y,
