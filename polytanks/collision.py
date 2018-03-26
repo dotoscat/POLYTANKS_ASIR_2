@@ -39,6 +39,10 @@ class CollisionMixin:
             start=self.bullet_platform_start
         )
         collision.register_callbacks(
+            (BULLET, PLAYER),
+            start=self.bullet_player_start
+        )
+        collision.register_callbacks(
             (PLAYER, BLAST_ZONE),
             end=self.player_blastzone_end
         )
@@ -71,7 +75,16 @@ class CollisionMixin:
         self.respawn_player(player.id)
         print("Player goes kabooooo")
 
+    def bullet_player_start(self, bullet, player, bullet_rect, player_rect):
+        print("bullet collides", bullet.info.owner, player.id)
+        if bullet.info.owner == player.id:
+            return
+        self._bullet_explodes(bullet)
+
     def bullet_platform_start(self, bullet, platform, bullet_rect, platform_rect):
+        self._bullet_explodes(bullet)
+
+    def _bullet_explodes(self, bullet):
         y = bullet.body.y
         x = bullet.body.x
         self.add_explosion(x, y, bullet.info.power)

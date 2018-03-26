@@ -87,7 +87,6 @@ class Bullet:
         self.body = Body()
         self.body.has_gravity = True
         self.collisions = Collisions()
-        self.owner = 0
         self.info = component.BulletInfo()
 
         width = HALF_UNIT
