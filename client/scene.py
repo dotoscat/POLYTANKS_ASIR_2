@@ -117,7 +117,6 @@ class Screen(Scene):
                 print("player {} floats".format(eve.player_id))
             elif eve.id == event.PLAYER_SHOOTS:
                 print("player {} shoots {}".format(eve.owner, eve.bullet_id))
-                # TODO: Tratar evento de player_shoots
                 id, bullet = self.engine.add_bullet(
                     eve.owner,
                     eve.x,
