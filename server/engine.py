@@ -61,5 +61,4 @@ class Engine(AbstractEngine):
         player.info.hitstun = hitstun
         if player.input.touch_floor:
             player.body.has_gravity = True
-        #player.input.touch_floor = False
         event_manager.add_player_hurt(player.id, player.info.damage)

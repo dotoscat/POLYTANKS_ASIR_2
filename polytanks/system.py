@@ -28,32 +28,38 @@ class InputSystem(toyblock3.System):
         self.dt = FPS
 
     def _update(self, entity):
-        if entity.info.hitstun > 0.:
-            entity.info.hitstun -= self.dt
-            return
-        entity.body.vel_x = entity.input.move*UNIT*2.
+        if not entity.info.has_hitstun:
+            entity.body.vel_x = entity.input.move*UNIT*2.
         # print("input vel y", entity.body.vel_y)
         self.shot_event = False
         self.float_event = False
         self.jump_event = False
-        if entity.input.jumps and entity.input.touch_floor and not entity.input.jump_pressed:
+        if (not entity.info.has_hitstun
+            and entity.input.jumps and entity.input.touch_floor
+            and not entity.input.jump_pressed):
             entity.body.vel_y = UNIT*3.
             entity.body.has_gravity = True
             entity.input.touch_floor = False
             entity.input.jump_pressed = True
             self.jump_event = True
-        elif entity.input.jumps and not entity.input.touch_floor and not entity.input.jump_pressed:
+        elif (not entity.info.has_hitstun
+            and entity.input.jumps and not entity.input.touch_floor
+            and not entity.input.jump_pressed):
             if entity.body.vel_y < 0.:
                 entity.body.vel_y = UNIT
             else:
                 entity.body.apply_force(self.dt, y=UNIT*7)
             self.float_event = True
-        if not entity.input.jumps and entity.input.jump_pressed:
+        if not entity.info.has_hitstun and not entity.input.jumps and entity.input.jump_pressed:
             entity.input.jump_pressed = False
         self.entity_shoots(entity)
+        if entity.info.has_hitstun:
+            entity.info.hitstun -= self.dt
     
     def entity_shoots(self, entity):
         self.shot_event = False
+        if entity.info.has_hitstun:
+            return
         if entity.input.shoots:
             entity.input.shoot_time += self.dt
         elif not entity.input.shoots and entity.input.shoot_time:

@@ -41,6 +41,10 @@ class PlayerInfo:
         self.touched_floor = False
         self.hitstun = 0.
 
+    @property
+    def has_hitstun(self):
+        return self.hitstun > 0.
+
 class BulletInfo:
     def __init__(self):
         self.owner = 0
