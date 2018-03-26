@@ -17,7 +17,7 @@ from itertools import count
 import toyblock3
 from polytanks.engine import AbstractEngine
 from .entity import Player, Platform, Bullet, Explosion
-from polytanks.system import physics, collision
+from polytanks.system import physics, collision, lifetime
 from .system import input
 from polytanks.event import event_manager
 from polytanks import event
@@ -37,6 +37,7 @@ class Engine(AbstractEngine):
         self.regenerate_id()
 
     def update(self, dt):
+        lifetime()
         input()
         physics()
         collision()

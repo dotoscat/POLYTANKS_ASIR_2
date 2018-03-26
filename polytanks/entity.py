@@ -29,6 +29,9 @@ class Explosion:
         blast.collides_with = collision.PLAYER
         self.collisions.append(blast)
 
+    def reset(self):
+        pass
+
 class Blastzone:
     SYSTEMS = (system.collision,)
     def __init__(self):
