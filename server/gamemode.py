@@ -89,16 +89,13 @@ class Standard(AbstractGameMode):
             self.spawn_time = self.spawn_each
             effect = random.choice(powerup.effects)
             effect_i = powerup.effects.index(effect)
-            player = self.engine.players[1]
+            player = self.engine.players.get(1)
             if not player:
                 return
             x = player.body.x
             y = player.body.y + UNIT*3
             self.engine.add_powerup(x, y, effect) 
-            event_manager.add_powerup_event()
-            # TODO: obtener i del efecto
-            # TODO: posicion de (un) jugador
-            # TODO: asignar x e y al powerup a partir del jugador
+            event_manager.add_powerup_event(x, y, effect_i)
             print("add powerup!")
 
     def ready(self):

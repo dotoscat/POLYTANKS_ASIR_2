@@ -217,7 +217,7 @@ class EventManager:
         while offset < total:
             what = int.from_bytes(data[offset:offset+1], "big")
             if what == ADD_POWERUP:
-                what, effect_i, x, y = add_powerup_struct.unpack_from(data, offset)
+                what, x, y, effect_i = add_powerup_struct.unpack_from(data, offset)
                 self.add_powerup_event(x, y, effect_i)
                 offset += add_powerup_struct.size
             elif what == PLAYER_HURT:

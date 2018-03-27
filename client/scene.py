@@ -133,6 +133,10 @@ class Screen(Scene):
                 player.info.damage = eve.damage
                 text = "{}. {} %".format(eve.player_id, eve.damage)
                 self.players_damage[eve.player_id].text = text
+            elif eve.id == event.ADD_POWERUP:
+                self.engine.add_powerup(eve.x, eve.y)
+                print("power up!", eve.x, eve.y)
+
 
     def apply_snapshot_data(self, data):
         tsnapshot = snapshot.Snapshot()
