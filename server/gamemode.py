@@ -31,7 +31,7 @@ class AbstractGameMode:
         self.READY_TIME = ready_time
         self.ready_time = self.READY_TIME
         self.status = Status.READY
-        self.time = 0.
+        self.time = self.READY_TIME
 
     def running_step(self, dt):
         raise NotImplementedError
@@ -68,12 +68,14 @@ class AbstractGameMode:
 class Standard(AbstractGameMode):
     def __init__(self, server, engine, powerup=5):
         super().__init__(server, engine)
-        self.powerup = powerup
         self.spawn_each = powerup/self.RUNNING_TIME
         self.spawn_time = self.spawn_each
 
     def running_step(self, dt):
         self.spawn_time -= dt
+        if self.spawn_time <= 0:
+            self.spawn_time = self.spawn_each
+            self.engine.add_powerup(0, 0)   
 
     def ready(self):
         pass

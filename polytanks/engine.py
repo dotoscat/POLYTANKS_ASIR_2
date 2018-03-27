@@ -61,6 +61,9 @@ class AbstractEngine(CollisionMixin):
         player.body.x = point[0] + HALF_UNIT
         player.body.y = point[1] + HALF_UNIT
 
+    def add_powerup(self, x, y):
+        pass
+
     def add_bullet(self, owner: int, x: float, y: float, cannon_angle: float, 
         power: int, speed: float, gravity: bool, id: Optional[int] = None):
         bullet = self.pools["bullet"]()

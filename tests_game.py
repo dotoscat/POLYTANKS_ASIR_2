@@ -1,11 +1,14 @@
+import time
 import unittest
+import unittest.mock
 import toyblock3
 import polytanks
 import polytanks.entity
-import server
+import server.engine
 import server.entity
 import server.protocol
 import server.server
+import server.gamemode
 import client.scene
 import client.client
 
@@ -91,4 +94,22 @@ class InputTest(unittest.TestCase):
         self.tick()
         self.assertTrue(self.player.input.shoots)
 
+class GamemodeTest(unittest.TestCase):
+    def test1_steps(self):
+        class TestMode(server.gamemode.AbstractGameMode):
+            pass
 
+        testmode = TestMode(object(), object(), ready_time=1., running_time=2., gameover_time=3.)
+        testmode.running_step = unittest.mock.Mock()
+        testmode.running = unittest.mock.Mock()
+        testmode.ready = unittest.mock.Mock()
+        testmode.gameover = unittest.mock.Mock()
+
+        start = time.monotonic()
+        while time.monotonic() - start < 11:
+            time.sleep(0.1)
+            testmode.run_steps(0.1)
+
+        print(testmode.ready.call_count)
+        print(testmode.running.call_count)
+        print(testmode.gameover.call_count)
