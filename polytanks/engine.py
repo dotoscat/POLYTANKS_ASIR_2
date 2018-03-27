@@ -61,8 +61,16 @@ class AbstractEngine(CollisionMixin):
         player.body.x = point[0] + HALF_UNIT
         player.body.y = point[1] + HALF_UNIT
 
-    def add_powerup(self, x, y, effect=None):
-        raise NotImplementedError
+    def add_powerup(self, x, y, effect=None, id=None):
+        powerup = self.pools["powerup"]()
+        if not powerup:
+            return
+        powerup.effect = effect
+        powerup.body.x = x
+        powerup.body.y = y
+        id = id if isinstance(id, int) else self.generate_id()
+        self.entities[id] = powerup
+        return (id, powerup)
 
     def add_bullet(self, owner: int, x: float, y: float, cannon_angle: float, 
         power: int, speed: float, gravity: bool, id: Optional[int] = None):

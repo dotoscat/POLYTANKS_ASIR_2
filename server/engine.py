@@ -49,9 +49,6 @@ class Engine(AbstractEngine):
     def regenerate_id(self):
         self.id_generator = count(self.start_id)
 
-    def add_powerup(self, x, y, effect=None):
-        # TODO: Hacer esto un metodo no abstracto. Implementar version para servidor y cliente
-
     def player_platform_start(self, player, platform, player_rect, platform_rect):
         super().player_platform_start(player, platform, player_rect, platform_rect)
         event_manager.add_player_event(event.PLAYER_TOUCHES_FLOOR, player.id)
