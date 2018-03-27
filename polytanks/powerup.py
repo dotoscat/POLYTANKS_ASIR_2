@@ -19,3 +19,7 @@ def heal(player):
 effects = [
     heal
 ]
+
+graphics = {
+    heal, "heal"
+}
