@@ -62,6 +62,18 @@ class AbstractGameMode:
             self.time = self.running_time
             self.running()
 
+    @property
+    def is_ready(self):
+        return self.status == Status.READY
+
+    @property
+    def is_running(self):
+        return self.status == Status.RUNNING
+
+    @property
+    def is_gameover(self):
+        return self.status == Status.GAMEOVER
+
 class Standard(AbstractGameMode):
     def __init__(self, server, engine, powerup=5):
         super().__init__(server, engine)
@@ -83,15 +95,3 @@ class Standard(AbstractGameMode):
 
     def gameover(self):
         pass
-
-    @property
-    def is_ready(self):
-        return self.status == Status.READY
-
-    @property
-    def is_running(self):
-        return self.status == Status.RUNNING
-
-    @property
-    def is_gameover(self):
-        return self.status == Status.GAMEOVER
