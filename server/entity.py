@@ -17,6 +17,11 @@ from polytanks import entity
 from polytanks.system import physics, collision, lifetime
 from .system import input
 
+class Powerup(entity.Powerup):
+    def __init__(self):
+        super().__init__()
+        self.effect = None
+
 class Explosion(entity.Explosion):
     SYSTEMS = (physics, collision, lifetime)
 

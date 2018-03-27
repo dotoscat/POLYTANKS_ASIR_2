@@ -17,6 +17,11 @@ from ogf4py_toyblock3.component import Body, CollisionRect, Collisions
 from . import collision, component, system
 from .constants import UNIT, HALF_UNIT, WIDTH, HEIGHT
 
+class Powerup:
+    def __init__(self):
+        self.body = Body()
+        # TODO: add collision
+
 class Explosion:
     def __init__(self):
         self.lifetime = 0.
