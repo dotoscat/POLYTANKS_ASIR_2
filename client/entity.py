@@ -20,6 +20,13 @@ from . import assets
 from .component import TankGraphic, PlatformSprite, Control
 from . import system
 
+class Powerup(polytanks.entity.Powerup):
+    SYSTEMS = (system.sprite, system.polytanks_system.physics)
+    def __init__(self, batch, group):
+        self.batch = batch
+        self.group = group
+        self.sprite = pyglet.sprite.Sprite(assets.images["heal"], batch=batch, group=group)
+
 class Explosion(polytanks.entity.Explosion):
     SYSTEMS = (system.polytanks_system.lifetime, system.sprite)
     def __init__(self, batch, group):
