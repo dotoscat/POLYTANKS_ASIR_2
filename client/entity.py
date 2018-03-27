@@ -23,6 +23,7 @@ from . import system
 class Powerup(polytanks.entity.Powerup):
     SYSTEMS = (system.sprite, system.polytanks_system.physics)
     def __init__(self, batch, group):
+        super().__init__()
         self.batch = batch
         self.group = group
         self.sprite = pyglet.sprite.Sprite(assets.images["heal"], batch=batch, group=group)
