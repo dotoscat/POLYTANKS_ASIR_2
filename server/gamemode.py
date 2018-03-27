@@ -65,7 +65,7 @@ class AbstractGameMode:
 class Standard(AbstractGameMode):
     def __init__(self, server, engine, powerup=5):
         super().__init__(server, engine)
-        self.spawn_each = powerup/self.RUNNING_TIME
+        self.spawn_each = self.running_time/powerup
         self.spawn_time = self.spawn_each
 
     def running_step(self, dt):
@@ -73,6 +73,7 @@ class Standard(AbstractGameMode):
         if self.spawn_time <= 0:
             self.spawn_time = self.spawn_each
             self.engine.add_powerup(0, 0)   
+            print("add powerup!")
 
     def ready(self):
         pass

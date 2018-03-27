@@ -116,11 +116,15 @@ class GamemodeTest(unittest.TestCase):
         testmode.ready = unittest.mock.Mock()
         testmode.gameover = unittest.mock.Mock()
 
-        self.run_gamemode_for(testmode, 11)
+        self.run_gamemode_for(testmode, 10)
 
         self.assertEqual(testmode.ready.call_count, 1, "Does not start with READY!")
         self.assertEqual(testmode.running.call_count, 2, "running doesn't called twice in 10 secs.")
         self.assertEqual(testmode.gameover.call_count, 2, "gameover doesn't called twice in 10 secs.")
         self.assertTrue(testmode.running_step.call_count > 10, "running_step doesn't called in running within 10 secs.")
 
-
+    def test2_createpowerup(self):
+        engine_mock = unittest.mock.Mock(server.engine.Engine)
+        standard = server.gamemode.Standard(object(), engine_mock)
+        self.run_gamemode_for(standard, 10)
+        self.assertTrue(engine_mock.add_powerup.called, "powerup not added")
