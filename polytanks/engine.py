@@ -23,7 +23,7 @@ from .entity import Blastzone
 
 class AbstractEngine(CollisionMixin):
     def __init__(self, pools):
-        types = ("player", "platform", "bullet", "explosion")
+        types = ("player", "platform", "bullet", "explosion", "powerup")
         for t in types:
             if t not in pools:
                 raise Exception("{} not found in pools".format(t))
@@ -61,8 +61,8 @@ class AbstractEngine(CollisionMixin):
         player.body.x = point[0] + HALF_UNIT
         player.body.y = point[1] + HALF_UNIT
 
-    def add_powerup(self, x, y):
-        pass
+    def add_powerup(self, x, y, effect=None):
+        raise NotImplementedError
 
     def add_bullet(self, owner: int, x: float, y: float, cannon_angle: float, 
         power: int, speed: float, gravity: bool, id: Optional[int] = None):

@@ -16,7 +16,7 @@
 from itertools import count
 import toyblock3
 from polytanks.engine import AbstractEngine
-from .entity import Player, Platform, Bullet, Explosion
+from .entity import Player, Platform, Bullet, Explosion, Powerup
 from polytanks.system import physics, collision, lifetime
 from .system import input
 from polytanks.event import event_manager
@@ -29,7 +29,8 @@ class Engine(AbstractEngine):
             "player": toyblock3.Manager(Player, n_players),
             "platform": toyblock3.Manager(Platform, 64),
             "bullet": toyblock3.Manager(Bullet, 128),
-            "explosion": toyblock3.Manager(Explosion, 128)
+            "explosion": toyblock3.Manager(Explosion, 128),
+            "powerup": toyblock3.Manager(Powerup, 32)
         }
         super().__init__(pools)
         self.start_id = start_id
@@ -47,6 +48,9 @@ class Engine(AbstractEngine):
 
     def regenerate_id(self):
         self.id_generator = count(self.start_id)
+
+    def add_powerup(self, x, y, effect=None):
+        # TODO: Hacer esto un metodo no abstracto. Implementar version para servidor y cliente
 
     def player_platform_start(self, player, platform, player_rect, platform_rect):
         super().player_platform_start(player, platform, player_rect, platform_rect)
