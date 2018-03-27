@@ -24,14 +24,11 @@ class AbstractGameMode:
     def __init__(self, server, engine, ready_time=5, running_time=10, gameover_time=3):
         self.server = server
         self.engine = engine
-        self.GAMEOVER_TIME = gameover_time
-        self.gameover_time = self.GAMEOVER_TIME
-        self.RUNNING_TIME = running_time
-        self.running_time = self.RUNNING_TIME
-        self.READY_TIME = ready_time
-        self.ready_time = self.READY_TIME
+        self.gameover_time = gameover_time
+        self.running_time = running_time
+        self.ready_time = ready_time
         self.status = Status.READY
-        self.time = self.READY_TIME
+        self.time = self.ready_time
 
     def running_step(self, dt):
         raise NotImplementedError
@@ -48,22 +45,22 @@ class AbstractGameMode:
     def run_steps(self, dt):
         self.time -= dt
         next_step = self.time <= 0.
+        if self.status == Status.RUNNING:
+            self.running_step(dt)
         if not next_step:
             return
         if self.status == Status.RUNNING:
             self.status = Status.GAMEOVER
-            self.time = self.GAMEOVER_TIME
+            self.time = self.gameover_time
             self.gameover()
         elif self.status == Status.GAMEOVER:
             self.status = Status.READY
-            self.time = self.READY_TIME
+            self.time = self.ready_time
             self.ready()
         elif self.status == Status.READY:
             self.status = Status.RUNNING
-            self.time = self.RUNNING_TIME
+            self.time = self.running_time
             self.running()
-        if self.status == Status.RUNNING:
-            self.running_step(dt)
 
 class Standard(AbstractGameMode):
     def __init__(self, server, engine, powerup=5):
