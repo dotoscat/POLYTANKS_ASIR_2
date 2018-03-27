@@ -14,6 +14,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import random
+from polytanks.event import event_manager
+from polytanks import powerup
+from polytanks.constants import UNIT
 
 class Status:
     RUNNING = 0
@@ -84,7 +87,18 @@ class Standard(AbstractGameMode):
         self.spawn_time -= dt
         if self.spawn_time <= 0:
             self.spawn_time = self.spawn_each
-            self.engine.add_powerup(0, 0)   
+            effect = random.choice(powerup.effects)
+            effect_i = powerup.effects.index(effect)
+            player = self.engine.players[1]
+            if not player:
+                return
+            x = player.body.x
+            y = player.body.y + UNIT*3
+            self.engine.add_powerup(x, y, effect) 
+            event_manager.add_powerup_event()
+            # TODO: obtener i del efecto
+            # TODO: posicion de (un) jugador
+            # TODO: asignar x e y al powerup a partir del jugador
             print("add powerup!")
 
     def ready(self):

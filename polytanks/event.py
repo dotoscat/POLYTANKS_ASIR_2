@@ -22,7 +22,7 @@ player_make_struct = struct.Struct("!BBH")
 player_make_value_struct = struct.Struct("!BBf")
 player_shoots_struct = struct.Struct("!BBeeeHe?H")
 player_hurt_struct = struct.Struct("!BBH")
-add_powerup_struct = struct.Struct("!BBee")
+add_powerup_struct = struct.Struct("!BeeB")
 
 PLAYER_JUMPS = 1
 PLAYER_FLOATS = 2
@@ -61,10 +61,10 @@ class _AddPowerup(Event):
         self.y = 0.
 
     def __bytes__(self):
-        return add_powerup_struct.pack(self.id, self.effect_i, self.x, self.y)
+        return add_powerup_struct.pack(self.id, self.x, self.y, self.effect_i)
 
     def from_bytes(self, buffer):
-        self.id, self.effect_i, self.x, self.y = add_powerup_struct.unpack(buffer)
+        self.id, self.x, self.y, self.effect_i = add_powerup_struct.unpack(buffer)
 
 AddPowerup = Pool(_AddPowerup, 64)
 
@@ -170,7 +170,7 @@ class EventManager:
         self.events = deque()
         self._consumed = deque()
 
-    def add_powerup_event(self, effect_i, x, y):
+    def add_powerup_event(self, x, y, effect_i):
         event = AddPowerup()
         event.id = ADD_POWERUP
         event.effect_i = effect_i
@@ -218,7 +218,7 @@ class EventManager:
             what = int.from_bytes(data[offset:offset+1], "big")
             if what == ADD_POWERUP:
                 what, effect_i, x, y = add_powerup_struct.unpack_from(data, offset)
-                self.add_powerup_event(effect_i, x, y)
+                self.add_powerup_event(x, y, effect_i)
                 offset += add_powerup_struct.size
             elif what == PLAYER_HURT:
                 what, player_id, damage = player_hurt_struct.unpack_from(data, offset)
