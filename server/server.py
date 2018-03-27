@@ -25,6 +25,7 @@ from .player import Player
 from .engine import Engine
 from .protocol import ServerProtocol, GameProtocol
 from .system import input
+from .gamemode import Standard
 
 logging.basicConfig(format="%(pathname)s:%(module)s:%(levelname)s:%(message)s", level=logging.DEBUG)
 
@@ -32,6 +33,7 @@ class Server:
     SNAPSHOT_RATE = 1./15.
     def __init__(self, max_n_players, host, game_protocol=GameProtocol):
         self.engine = Engine(max_n_players, max_n_players + 1)
+        self.gamemode = Standard(self, self.engine)
         self.engine.load_level()
         self.clients = {}
         self.max_n_players = max_n_players
@@ -68,6 +70,7 @@ class Server:
             start = self.loop.time()
             self.rudp.run()
             self.clean_clients()
+            self.gamemode.run_steps(GAME_RATE)
             self.engine.update(GAME_RATE)
             self.send_snapshot()
             self.send_events()
