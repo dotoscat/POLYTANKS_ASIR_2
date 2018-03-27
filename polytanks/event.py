@@ -22,6 +22,7 @@ player_make_struct = struct.Struct("!BBH")
 player_make_value_struct = struct.Struct("!BBf")
 player_shoots_struct = struct.Struct("!BBeeeHe?H")
 player_hurt_struct = struct.Struct("!BBH")
+add_powerup_struct = struct.Struct("!BBee")
 
 PLAYER_JUMPS = 1
 PLAYER_FLOATS = 2
@@ -30,6 +31,7 @@ PLAYER_NOCKED_OUT = 4
 PLAYER_SHOOTS = 5
 PLAYER_CANNON_MOVES = 6
 PLAYER_HURT = 7
+ADD_POWERUP = 8
 
 PLAYER_MAKE_GROUP = (
     PLAYER_JUMPS,
@@ -43,13 +45,28 @@ class Event:
         self.id = 0
     
     def from_bytes(self, bytes):
-        raise NotImplementedError
+        pass
 
     def __bytes__(self):
         raise NotImplementedError
 
     def reset(self):
         self.id = 0
+
+class _AddPowerup(Event):
+    def __init__(self):
+        super().__init__()
+        self.effect_i = 0
+        self.x = 0.
+        self.y = 0.
+
+    def __bytes__(self):
+        return add_powerup_struct.pack(self.id, self.effect_i, self.x, self.y)
+
+    def from_bytes(self, buffer):
+        self.id, self.effect_i, self.x, self.y = add_powerup_struct.unpack(buffer)
+
+AddPowerup = Pool(_AddPowerup, 64)
 
 class _PlayerHurt(Event):
     def __init__(self):
@@ -153,6 +170,14 @@ class EventManager:
         self.events = deque()
         self._consumed = deque()
 
+    def add_powerup_event(self, effect_i, x, y):
+        event = AddPowerup()
+        event.id = ADD_POWERUP
+        event.effect_i = effect_i
+        event.x = x
+        event.y = y
+        self.events.append(event)
+
     def add_player_event(self, what, who):
         event = PlayerEvent()
         event.id = what
@@ -191,7 +216,11 @@ class EventManager:
         offset = 0
         while offset < total:
             what = int.from_bytes(data[offset:offset+1], "big")
-            if what == PLAYER_HURT:
+            if what == ADD_POWERUP:
+                what, effect_i, x, y = add_powerup_struct.unpack_from(data, offset)
+                self.add_powerup_event(effect_i, x, y)
+                offset += add_powerup_struct.size
+            elif what == PLAYER_HURT:
                 what, player_id, damage = player_hurt_struct.unpack_from(data, offset)
                 self.add_player_hurt(player_id, damage)
                 offset += player_hurt_struct.size
