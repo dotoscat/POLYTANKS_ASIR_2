@@ -105,11 +105,18 @@ class GamemodeTest(unittest.TestCase):
         testmode.ready = unittest.mock.Mock()
         testmode.gameover = unittest.mock.Mock()
 
-        start = time.monotonic()
-        while time.monotonic() - start < 11:
+        last = time.monotonic()
+        seconds = 0.
+        while seconds < 11:
+            now = time.monotonic()
+            dt = now - last
+            seconds += dt
+            testmode.run_steps(dt)
+            last = now
             time.sleep(0.1)
-            testmode.run_steps(0.1)
+            print("seconds", seconds)
 
-        print(testmode.ready.call_count)
-        print(testmode.running.call_count)
-        print(testmode.gameover.call_count)
+        self.assertEqual(testmode.ready.call_count, 1, "Does not start with READY!")
+        self.assertEqual(testmode.running.call_count, 2, "running doesn't called twice in 10 secs.")
+        self.assertEqual(testmode.gameover.call_count, 2, "gameover doesn't called twice in 10 secs.")
+        self.assertTrue(testmode.running_step.call_count > 10, "running_step doesn't called in running within 10 secs.")
