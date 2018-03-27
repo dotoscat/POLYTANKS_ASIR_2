@@ -13,6 +13,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import random
+
 class Status:
     RUNNING = 0
     GAMEOVER = 1
@@ -64,5 +66,20 @@ class AbstractGameMode:
             self.running_step(dt)
 
 class Standard(AbstractGameMode):
+    def __init__(self, server, engine, powerup=5):
+        super().__init__(server, engine)
+        self.powerup = powerup
+        self.spawn_each = powerup/self.RUNNING_TIME
+        self.spawn_time = self.spawn_each
+
     def running_step(self, dt):
+        self.spawn_time -= dt
+
+    def ready(self):
+        pass
+    
+    def running(self):
+        pass
+
+    def gameover(self):
         pass
