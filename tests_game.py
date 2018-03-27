@@ -89,3 +89,5 @@ class InputTest(unittest.TestCase):
         self.assertTrue(self.player.input.shoots)
         self.tick()
         self.assertTrue(self.player.input.shoots)
+
+

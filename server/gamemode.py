@@ -18,12 +18,15 @@ class Status:
     GAMEOVER = 1
     READY = 2
 
-class GameModeMixin:
-    def __init__(self, server, engine):
+class AbstractGameMode:
+    def __init__(self, server, engine, ready_time=5, running_time=10, gameover_time=3):
         self.server = server
         self.engine = engine
+        self.GAMEOVER_TIME = gameover_time
         self.gameover_time = self.GAMEOVER_TIME
+        self.RUNNING_TIME = running_time
         self.running_time = self.RUNNING_TIME
+        self.READY_TIME = ready_time
         self.ready_time = self.READY_TIME
         self.status = Status.READY
         self.time = 0.
@@ -59,3 +62,7 @@ class GameModeMixin:
             self.running()
         if self.status == Status.RUNNING:
             self.running_step(dt)
+
+class Standard(AbstractGameMode):
+    def running_step(self, dt):
+        pass
