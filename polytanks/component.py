@@ -41,6 +41,7 @@ class PlayerInfo:
         self.touched_floor = False
         self.hitstun = 0.
         self.score = 0
+        self.last_touch = 0
 
     @property
     def has_hitstun(self):

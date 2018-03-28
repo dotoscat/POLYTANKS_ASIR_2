@@ -35,6 +35,7 @@ class Explosion:
     def __init__(self):
         self.lifetime = 0.
         self.body = Body()
+        self.owner = 0
         self.power = 0.
         self.collisions = Collisions()
         blast = CollisionRect(UNIT, UNIT)

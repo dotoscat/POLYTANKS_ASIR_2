@@ -61,6 +61,7 @@ class Engine(AbstractEngine):
         player.body.vel_y = knockback if knockback >= UNIT else UNIT
         hitstun = 0.25 if knockback <= UNIT else 1.
         player.info.hitstun = hitstun
+        player.info.last_touch = explosion.owner
         if player.input.touch_floor:
             player.body.has_gravity = True
         event_manager.add_player_hurt(player.id, player.info.damage)

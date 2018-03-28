@@ -92,7 +92,7 @@ class CollisionMixin:
     def _bullet_explodes(self, bullet):
         y = bullet.body.y
         x = bullet.body.x
-        self.add_explosion(x, y, bullet.info.power)
+        self.add_explosion(x, y, bullet.info.power, bullet.info.owner)
         bullet.free()
 
     def bullet_blastzone_end(self, bullet, blastzone, bullect_rect, blastzone_rect):
