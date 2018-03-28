@@ -105,4 +105,5 @@ class CollisionMixin:
         pass
 
     def powerup_player(self, powerup, player, powerup_rect, player_rect):
+        print("pickup from abstract")
         powerup.free()

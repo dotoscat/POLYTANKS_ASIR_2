@@ -21,7 +21,7 @@ from .component import TankGraphic, PlatformSprite, Control
 from . import system
 
 class Powerup(polytanks.entity.Powerup):
-    SYSTEMS = (system.sprite, system.polytanks_system.physics)
+    SYSTEMS = (system.sprite, system.polytanks_system.physics, system.polytanks_system.collision)
     def __init__(self, batch, group):
         super().__init__()
         self.batch = batch
@@ -29,12 +29,13 @@ class Powerup(polytanks.entity.Powerup):
         self.sprite = pyglet.sprite.Sprite(assets.images["heal"], batch=batch, group=group)
 
     def reset(self):
-        super().reset()
+        self.body.x = -77
+        self.body.y = -77
         self.sprite.x = -77
         self.sprite.y = -77
 
 class Explosion(polytanks.entity.Explosion):
-    SYSTEMS = (system.polytanks_system.lifetime, system.sprite, system.polytanks_system.collision)
+    SYSTEMS = (system.polytanks_system.lifetime, system.sprite)
     def __init__(self, batch, group):
         super().__init__()
         self.sprite = pyglet.sprite.Sprite(assets.images["explosion"], batch=batch, group=group)
