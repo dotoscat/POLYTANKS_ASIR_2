@@ -13,8 +13,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from .event import event_manager
+
 def heal(player):
     player.info.damage = 0
+    event_manager.add_heal_event(player.id, 0)
 
 effects = [
     heal

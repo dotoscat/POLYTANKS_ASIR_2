@@ -191,6 +191,7 @@ class EventManager:
         event.id = what
         event.player_id = player_id
         event.amount = amount
+        self.events.append(event)
 
     def add_powerup_event(self, x, y, effect_i):
         event = AddPowerup()
