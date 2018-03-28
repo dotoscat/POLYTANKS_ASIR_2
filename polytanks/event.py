@@ -23,6 +23,7 @@ player_make_value_struct = struct.Struct("!BBf")
 player_shoots_struct = struct.Struct("!BBeeeHe?H")
 player_hurt_struct = struct.Struct("!BBH")
 add_powerup_struct = struct.Struct("!BeeB")
+modify_player_struct = struct.Struct("!BBH")
 
 PLAYER_JUMPS = 1
 PLAYER_FLOATS = 2
@@ -32,6 +33,7 @@ PLAYER_SHOOTS = 5
 PLAYER_CANNON_MOVES = 6
 PLAYER_HURT = 7
 ADD_POWERUP = 8
+MODIFY_HEALTH = 9
 
 PLAYER_MAKE_GROUP = (
     PLAYER_JUMPS,
@@ -52,6 +54,17 @@ class Event:
 
     def reset(self):
         self.id = 0
+
+class _Modify(Event):
+    def __init__(self):
+        super().__init__()
+        self.player_id = 0
+        self.amount = 0
+
+    def __bytes__(self):
+        return modify_player_struct.pack(self.id, self.player_id, self.amount)
+
+Modify = Pool(_Modify, 64)
 
 class _AddPowerup(Event):
     def __init__(self):
@@ -170,6 +183,15 @@ class EventManager:
         self.events = deque()
         self._consumed = deque()
 
+    def add_heal_event(self, player_id, amount):
+        self.add_modify_player(MODIFY_HEALTH, player_id, amount)
+
+    def add_modify_player(self, what, player_id, amount):
+        event = Modify()
+        event.id = what
+        event.player_id = player_id
+        event.amount = amount
+
     def add_powerup_event(self, x, y, effect_i):
         event = AddPowerup()
         event.id = ADD_POWERUP
@@ -216,7 +238,11 @@ class EventManager:
         offset = 0
         while offset < total:
             what = int.from_bytes(data[offset:offset+1], "big")
-            if what == ADD_POWERUP:
+            if what == MODIFY_HEALTH:
+                what, player_id, amount = modify_player_struct.unpack_from(data, offset)
+                self.add_heal_event(player_id, amount)
+                offset += modify_player_struct.size
+            elif what == ADD_POWERUP:
                 what, x, y, effect_i = add_powerup_struct.unpack_from(data, offset)
                 self.add_powerup_event(x, y, effect_i)
                 offset += add_powerup_struct.size
