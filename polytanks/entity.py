@@ -20,7 +20,12 @@ from .constants import UNIT, HALF_UNIT, WIDTH, HEIGHT
 class Powerup:
     def __init__(self):
         self.body = Body()
-        # TODO: add collision
+        self.collisions = Collisions()
+        rect = CollisionRect(UNIT, UNIT)
+        rect.offset = (-HALF_UNIT, -HALF_UNIT)
+        rect.type = collision.POWERUP
+        rect.collides_with = collision.PLAYER
+        self.collisions.append(rect)
 
 class Explosion:
     def __init__(self):

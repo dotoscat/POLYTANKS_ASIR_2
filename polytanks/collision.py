@@ -21,6 +21,7 @@ PLAYER_FEET = 1 << 2
 BULLET = 1 << 3
 BLAST_ZONE = 1 << 4
 EXPLOSION = 1 << 5
+POWERUP = 1 << 6
 
 class CollisionMixin:
     """
