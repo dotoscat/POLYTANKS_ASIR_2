@@ -27,6 +27,10 @@ class Powerup:
         rect.collides_with = collision.PLAYER
         self.collisions.append(rect)
 
+    def reset(self):
+        self.body.x = -77
+        self.body.y = -77
+
 class Explosion:
     def __init__(self):
         self.lifetime = 0.

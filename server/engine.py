@@ -64,3 +64,9 @@ class Engine(AbstractEngine):
         if player.input.touch_floor:
             player.body.has_gravity = True
         event_manager.add_player_hurt(player.id, player.info.damage)
+
+    def powerup_player(self, powerup, player, powerup_rect, player_rect):
+        print("player", player, "picks up", powerup)
+        super().powerup_player(powerup, player, powerup_rect, player_rect)
+        if callable(powerup.effect):
+            powerup.effect(player)

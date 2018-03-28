@@ -55,6 +55,10 @@ class CollisionMixin:
             (EXPLOSION, PLAYER),
             start=self.explosion_player_start
         )
+        collision.register_callbacks(
+            (POWERUP, PLAYER),
+            start=self.powerup_player
+        )
 
     def player_platform_start(self, player, platform, player_rect, platform_rect):
         if player.body.vel_y > 0.:
@@ -99,3 +103,6 @@ class CollisionMixin:
 
     def explosion_player_start(self, explosion, player, explosion_rect, player_rect):
         pass
+
+    def powerup_player(self, powerup, player, powerup_rect, player_rect):
+        powerup.free()

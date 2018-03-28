@@ -18,7 +18,7 @@ from polytanks.system import physics, collision, lifetime
 from .system import input
 
 class Powerup(entity.Powerup):
-    SYSTEMS = (physics,)
+    SYSTEMS = (physics, collision)
     def __init__(self):
         super().__init__()
         self.effect = None
