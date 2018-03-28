@@ -78,8 +78,7 @@ class CollisionMixin:
 
     def player_blastzone_end(self, player, blastzone, player_rect, blastzone_rect):
         self.respawn_player(player.id)
-        print("Player goes kabooooo")
-
+        
     def bullet_player_start(self, bullet, player, bullet_rect, player_rect):
         print("bullet collides", bullet.info.owner, player.id)
         if bullet.info.owner == player.id:

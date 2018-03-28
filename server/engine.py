@@ -71,3 +71,13 @@ class Engine(AbstractEngine):
         if callable(powerup.effect):
             powerup.effect(player)
         powerup.free()
+
+    def player_blastzone_end(self, player, blastzone, player_rect, blastzone_rect):
+        super().player_blastzone_end(player, blastzone, player_rect, blastzone_rect)
+        info = player.info
+        if not info.last_touch or info.last_touch == player.id:
+            print("suicidal")
+            info.score -= 1
+        else:
+            info.score += 1
+            self.players[info.last_touch].info.score -= 1
