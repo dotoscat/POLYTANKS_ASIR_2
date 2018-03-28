@@ -40,6 +40,7 @@ class PlayerInfo:
         self.damage = 0
         self.touched_floor = False
         self.hitstun = 0.
+        self.score = 0
 
     @property
     def has_hitstun(self):
