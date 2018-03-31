@@ -24,6 +24,7 @@ player_shoots_struct = struct.Struct("!BBeeeHe?H")
 player_hurt_struct = struct.Struct("!BBH")
 add_powerup_struct = struct.Struct("!BeeB")
 modify_player_struct = struct.Struct("!BBH")
+player_joined_struct = struct.Struct("!BB")
 
 PLAYER_JUMPS = 1
 PLAYER_FLOATS = 2
@@ -34,6 +35,7 @@ PLAYER_CANNON_MOVES = 6
 PLAYER_HURT = 7
 ADD_POWERUP = 8
 MODIFY_HEALTH = 9
+PLAYER_JOINED = 10
 
 PLAYER_MAKE_GROUP = (
     PLAYER_JUMPS,
@@ -54,6 +56,16 @@ class Event:
 
     def reset(self):
         self.id = 0
+
+class _PlayerJoined(Event):
+    def __init__(self):
+        super().__init__()
+        self.player_id = 0
+    
+    def __bytes__(self):
+        return player_joined_struct.pack(self.id, self.player_id)
+
+PlayerJoined = Pool(_PlayerJoined, 8)
 
 class _Modify(Event):
     def __init__(self):
@@ -182,6 +194,12 @@ class EventManager:
     def __init__(self):
         self.events = deque()
         self._consumed = deque()
+
+    def add_player_joined(self, player_id):
+        event = PlayerJoined()
+        event.id = PLAYER_JOINED
+        event.player_id = player_id
+        self.events.append(event)
 
     def add_heal_event(self, player_id, amount):
         self.add_modify_player(MODIFY_HEALTH, player_id, amount)
