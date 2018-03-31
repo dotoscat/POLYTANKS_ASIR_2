@@ -58,6 +58,7 @@ class AbstractEngine(CollisionMixin):
     def respawn_player(self, id):
         player = self.players[id]
         point = self.spawn_points[str(id)]
+        player.body.reset()
         player.body.x = point[0] + HALF_UNIT
         player.body.y = point[1] + HALF_UNIT
 
