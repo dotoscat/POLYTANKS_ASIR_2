@@ -141,6 +141,8 @@ class Screen(Scene):
                 player.info.damage = eve.amount
                 text = "{}. {} %".format(eve.player_id, eve.amount)
                 self.players_damage[eve.player_id].text = text
+            elif eve.id == event.PLAYER_JOINED:
+                print("Jugador", eve.player_id, "se une")
 
 
     def apply_snapshot_data(self, data):

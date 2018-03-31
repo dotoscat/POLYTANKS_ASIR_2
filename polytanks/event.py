@@ -257,7 +257,13 @@ class EventManager:
         offset = 0
         while offset < total:
             what = int.from_bytes(data[offset:offset+1], "big")
-            if what == MODIFY_HEALTH:
+            print("what", what)
+            if what == PLAYER_JOINED:
+                # TODO: Crear en el cliente que corresponda el jugador
+                what, player_id = player_joined_struct.unpack_from(data, offset)
+                self.add_player_joined(player_id)
+                offset += player_joined_struct.size
+            elif what == MODIFY_HEALTH:
                 what, player_id, amount = modify_player_struct.unpack_from(data, offset)
                 self.add_heal_event(player_id, amount)
                 offset += modify_player_struct.size
