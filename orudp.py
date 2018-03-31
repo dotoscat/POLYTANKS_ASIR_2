@@ -178,6 +178,8 @@ class Mailbox:
     def _resend(self, message, time_for_response):
         if message.tries == 0:
             return
+        if not message.data:
+            return
         self._send(message.data, message.address)
         self._mysched.enter(time_for_response, 1, self._resend, argument=(message, time_for_response))
         if message.tries:

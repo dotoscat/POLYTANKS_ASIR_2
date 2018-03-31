@@ -259,7 +259,6 @@ class EventManager:
             what = int.from_bytes(data[offset:offset+1], "big")
             print("what", what)
             if what == PLAYER_JOINED:
-                # TODO: Crear en el cliente que corresponda el jugador
                 what, player_id = player_joined_struct.unpack_from(data, offset)
                 self.add_player_joined(player_id)
                 offset += player_joined_struct.size

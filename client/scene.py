@@ -141,7 +141,8 @@ class Screen(Scene):
                 player.info.damage = eve.amount
                 text = "{}. {} %".format(eve.player_id, eve.amount)
                 self.players_damage[eve.player_id].text = text
-            elif eve.id == event.PLAYER_JOINED:
+            elif eve.id == event.PLAYER_JOINED and eve.player_id != self.client.id:
+                self.engine.add_player(eve.player_id)
                 print("Jugador", eve.player_id, "se une")
 
 
