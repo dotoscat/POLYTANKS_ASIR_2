@@ -52,7 +52,8 @@ class ServerProtocol(asyncio.Protocol):
             command, player_id, port, rudp_port = protocol.sendgameport_struct.unpack(data) 
             print("game - rudp port", player_id, port, rudp_port)
             self.server.set_game_address(player_id, port, rudp_port)
-            event_manager.add_player_joined(player_id)
+            for player_id in self.server.engine.players:
+                event_manager.add_player_joined(player_id)
         elif command == protocol.REQUEST_SNAPSHOT:
             command, player_id = protocol.request_snapshot_struct.unpack(data)
             self.server.send_requested_snapshot(player_id)
