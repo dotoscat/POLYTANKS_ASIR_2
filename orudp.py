@@ -140,7 +140,9 @@ class Mailbox:
             elif type == ACK:
                 if id not in self._sent:
                     continue
-                self._mysched.cancel(self._sent[id].event)
+                event = self._sent[id].event
+                if event in self._mysched.queue:
+                    self._mysched.cancel(event)
                 message = self._sent.pop(id)
                 message.reset()
                 self._messages.append(message)
