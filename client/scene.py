@@ -22,17 +22,18 @@ from polytanks.event import event_manager
 from polytanks.constants import CANNON_JOINT, CANNON_LENGTH, BULLET_SPEED, WIDTH
 from ogf4py.scene import Scene
 from ogf4py.director import Director
-from . import assets, system
+from . import assets, system, hud
 from .engine import Engine
 
 class Screen(Scene):
     INPUT_PER_SEC = 1./20.
     def __init__(self, client):
-        super().__init__(4)
+        super().__init__(5)
         self.client = client
         self.engine = Engine(self.batch, self.groups)
         self.player = None
         self.players_damage = {}
+        self.hud = hud.HUD(self.batch, self.groups)
         # level.load_level(level.basic, self.pools["platform"])
 
     def init(self):
@@ -147,8 +148,10 @@ class Screen(Scene):
                 self.engine.add_player(eve.player_id)
                 print("Jugador", eve.player_id, "se une")
             elif eve.id == event.GAMEMODE_READY:
+                self.hud.show_message()
                 print("Listos por", eve.seconds)
             elif eve.id == event.GAMEMODE_RUNNING:
+                self.hud.hide_message()
                 print("Juego por", eve.seconds)
             elif eve.id == event.GAMEMODE_GAMEOVER:
                 print("Gameover por", eve.seconds)
