@@ -69,6 +69,6 @@ class HUD:
         self.clock.set(seconds) 
         self.clock.start()
 
-    def hide_clock(self, seconds):
+    def hide_clock(self):
         self.clock.label.y = HEIGHT+32. 
         self.clock.stop()
