@@ -28,6 +28,7 @@ class Clock:
     def set(self, total_seconds):
         self.total_seconds = total_seconds
         self.seconds = total_seconds
+        self.update_text()
 
     def start(self):
         clock.schedule(self.update)
@@ -38,12 +39,13 @@ class Clock:
     def update_text(self):
         seconds = self.seconds % 60
         minutes = self.seconds // 60
-        label.
+        self.label.text = "{} : {}".format(minutes, seconds)
 
     def update(self, dt):
         self.seconds += -dt
-        if self.seconds < 0.
+        if self.seconds < 0.:
             self.seconds = 0.
+        self.update_text()
 
 class HUD:
     MESSAGE = "READY"
@@ -59,3 +61,9 @@ class HUD:
 
     def hide_message(self):
         self.message.color = self.message.color[:3] + (0,)
+
+    def show_clock(self, seconds):
+        pass
+
+    def hide_clock(self, seconds):
+        pass
