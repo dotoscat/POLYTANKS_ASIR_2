@@ -13,17 +13,45 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from polytanks.constants import WIDTH, HEIGHT, UNIT
 import pyglet
+from pyglet import clock
+from polytanks.constants import WIDTH, HEIGHT, UNIT
+
+class Clock:
+    def __init__(self, batch, group):
+        self.seconds = 0.
+        self.total_seconds = 0.
+        self.label = pyglet.text.Label("",
+            batch=batch,
+            group=group)
+
+    def set(self, total_seconds):
+        self.total_seconds = total_seconds
+        self.seconds = total_seconds
+
+    def start(self):
+        clock.schedule(self.update)
+
+    def stop(self):
+        clock.unschedule(self.update)
+
+    def update_text(self):
+        seconds = self.seconds % 60
+        minutes = self.seconds // 60
+        label.
+
+    def update(self, dt):
+        self.seconds += -dt
+        if self.seconds < 0.
+            self.seconds = 0.
 
 class HUD:
     MESSAGE = "READY"
     def __init__(self, batch, groups):
         self.message = pyglet.text.Label(self.MESSAGE,
-                                        x=WIDTH/2., y=HEIGHT/2.,
-                                        anchor_x="center",
-                                        anchor_y="center",
-                                        batch=batch, group=groups[4])
+            x=WIDTH/2., y=HEIGHT/2.,
+            anchor_x="center", anchor_y="center",
+            batch=batch, group=groups[4])
         self.hide_message()
 
     def show_message(self):
