@@ -216,7 +216,7 @@ class EventManager:
         self.add_gamemode_event(GAMEMODE_RUNNING, seconds)
 
     def add_gameover_event(self, seconds):
-        self.add_gamemode_event(GAMEMODE_READY, seconds)
+        self.add_gamemode_event(GAMEMODE_GAMEOVER, seconds)
 
     def add_gamemode_event(self, what, seconds):
         event = Gamemode()
@@ -286,7 +286,6 @@ class EventManager:
         offset = 0
         while offset < total:
             what = int.from_bytes(data[offset:offset+1], "big")
-            print("what", what)
             if what == GAMEMODE_READY:
                 what, seconds = gamemode_struct.unpack_from(data, offset)
                 self.add_ready_event(seconds)

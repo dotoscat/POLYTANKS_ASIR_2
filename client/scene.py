@@ -148,6 +148,10 @@ class Screen(Scene):
                 print("Jugador", eve.player_id, "se une")
             elif eve.id == event.GAMEMODE_READY:
                 print("Listos por", eve.seconds)
+            elif eve.id == event.GAMEMODE_RUNNING:
+                print("Juego por", eve.seconds)
+            elif eve.id == event.GAMEMODE_GAMEOVER:
+                print("Gameover por", eve.seconds)
 
 
     def apply_snapshot_data(self, data):

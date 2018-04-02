@@ -104,7 +104,9 @@ class Standard(AbstractGameMode):
         event_manager.add_ready_event(self.ready_time)
     
     def running(self):
-        pass
+        print("Enviar running event")
+        event_manager.add_running_event(self.running_time)
 
     def gameover(self):
-        pass
+        print("Enviar gameover event")
+        event_manager.add_gameover_event(self.gameover_time)
