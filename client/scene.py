@@ -148,6 +148,7 @@ class Screen(Scene):
                 self.engine.add_player(eve.player_id)
                 print("Jugador", eve.player_id, "se une")
             elif eve.id == event.GAMEMODE_READY:
+                self.hud.hide_results()
                 self.hud.show_message()
                 print("Listos por", eve.seconds)
             elif eve.id == event.GAMEMODE_RUNNING:
@@ -156,6 +157,7 @@ class Screen(Scene):
                 print("Juego por", eve.seconds)
             elif eve.id == event.GAMEMODE_GAMEOVER:
                 self.hud.hide_clock()
+                self.hud.show_results()
                 print("Gameover por", eve.seconds)
 
 

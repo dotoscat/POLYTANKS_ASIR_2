@@ -57,6 +57,12 @@ class HUD:
         self.clock = Clock(batch, groups[4])
         self.clock.label.y = HEIGHT-32. 
         self.hide_message()
+        self.results = pyglet.text.Label(
+            "Hola mundo\nGuay\n\nJeje",
+            anchor_x="center", anchor_y="center",
+            batch=batch, group=groups[4],
+            multiline=True, width=WIDTH/4.
+        )
 
     def show_message(self):
         self.message.color = self.message.color[:3] + (255,)
@@ -72,3 +78,9 @@ class HUD:
     def hide_clock(self):
         self.clock.label.y = HEIGHT+32. 
         self.clock.stop()
+
+    def show_results(self):
+        self.results.x = WIDTH/2.
+
+    def hide_results(self):
+        self.results.x = WIDTH
