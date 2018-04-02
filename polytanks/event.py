@@ -287,7 +287,19 @@ class EventManager:
         while offset < total:
             what = int.from_bytes(data[offset:offset+1], "big")
             print("what", what)
-            if what == PLAYER_JOINED:
+            if what == GAMEMODE_READY:
+                what, seconds = gamemode_struct.unpack_from(data, offset)
+                self.add_ready_event(seconds)
+                offset += gamemode_struct.size
+            elif what == GAMEMODE_RUNNING:
+                what, seconds = gamemode_struct.unpack_from(data, offset)
+                self.add_running_event(seconds)
+                offset += gamemode_struct.size
+            elif what == GAMEMODE_GAMEOVER:
+                what, seconds = gamemode_struct.unpack_from(data, offset)
+                self.add_gameover_event(seconds)
+                offset += gamemode_struct.size
+            elif what == PLAYER_JOINED:
                 what, player_id = player_joined_struct.unpack_from(data, offset)
                 self.add_player_joined(player_id)
                 offset += player_joined_struct.size
