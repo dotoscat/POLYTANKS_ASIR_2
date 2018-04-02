@@ -38,7 +38,7 @@ ADD_POWERUP = 8
 MODIFY_HEALTH = 9
 PLAYER_JOINED = 10
 GAMEMODE_READY = 11
-GAMEMODE_RUNNIMG = 12
+GAMEMODE_RUNNING = 12
 GAMEMODE_GAMEOVER = 13
 
 PLAYER_MAKE_GROUP = (
@@ -210,6 +210,12 @@ class EventManager:
         self._consumed = deque()
 
     def add_ready_event(self, seconds):
+        self.add_gamemode_event(GAMEMODE_READY, seconds)
+
+    def add_running_event(self, seconds):
+        self.add_gamemode_event(GAMEMODE_RUNNING, seconds)
+
+    def add_gameover_event(self, seconds):
         self.add_gamemode_event(GAMEMODE_READY, seconds)
 
     def add_gamemode_event(self, what, seconds):
