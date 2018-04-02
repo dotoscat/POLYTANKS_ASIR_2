@@ -152,8 +152,10 @@ class Screen(Scene):
                 print("Listos por", eve.seconds)
             elif eve.id == event.GAMEMODE_RUNNING:
                 self.hud.hide_message()
+                self.hud.show_clock(eve.seconds)
                 print("Juego por", eve.seconds)
             elif eve.id == event.GAMEMODE_GAMEOVER:
+                self.hud.hide_clock()
                 print("Gameover por", eve.seconds)
 
 

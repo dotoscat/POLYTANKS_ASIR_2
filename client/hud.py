@@ -54,6 +54,8 @@ class HUD:
             x=WIDTH/2., y=HEIGHT/2.,
             anchor_x="center", anchor_y="center",
             batch=batch, group=groups[4])
+        self.clock = Clock(batch, groups[4])
+        self.clock.label.y = HEIGHT-32. 
         self.hide_message()
 
     def show_message(self):
@@ -63,7 +65,10 @@ class HUD:
         self.message.color = self.message.color[:3] + (0,)
 
     def show_clock(self, seconds):
-        pass
+        self.clock.label.y = HEIGHT-32.
+        self.clock.set(seconds) 
+        self.clock.start()
 
     def hide_clock(self, seconds):
-        pass
+        self.clock.label.y = HEIGHT+32. 
+        self.clock.stop()
