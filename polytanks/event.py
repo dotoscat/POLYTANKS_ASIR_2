@@ -209,6 +209,15 @@ class EventManager:
         self.events = deque()
         self._consumed = deque()
 
+    def add_ready_event(self, seconds):
+        self.add_gamemode_event(GAMEMODE_READY, seconds)
+
+    def add_gamemode_event(self, what, seconds):
+        event = Gamemode()
+        event.id = what
+        event.seconds = seconds
+        self.events.append(event)
+
     def add_player_joined(self, player_id):
         event = PlayerJoined()
         event.id = PLAYER_JOINED
