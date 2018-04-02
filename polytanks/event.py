@@ -25,6 +25,7 @@ player_hurt_struct = struct.Struct("!BBH")
 add_powerup_struct = struct.Struct("!BeeB")
 modify_player_struct = struct.Struct("!BBH")
 player_joined_struct = struct.Struct("!BB")
+gamemode_struct = struct.Struct("!BH") # Usado para GAMEMODE_(READY|RUNNING|GAMEOVER)
 
 PLAYER_JUMPS = 1
 PLAYER_FLOATS = 2
@@ -36,6 +37,9 @@ PLAYER_HURT = 7
 ADD_POWERUP = 8
 MODIFY_HEALTH = 9
 PLAYER_JOINED = 10
+GAMEMODE_READY = 11
+GAMEMODE_RUNNIMG = 12
+GAMEMODE_GAMEOVER = 13
 
 PLAYER_MAKE_GROUP = (
     PLAYER_JUMPS,
@@ -56,6 +60,16 @@ class Event:
 
     def reset(self):
         self.id = 0
+
+class _Gamemode(Event):
+    def __init__(self):
+        super().__init__()
+        self.seconds = 0.
+
+    def __bytes__(self):
+        return gamemode_struct.pack(self.id, self.seconds)
+
+Gamemode = Pool(_Gamemode, 2)
 
 class _PlayerJoined(Event):
     def __init__(self):
