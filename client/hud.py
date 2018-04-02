@@ -81,6 +81,7 @@ class HUD:
 
     def show_results(self):
         self.results.x = WIDTH/2.
+        self.results.y = HEIGHT/2.
 
     def hide_results(self):
-        self.results.x = WIDTH
+        self.results.x = WIDTH*2.
