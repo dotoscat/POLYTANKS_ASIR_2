@@ -299,6 +299,7 @@ class EventManager:
                 what, seconds = gamemode_struct.unpack_from(data, offset)
                 self.add_gameover_event(seconds)
                 offset += gamemode_struct.size
+            # TODO: Emitir gamemode ready en el servidor
             elif what == PLAYER_JOINED:
                 what, player_id = player_joined_struct.unpack_from(data, offset)
                 self.add_player_joined(player_id)

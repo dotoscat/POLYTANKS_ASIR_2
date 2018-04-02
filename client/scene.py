@@ -146,6 +146,8 @@ class Screen(Scene):
                     return
                 self.engine.add_player(eve.player_id)
                 print("Jugador", eve.player_id, "se une")
+            elif eve.id == event.GAMEMODE_READY:
+                print("Listos por", eve.seconds)
 
 
     def apply_snapshot_data(self, data):

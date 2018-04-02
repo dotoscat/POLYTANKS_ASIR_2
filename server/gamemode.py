@@ -17,6 +17,7 @@ import random
 from polytanks.event import event_manager
 from polytanks import powerup
 from polytanks.constants import UNIT
+from polytanks.event import event_manager
 
 class Status:
     RUNNING = 0
@@ -96,10 +97,11 @@ class Standard(AbstractGameMode):
             y = player.body.y + UNIT*3
             self.engine.add_powerup(x, y, effect) 
             event_manager.add_powerup_event(x, y, effect_i)
-            print("add powerup!")
+            # print("add powerup!")
 
     def ready(self):
-        pass
+        print("Enviar ready event")
+        event_manager.add_ready_event(self.ready_time)
     
     def running(self):
         pass
